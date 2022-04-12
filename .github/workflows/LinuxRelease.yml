@@ -30,6 +30,7 @@ env:
 
 jobs:
  linux-release-64:
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
     name: Linux (64 Bit)
     runs-on: ubuntu-latest
     container: ubuntu:16.04
