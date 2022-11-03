@@ -6,6 +6,9 @@ image:
 tasks:
   - name: dependencies
     init: |
+      # Install R, most recent version
+      rig add default
+
       # Scriptlets, with custom Git config
       mv ~/.gitconfig ~/.gitconfig.gitpod
       curl -s https://raw.githubusercontent.com/krlmlr/scriptlets/master/bootstrap | sh
