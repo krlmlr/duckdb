@@ -6,7 +6,8 @@ image:
 tasks:
   - name: dependencies
     init: |
-      # Install R, most recent version
+      # Install rig and R, most recent version
+      curl -Ls https://github.com/r-lib/rig/releases/download/latest/rig-linux-latest.tar.gz | tar xz -C /usr/local
       rig add default
 
       # Scriptlets, with custom Git config
