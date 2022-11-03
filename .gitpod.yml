@@ -8,7 +8,7 @@ tasks:
     init: |
       # Install rig and R, most recent version
       curl -Ls https://github.com/r-lib/rig/releases/download/latest/rig-linux-latest.tar.gz | tar xz -C /usr/local
-      rig add default
+      rig add release
 
       # Scriptlets, with custom Git config
       mv ~/.gitconfig ~/.gitconfig.gitpod
