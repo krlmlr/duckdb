@@ -1,8 +1,5 @@
 # Generated with cynkrathis::use_gitpod(), do not edit.
 #
-# Call:
-      code                           compare 
-"quote(cynkrathis::use_gitpod())"                            "NULL" 
 
 image:
   file: .gitpod.Dockerfile
