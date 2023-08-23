@@ -17,3 +17,5 @@ CMakeLists.txt
 NEWS.md
 tests/regression
 ^revdep$
+^\.DS_Store$
+^\.Rhistory$
