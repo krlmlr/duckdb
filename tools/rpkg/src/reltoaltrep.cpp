@@ -37,6 +37,8 @@ void RelToAltrep::Initialize(DllInfo *dll) {
 	R_set_altvec_Dataptr_method(real_class, VectorDataptr);
 	R_set_altvec_Dataptr_method(string_class, VectorDataptr);
 
+	R_set_altvec_Dataptr_or_null_method(rownames_class, RownamesDataptrOrNull);
+
 	R_set_altstring_Elt_method(string_class, VectorStringElt);
 }
 
@@ -59,6 +61,10 @@ struct AltrepRelationWrapper {
 	}
 
 	AltrepRelationWrapper(shared_ptr<Relation> rel_p) : rel(rel_p) {
+	}
+
+	bool HasQueryResult() const {
+	  return (bool)res;
 	}
 
 	MaterializedQueryResult *GetQueryResult() {
@@ -166,6 +172,21 @@ R_xlen_t RelToAltrep::RownamesLength(SEXP x) {
 
 void *RelToAltrep::RownamesDataptr(SEXP x, Rboolean writeable) {
 	BEGIN_CPP11
+	return DoRownamesDataptrGet(x);
+	END_CPP11
+}
+
+const void *RelToAltrep::RownamesDataptrOrNull(SEXP x) {
+	BEGIN_CPP11
+	auto rownames_wrapper = AltrepRownamesWrapper::Get(x);
+	if (!rownames_wrapper->rel->HasQueryResult()) {
+		return R_NilValue;
+	}
+	return DoRownamesDataptrGet(x);
+	END_CPP11
+}
+
+void *RelToAltrep::DoRownamesDataptrGet(SEXP x) {
 	auto rownames_wrapper = AltrepRownamesWrapper::Get(x);
 	auto row_count = rownames_wrapper->rel->GetQueryResult()->RowCount();
 	if (row_count > (idx_t)NumericLimits<int32_t>::Maximum()) {
@@ -173,7 +194,6 @@ void *RelToAltrep::RownamesDataptr(SEXP x, Rboolean writeable) {
 	}
 	rownames_wrapper->rowlen_data[1] = -row_count;
 	return rownames_wrapper->rowlen_data;
-	END_CPP11
 }
 
 R_xlen_t RelToAltrep::VectorLength(SEXP x) {
