@@ -36,7 +36,7 @@ jobs:
           python-version: '3.9'
 
       - name: Build DuckDB Python client
-        run: make debug_python
+        run: make debug_python || make debug_python || make debug_python
 
       - name: Install Python test dependencies
         run: python -m pip install --upgrade pytest
