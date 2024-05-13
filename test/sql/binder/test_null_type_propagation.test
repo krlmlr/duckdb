@@ -123,7 +123,7 @@ NULL
 query I
 SELECT typeof(#1) FROM tbl LIMIT 1
 ----
-INTEGER
+BOOLEAN
 
 # views preserve NULLs
 statement ok
