@@ -49,7 +49,7 @@ CREATE MACRO in_next_n2(x, s, n) AS x IN (
     WITH RECURSIVE cte AS (
             SELECT nextval(s) AS nxt, n AS n
         UNION ALL
-            SELECT nextval(s), cte.n - 1
+            SELECT nextval(s), COALESCE(cte.n, NULL::integer) - 1
             FROM cte
             WHERE cte.n > 1
     )
