@@ -618,7 +618,7 @@ idx_t DBConfig::ParseMemoryLimit(const string &arg) {
 
 	if (!error.empty()) {
 		if (error == "Memory cannot be negative") {
-			result = DConstants::INVALID_INDEX;
+			return NumericLimits<idx_t>::Maximum();
 		} else {
 			throw ParserException(error);
 		}
