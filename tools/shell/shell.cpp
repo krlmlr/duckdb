@@ -1469,7 +1469,7 @@ void ShellState::ResetOutput() {
 				PrintF(PrintOutput::STDERR, "Failed: [%s]\n", zCmd.c_str());
 			} else {
 				/* Give the start/open/xdg-open command some time to get
-				** going before we continue, and potential delete the
+				** going before we continue, and potentially delete the
 				** zTempFile data file out from under it */
 				Sleep(2000);
 			}
@@ -2756,7 +2756,7 @@ bool ShellState::GetBailOnError(InputMode mode) {
 
 /*
 ** Read input from *in and process it.  If *in==0 then input
-** is interactive - the user is typing it it.  Otherwise, input
+** is interactive - the user is typing it in.  Otherwise, input
 ** is coming from a file or device.  A prompt is issued and history
 ** is saved only if input is interactive.  An interrupt signal will
 ** cause this routine to exit immediately, unless input is interactive.
@@ -3114,7 +3114,7 @@ int RunShell(int argc, const char **argv) {
 			if (data.zDbFilename.empty()) {
 				data.zDbFilename = z;
 			} else {
-				/* Excesss arguments are interpreted as SQL (or dot-commands) and
+				/* Excess arguments are interpreted as SQL (or dot-commands) and
 				** mean that nothing is read from stdin */
 				data.readStdin = false;
 				data.stdin_is_interactive = false;
@@ -3171,7 +3171,7 @@ int RunShell(int argc, const char **argv) {
 	data.OpenDB();
 
 	/* Process the initialization file if there is one.  If no -init option
-	** is given on the command line, look for a file named ~/.sqliterc and
+	** is given on the command line, look for a file named ~/.duckdbrc and
 	** try to process it.
 	*/
 	if (data.run_init && !data.ProcessDuckDBRC(data.initFile.empty() ? nullptr : data.initFile.c_str())) {
