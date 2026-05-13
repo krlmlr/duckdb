@@ -1273,7 +1273,8 @@ struct HTTPProxySetting {
 	using RETURN_TYPE = string;
 	static constexpr const char *Name = "http_proxy";
 	static constexpr const char *Description =
-	    "HTTP proxy host (defaults to the HTTP_PROXY environment variable when unset)";
+	    "HTTP proxy host (defaults to the HTTPS_PROXY / HTTP_PROXY environment variable when unset; the URL may embed "
+	    "`user[:password]@`, which then populates http_proxy_username / http_proxy_password)";
 	static constexpr const char *InputType = "VARCHAR";
 	static void SetGlobal(DatabaseInstance *db, DBConfig &config, const Value &parameter);
 	static void ResetGlobal(DatabaseInstance *db, DBConfig &config);

@@ -1,0 +1,80 @@
+# name: test/sql/settings/http_proxy.test
+# description: Test http_proxy setting parsing
+# group: [settings]
+
+# Plain host:port stays unchanged and does not touch credentials
+statement ok
+SET http_proxy = 'proxy.example.com:8080'
+
+query I
+SELECT current_setting('http_proxy')
+----
+proxy.example.com:8080
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+(empty)
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+(empty)
+
+# A scheme is preserved and `user:pass@` populates the credential settings
+statement ok
+SET http_proxy = 'https://alice:s3cr3t@proxy.example.com:8443'
+
+query I
+SELECT current_setting('http_proxy')
+----
+https://proxy.example.com:8443
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+alice
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+s3cr3t
+
+# Username only (no password) is supported
+statement ok
+SET http_proxy_password = ''
+
+statement ok
+SET http_proxy = 'http://bob@proxy.example.com:3128'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://proxy.example.com:3128
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+bob
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+(empty)
+
+# An `@` that appears in the path component must not be treated as userinfo
+statement ok
+SET http_proxy_username = ''
+
+statement ok
+SET http_proxy = 'http://proxy.example.com/path@with-at'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://proxy.example.com/path@with-at
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+(empty)

@@ -1029,12 +1029,49 @@ Value ForceMbedtlsUnsafeSetting::GetSetting(const ClientContext &context) {
 //===----------------------------------------------------------------------===//
 // HTTP Proxy
 //===----------------------------------------------------------------------===//
+namespace {
+
+// Extract a `user[:password]@` userinfo component from a proxy URL, store the
+// parts in the `http_proxy_username` / `http_proxy_password` settings, and
+// strip it from `proxy` in place. Leaves `proxy` and the credential settings
+// untouched when no userinfo is present.
+void ExtractHTTPProxyCredentials(DBConfig &config, string &proxy) {
+	idx_t userinfo_start = 0;
+	auto scheme_end = proxy.find("://");
+	if (scheme_end != string::npos) {
+		userinfo_start = scheme_end + 3;
+	}
+	auto path_start = proxy.find('/', userinfo_start);
+	auto at_pos = proxy.find('@', userinfo_start);
+	if (at_pos == string::npos || (path_start != string::npos && at_pos > path_start)) {
+		return;
+	}
+	auto userinfo = proxy.substr(userinfo_start, at_pos - userinfo_start);
+	auto colon_pos = userinfo.find(':');
+	string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
+	config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
+	if (colon_pos != string::npos) {
+		config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
+		                                    Value(userinfo.substr(colon_pos + 1)));
+	}
+	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
+}
+
+} // namespace
+
 void HTTPProxySetting::SetGlobal(DatabaseInstance *, DBConfig &config, const Value &input) {
-	config.options.http_proxy = input.GetValue<string>();
+	auto proxy = input.GetValue<string>();
+	ExtractHTTPProxyCredentials(config, proxy);
+	config.options.http_proxy = std::move(proxy);
 }
 
 void HTTPProxySetting::ResetGlobal(DatabaseInstance *, DBConfig &config) {
-	config.options.http_proxy = FileSystem::GetEnvVariable("HTTP_PROXY");
+	auto proxy = FileSystem::GetEnvVariable("HTTPS_PROXY");
+	if (proxy.empty()) {
+		proxy = FileSystem::GetEnvVariable("HTTP_PROXY");
+	}
+	ExtractHTTPProxyCredentials(config, proxy);
+	config.options.http_proxy = std::move(proxy);
 }
 
 //===----------------------------------------------------------------------===//

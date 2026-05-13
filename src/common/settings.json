@@ -850,7 +850,7 @@
     },
     {
         "name": "http_proxy",
-        "description": "HTTP proxy host (defaults to the HTTP_PROXY environment variable when unset)",
+        "description": "HTTP proxy host (defaults to the HTTPS_PROXY / HTTP_PROXY environment variable when unset; the URL may embed `user[:password]@`, which then populates http_proxy_username / http_proxy_password)",
         "type": "VARCHAR",
         "scope": "global",
         "struct": "HTTPProxySetting",

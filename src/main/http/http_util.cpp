@@ -296,6 +296,8 @@ void HTTPUtil::ParseHTTPProxyHost(string &proxy_value, string &hostname_out, idx
 	auto sanitized_proxy_value = proxy_value;
 	if (StringUtil::StartsWith(proxy_value, "http://")) {
 		sanitized_proxy_value = proxy_value.substr(7);
+	} else if (StringUtil::StartsWith(proxy_value, "https://")) {
+		sanitized_proxy_value = proxy_value.substr(8);
 	}
 	auto proxy_split = StringUtil::Split(sanitized_proxy_value, ":");
 	if (proxy_split.size() == 1) {
