@@ -1066,9 +1066,16 @@ void HTTPProxySetting::SetGlobal(DatabaseInstance *, DBConfig &config, const Val
 }
 
 void HTTPProxySetting::ResetGlobal(DatabaseInstance *, DBConfig &config) {
-	auto proxy = FileSystem::GetEnvVariable("HTTPS_PROXY");
-	if (proxy.empty()) {
-		proxy = FileSystem::GetEnvVariable("HTTP_PROXY");
+	// Prefer lowercase, which is the de-facto standard followed by curl/wget and
+	// avoids the `HTTP_PROXY` (uppercase) CGI httpoxy ambiguity; fall back to
+	// uppercase for compatibility. HTTPS takes precedence over HTTP.
+	static const char *kEnvVars[] = {"https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY"};
+	string proxy;
+	for (auto *name : kEnvVars) {
+		proxy = FileSystem::GetEnvVariable(name);
+		if (!proxy.empty()) {
+			break;
+		}
 	}
 	ExtractHTTPProxyCredentials(config, proxy);
 	config.options.http_proxy = std::move(proxy);
