@@ -78,3 +78,169 @@ query I
 SELECT current_setting('http_proxy_username')
 ----
 (empty)
+
+# --- Malformed URLs --------------------------------------------------------
+
+# An `@` inside the query string is not userinfo
+statement ok
+SET http_proxy_username = 'preexisting'
+
+statement ok
+SET http_proxy_password = 'preexisting'
+
+statement ok
+SET http_proxy = 'http://proxy.example.com?token=a@b.com'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://proxy.example.com?token=a@b.com
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+preexisting
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+preexisting
+
+# An `@` inside the fragment is not userinfo
+statement ok
+SET http_proxy = 'http://proxy.example.com#frag@ment'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://proxy.example.com#frag@ment
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+preexisting
+
+# Empty userinfo (`@host`) strips the `@` and leaves credentials untouched
+statement ok
+SET http_proxy = '@proxy.example.com:8080'
+
+query I
+SELECT current_setting('http_proxy')
+----
+proxy.example.com:8080
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+preexisting
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+preexisting
+
+# A trailing `@` with no authority is similarly a no-op for credentials
+statement ok
+SET http_proxy = 'http://@'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+preexisting
+
+# Explicit empty password (`user:@host`) clears the password but keeps the user
+statement ok
+SET http_proxy = 'http://carol:@proxy.example.com:3128'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://proxy.example.com:3128
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+carol
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+(empty)
+
+# Multiple `@` in the userinfo: only the first separates userinfo from host.
+# The remainder is left in the URL (which downstream parsing will reject
+# during the actual request) - we are robust, not strict.
+statement ok
+SET http_proxy_username = ''
+
+statement ok
+SET http_proxy_password = ''
+
+statement ok
+SET http_proxy = 'http://dave:p@ss@proxy.example.com:8080'
+
+query I
+SELECT current_setting('http_proxy')
+----
+http://ss@proxy.example.com:8080
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+dave
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+p
+
+# A `:` colon inside the password is preserved (only the first `:` splits)
+statement ok
+SET http_proxy = 'http://eve:p:a:s:s@proxy.example.com:8080'
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+eve
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+p:a:s:s
+
+# Leading `:` produces an empty username with the password set
+statement ok
+SET http_proxy = 'http://:onlypass@proxy.example.com:8080'
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+(empty)
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+onlypass
+
+# A bare `://` scheme separator with no authority is stored verbatim
+statement ok
+SET http_proxy = '://'
+
+query I
+SELECT current_setting('http_proxy')
+----
+://
+
+# Empty value is permitted (and clears the setting)
+statement ok
+SET http_proxy = ''
+
+query I
+SELECT current_setting('http_proxy')
+----
+(empty)

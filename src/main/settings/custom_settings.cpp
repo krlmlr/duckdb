@@ -1041,12 +1041,21 @@ void ExtractHTTPProxyCredentials(DBConfig &config, string &proxy) {
 	if (scheme_end != string::npos) {
 		userinfo_start = scheme_end + 3;
 	}
-	auto path_start = proxy.find('/', userinfo_start);
+	// Userinfo (if any) lives in the authority component, which ends at the
+	// first '/', '?' or '#' character (RFC 3986 §3.2); a later '@' belongs to
+	// the path / query / fragment and must not be treated as a credential.
+	auto authority_end = proxy.find_first_of("/?#", userinfo_start);
 	auto at_pos = proxy.find('@', userinfo_start);
-	if (at_pos == string::npos || (path_start != string::npos && at_pos > path_start)) {
+	if (at_pos == string::npos || (authority_end != string::npos && at_pos > authority_end)) {
 		return;
 	}
 	auto userinfo = proxy.substr(userinfo_start, at_pos - userinfo_start);
+	// Drop `userinfo@` from the URL whether or not credentials were extracted,
+	// so the remainder is the bare proxy authority.
+	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
+	if (userinfo.empty()) {
+		return;
+	}
 	auto colon_pos = userinfo.find(':');
 	string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
 	config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
@@ -1054,7 +1063,6 @@ void ExtractHTTPProxyCredentials(DBConfig &config, string &proxy) {
 		config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
 		                                    Value(userinfo.substr(colon_pos + 1)));
 	}
-	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
 }
 
 } // namespace
