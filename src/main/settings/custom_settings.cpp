@@ -1031,11 +1031,11 @@ Value ForceMbedtlsUnsafeSetting::GetSetting(const ClientContext &context) {
 //===----------------------------------------------------------------------===//
 namespace {
 
-// Extract a `user[:password]@` userinfo component from a proxy URL, store the
-// parts in the `http_proxy_username` / `http_proxy_password` settings, and
-// strip it from `proxy` in place. Leaves `proxy` and the credential settings
-// untouched when no userinfo is present.
-void ExtractHTTPProxyCredentials(DBConfig &config, string &proxy) {
+// Assign a proxy URL to the `http_proxy` option, splitting any embedded
+// `user[:password]@` userinfo into the matching `http_proxy_username` /
+// `http_proxy_password` settings. The credential settings are only touched
+// when a non-empty userinfo is found.
+void ApplyHTTPProxyURL(DBConfig &config, string proxy) {
 	idx_t userinfo_start = 0;
 	auto scheme_end = proxy.find("://");
 	if (scheme_end != string::npos) {
@@ -1046,31 +1046,29 @@ void ExtractHTTPProxyCredentials(DBConfig &config, string &proxy) {
 	// the path / query / fragment and must not be treated as a credential.
 	auto authority_end = proxy.find_first_of("/?#", userinfo_start);
 	auto at_pos = proxy.find('@', userinfo_start);
-	if (at_pos == string::npos || (authority_end != string::npos && at_pos > authority_end)) {
-		return;
+	if (at_pos != string::npos && (authority_end == string::npos || at_pos < authority_end)) {
+		auto userinfo = proxy.substr(userinfo_start, at_pos - userinfo_start);
+		// Drop `userinfo@` from the URL whether or not credentials were extracted,
+		// so the remainder is the bare proxy authority.
+		proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
+		if (!userinfo.empty()) {
+			auto colon_pos = userinfo.find(':');
+			string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
+			config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex,
+			                                    Value(std::move(username)));
+			if (colon_pos != string::npos) {
+				config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
+				                                    Value(userinfo.substr(colon_pos + 1)));
+			}
+		}
 	}
-	auto userinfo = proxy.substr(userinfo_start, at_pos - userinfo_start);
-	// Drop `userinfo@` from the URL whether or not credentials were extracted,
-	// so the remainder is the bare proxy authority.
-	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
-	if (userinfo.empty()) {
-		return;
-	}
-	auto colon_pos = userinfo.find(':');
-	string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
-	config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
-	if (colon_pos != string::npos) {
-		config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
-		                                    Value(userinfo.substr(colon_pos + 1)));
-	}
+	config.options.http_proxy = std::move(proxy);
 }
 
 } // namespace
 
 void HTTPProxySetting::SetGlobal(DatabaseInstance *, DBConfig &config, const Value &input) {
-	auto proxy = input.GetValue<string>();
-	ExtractHTTPProxyCredentials(config, proxy);
-	config.options.http_proxy = std::move(proxy);
+	ApplyHTTPProxyURL(config, input.GetValue<string>());
 }
 
 void HTTPProxySetting::ResetGlobal(DatabaseInstance *, DBConfig &config) {
@@ -1085,8 +1083,7 @@ void HTTPProxySetting::ResetGlobal(DatabaseInstance *, DBConfig &config) {
 			break;
 		}
 	}
-	ExtractHTTPProxyCredentials(config, proxy);
-	config.options.http_proxy = std::move(proxy);
+	ApplyHTTPProxyURL(config, std::move(proxy));
 }
 
 //===----------------------------------------------------------------------===//
