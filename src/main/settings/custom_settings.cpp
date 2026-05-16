@@ -1054,8 +1054,7 @@ void ApplyHTTPProxyURL(DBConfig &config, string proxy) {
 		if (!userinfo.empty()) {
 			auto colon_pos = userinfo.find(':');
 			string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
-			config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex,
-			                                    Value(std::move(username)));
+			config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
 			if (colon_pos != string::npos) {
 				config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
 				                                    Value(userinfo.substr(colon_pos + 1)));
