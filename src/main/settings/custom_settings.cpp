@@ -1062,14 +1062,16 @@ void ApplyHTTPProxyURL(DBConfig &config, string proxy) {
 	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
 	// An empty `@` block (e.g. `http://@host`) is malformed userinfo; leave
 	// the existing credential settings alone instead of clobbering them.
-	if (!userinfo.empty()) {
-		auto colon_pos = userinfo.find(':');
-		string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
-		config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
-		if (colon_pos != string::npos) {
-			config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
-			                                    Value(userinfo.substr(colon_pos + 1)));
-		}
+	if (userinfo.empty()) {
+		config.options.http_proxy = std::move(proxy);
+		return;
+	}
+	auto colon_pos = userinfo.find(':');
+	string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
+	config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
+	if (colon_pos != string::npos) {
+		config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex,
+		                                    Value(userinfo.substr(colon_pos + 1)));
 	}
 	config.options.http_proxy = std::move(proxy);
 }
