@@ -120,14 +120,17 @@ SELECT current_setting('http_proxy_username')
 ----
 preexisting
 
-# Empty userinfo (`@host`) strips the `@` and leaves credentials untouched
+# Without an explicit scheme the URL is stored verbatim and no credential
+# parsing is attempted - `user:pass@host` is ambiguous (it could be userinfo
+# or a literal hostname containing `@`), so we make no assumptions and leave
+# the existing credential settings alone.
 statement ok
-SET http_proxy = '@proxy.example.com:8080'
+SET http_proxy = 'alice:s3cr3t@proxy.example.com:8080'
 
 query I
 SELECT current_setting('http_proxy')
 ----
-proxy.example.com:8080
+alice:s3cr3t@proxy.example.com:8080
 
 query I
 SELECT current_setting('http_proxy_username')
@@ -139,7 +142,27 @@ SELECT current_setting('http_proxy_password')
 ----
 preexisting
 
-# A trailing `@` with no authority is similarly a no-op for credentials
+# Same for a leading `@` with no scheme
+statement ok
+SET http_proxy = '@proxy.example.com:8080'
+
+query I
+SELECT current_setting('http_proxy')
+----
+@proxy.example.com:8080
+
+query I
+SELECT current_setting('http_proxy_username')
+----
+preexisting
+
+query I
+SELECT current_setting('http_proxy_password')
+----
+preexisting
+
+# Empty userinfo (`http://@`) with a scheme strips the `@` and leaves
+# credentials untouched
 statement ok
 SET http_proxy = 'http://@'
 
