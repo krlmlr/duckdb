@@ -1043,12 +1043,16 @@ void ApplyHTTPProxyURL(DBConfig &config, string proxy) {
 		return;
 	}
 	idx_t userinfo_start = scheme_end + 3;
-	// Userinfo (if any) lives in the authority component, which ends at the
-	// first '/', '?' or '#' character (RFC 3986 §3.2); a later '@' belongs to
-	// the path / query / fragment and must not be treated as a credential.
-	auto authority_end = proxy.find_first_of("/?#", userinfo_start);
 	auto at_pos = proxy.find('@', userinfo_start);
-	if (at_pos == string::npos || (authority_end != string::npos && at_pos > authority_end)) {
+	if (at_pos == string::npos) {
+		config.options.http_proxy = std::move(proxy);
+		return;
+	}
+	// RFC 3986 §3.2: the authority component ends at the first '/', '?' or
+	// '#'. A later '@' belongs to the path / query / fragment and is not
+	// userinfo, so don't treat it as a credential.
+	auto authority_end = proxy.find_first_of("/?#", userinfo_start);
+	if (authority_end != string::npos && at_pos > authority_end) {
 		config.options.http_proxy = std::move(proxy);
 		return;
 	}
@@ -1056,6 +1060,8 @@ void ApplyHTTPProxyURL(DBConfig &config, string proxy) {
 	// Drop `userinfo@` from the URL whether or not credentials were extracted,
 	// so the remainder is the bare proxy authority.
 	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
+	// An empty `@` block (e.g. `http://@host`) is malformed userinfo; leave
+	// the existing credential settings alone instead of clobbering them.
 	if (!userinfo.empty()) {
 		auto colon_pos = userinfo.find(':');
 		string username = colon_pos == string::npos ? std::move(userinfo) : userinfo.substr(0, colon_pos);
