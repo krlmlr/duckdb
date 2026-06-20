@@ -1,0 +1,59 @@
+# Configuration for the "Pull" GitHub App, which keeps this fork in sync with
+# the upstream duckdb/duckdb repository.
+#
+# Pointers:
+#   - App / install / manage:  https://pull.git.ci/
+#   - Source:                  https://github.com/wei/pull
+#   - Configuration reference: https://github.com/wei/pull/blob/master/docs/CONFIGURATIONS.md
+#   - Trigger a manual sync:   https://pull.git.ci/process/krlmlr/duckdb
+#
+# Notes:
+#   - This file must live on the fork's default branch for Pull to read it.
+#   - `upstream` is written as `owner:branch` (here always duckdb:<branch>).
+#   - `mergeMethod` values: none | merge | squash | rebase | hardreset.
+#       rebase    -> replay the fork-local commits on top of upstream, so the
+#                    fork stays exactly one commit (this pull.yml) ahead of main.
+#       hardreset -> force the fork branch to match upstream exactly (1:1 mirror);
+#                    discards any fork-local commits on that branch.
+#
+# Intent of this variant:
+#   - `main` uses `rebase` so the only fork-local commit (this pull.yml) is
+#     preserved as the single commit ahead of upstream duckdb:main. Using
+#     hardreset here would delete this config on every sync.
+#   - `v2.0` is a 1:1 mirror of upstream's `main` via hardreset.
+
+version: "1"
+
+rules:
+  # Keep pull.yml as the only commit ahead of upstream main.
+  - base: v2.0
+    upstream: duckdb:main
+    mergeMethod: rebase
+
+  # Mirror upstream's main 1:1 onto the fork's v2.0 branch.
+  - base: main
+    upstream: duckdb:main
+    mergeMethod: hardreset
+
+  - base: v1.1-eatoni
+    upstream: duckdb:v1.1-eatoni
+    mergeMethod: hardreset
+
+  - base: v1.2-histrionicus
+    upstream: duckdb:v1.2-histrionicus
+    mergeMethod: hardreset
+
+  - base: v1.3-ossivalis
+    upstream: duckdb:v1.3-ossivalis
+    mergeMethod: hardreset
+
+  - base: v1.4-andium
+    upstream: duckdb:v1.4-andium
+    mergeMethod: hardreset
+
+  - base: v1.5-variegata
+    upstream: duckdb:v1.5-variegata
+    mergeMethod: hardreset
+
+label: ":arrow_heart_down: pull"
+conflictLabel: "merge-conflict"
