@@ -87,7 +87,7 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
 2. **Apply + resolve (main checkout).** This is the semantic work: the base
    carries the release line's backports, the dev line carries its own versions
    of overlapping fixes, so conflicts are *expected* here (unlike the purely
-   mechanical `add-flat-branch` / `advance-green-dev` skills).
+   mechanical `add-flat-branch` skill).
    ```bash
    git cherry-pick "$C"        # keeps author + message (incl. Upstream-commit)
    ```

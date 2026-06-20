@@ -82,19 +82,22 @@ REMAINING=("${ALL[@]}")
 TIP=""; DONE=0
 if git rev-parse --verify -q "refs/remotes/origin/$TARGET" >/dev/null; then
 	TIP=$(git rev-parse "origin/$TARGET")
-	tip_up=$(upstream_of "$TIP")
-	if [ -n "$tip_up" ]; then
-		REMAINING=(); seen=0
-		for c in "${ALL[@]}"; do
-			if [ "$seen" = 1 ]; then REMAINING+=("$c"); continue; fi
-			[ "$(upstream_of "$c")" = "$tip_up" ] && { seen=1; }
-		done
-		[ "$seen" = 1 ] || {
-			echo "ERROR: target tip's Upstream-commit ($tip_up) is not in $BASE..$DEV_FLAT;" >&2
-			echo "       source history diverged -- rebuild from a clean base instead." >&2
-			exit 1
-		}
-		DONE=$(( ${#ALL[@]} - ${#REMAINING[@]} ))
+	# An empty target (tip still at BASE) is a fresh start: keep all of ALL.
+	if [ "$TIP" != "$BASE" ]; then
+		tip_up=$(upstream_of "$TIP")
+		if [ -n "$tip_up" ]; then
+			REMAINING=(); seen=0
+			for c in "${ALL[@]}"; do
+				if [ "$seen" = 1 ]; then REMAINING+=("$c"); continue; fi
+				[ "$(upstream_of "$c")" = "$tip_up" ] && { seen=1; }
+			done
+			[ "$seen" = 1 ] || {
+				echo "ERROR: target tip's Upstream-commit ($tip_up) is not in $BASE..$DEV_FLAT;" >&2
+				echo "       source history diverged -- rebuild from a clean base instead." >&2
+				exit 1
+			}
+			DONE=$(( ${#ALL[@]} - ${#REMAINING[@]} ))
+		fi
 	fi
 fi
 
