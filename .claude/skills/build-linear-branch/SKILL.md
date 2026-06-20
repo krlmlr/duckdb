@@ -20,8 +20,12 @@ Three invariants — keep all three true at every push:
 2. **Every source commit, in spirit, same message.** Carry the dev-flat commits
    in order. A plain `cherry-pick` preserves the message verbatim, including the
    `Upstream-commit` trailer — do not rewrite subjects or strip trailers.
-3. **Green per commit.** A commit is pushed only after `make reldebug` and the
+3. **Green per commit.** A commit is pushed only after a `release` build and the
    fast unit tests pass on it. CI on GitHub Actions re-verifies independently.
+   (Measured on `v2.0`: `release` runs the identical 4859 registered / 4517
+   executed tests with identical outcomes vs `reldebug`, builds faster, and its
+   tree is 0.7 GiB vs 16.1 GiB — so it is the default gate; `reldebug` /
+   `relassert` are triage knobs via `DUCKDB_BUILD`.)
 
 This runs in a clone of **`krlmlr/duckdb`** (`origin`); the target is pushed
 there alongside the `-flat` branches. It is a long, **restartable** job (≈956
@@ -73,12 +77,12 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    ```bash
    bash $SK/linear-disk-guard.sh "$SCRATCH" || { scrub a finished worktree; retry; }
    ```
-   The guard models the loop's real footprint — **one full build + (k−1) pruned
-   test-trees** (see step 3) — and prints `MAX_PARALLEL`, measuring actual tree
-   sizes once they exist. Pruning is what lets `MAX_PARALLEL` reach 2 on a disk
-   that cannot hold two *full* builds; if it still reports `1`, the loop is
-   serial-with-ccache (not stalled), and a lighter `DUCKDB_BUILD` flavor (e.g.
-   `release`) shrinks the peak enough to overlap.
+   With the default `release` gate a build tree is ~0.7 GiB, so disk is not the
+   binding constraint — **CPU/build-time is** (a single `-j` build saturates the
+   cores), and the guard will report a large `MAX_PARALLEL`. Cap real concurrency
+   by cores, not disk. The guard earns its keep mainly under the `reldebug`
+   triage knob (~16 GiB trees), where it models **one full build + (k−1) pruned
+   trees** and measures actual sizes once they exist.
 
 2. **Apply + resolve (main checkout).** This is the semantic work: the base
    carries the release line's backports, the dev line carries its own versions
@@ -92,21 +96,21 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    - If the pick is **empty** (the change is already in the base), the commit is
      present in spirit — `git cherry-pick --skip` and move on.
 
-3. **Build → prune → test in a worktree.** Worktrees share ccache; the build
-   phase prunes object files as soon as it links, collapsing the tree to a small
-   runnable footprint:
+3. **Build → test in a worktree.** Worktrees share ccache; the build phase
+   prunes intermediates after link (minor for `release`, large for `reldebug`):
    ```bash
    WT="$SCRATCH/wt-$(git rev-parse --short HEAD)"
    git worktree add --detach "$WT" HEAD
-   bash $SK/linear-build-test.sh build "$WT"   # compile+link, then prune *.o
+   bash $SK/linear-build-test.sh build "$WT"   # compile+link, then prune *.o/*.a
    bash $SK/linear-build-test.sh test  "$WT"   # run the fast unittest
    ```
-   **Overlap to get a second process:** keep at most one worktree in the *build*
-   phase (the disk/CPU peak). The moment its build prunes, that worktree drops to
-   a pruned tree and frees room — start the **next** commit's `build` while the
-   current one runs `test`. So the pipeline is `build(N) → prune(N) →
-   [test(N) ‖ build(N+1)]`, bounded by `MAX_PARALLEL`. Only overlap commits you
-   do **not** expect to fix — a fix to `K` invalidates a speculative `K+1` built
+   **Overlap to use a second process:** under `release` the limit is **CPU**, not
+   disk — a single `-j` build already uses all cores, so a second concurrent
+   build mostly splits throughput rather than adding it; the useful overlap is
+   running `test(N)` (the ~9 min suite) while `build(N+1)` compiles. So the
+   pipeline is `build(N) → [test(N) ‖ build(N+1)]`, bounded by cores (and, under
+   the `reldebug` knob, by `MAX_PARALLEL`). Only overlap commits you do **not**
+   expect to fix — a fix to `K` invalidates a speculative `K+1` built
    on it (see step 5). While builds run, resolve later commits in the main
    checkout.
 

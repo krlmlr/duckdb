@@ -4,12 +4,13 @@
 # built in its own worktree (source checkout + build tree). ccache is shared and
 # persistent, so it is NOT counted here.
 #
-# The loop overlaps work by pruning object files right after a build links (see
-# linear-build-test.sh): at most ONE worktree is at its full "building" peak,
-# while the others have shrunk to a "pruned" test tree. So the space needed is
-#   one FULL build  +  (k-1) PRUNED trees
-# for k concurrent worktrees. This is what makes a second process fit on a disk
-# that could not hold two full builds.
+# With the default `release` gate the build tree is small (~0.7 GiB measured on
+# v2.0), so disk is rarely the binding constraint -- CPU/build-time is, and a
+# single -j build already saturates the cores. This guard still applies, and
+# matters most under the reldebug triage knob (~16 GiB trees), where the loop
+# overlaps work by pruning intermediates right after link: at most ONE worktree
+# is at its full peak while the others shrink to a pruned tree, so the space
+# needed for k worktrees is one FULL build + (k-1) PRUNED trees.
 #
 # Usage: linear-disk-guard.sh [<scratch-dir>]   (default: current directory)
 #   Prints an eval-able report and exits:
@@ -18,9 +19,9 @@
 #
 # Env:
 #   FULL_GIB     full (pre-prune) build estimate; auto-measured from the largest
-#                build tree found, else this default (default: 22)
+#                build tree found, else this default (default: 2, ~release)
 #   PRUNED_GIB   pruned (post-prune) test-tree estimate; auto-measured from the
-#                smallest build tree found, else this default (default: 6)
+#                smallest build tree found, else this default (default: 1)
 #   RESERVE_GIB  free space to always keep (default: 5)
 #   BUILD_GLOB   build trees to measure (default: <scratch>/*/build/* ./build/*)
 
@@ -28,8 +29,8 @@ set -euo pipefail
 
 DIR="${1:-$PWD}"
 RESERVE_GIB="${RESERVE_GIB:-5}"
-FULL_GIB="${FULL_GIB:-22}"
-PRUNED_GIB="${PRUNED_GIB:-6}"
+FULL_GIB="${FULL_GIB:-2}"
+PRUNED_GIB="${PRUNED_GIB:-1}"
 SRC_BYTES=1610612736   # ~1.5 GiB source checkout per worktree
 
 gib() { awk -v b="$1" 'BEGIN{printf "%.1f", b/1073741824}'; }
