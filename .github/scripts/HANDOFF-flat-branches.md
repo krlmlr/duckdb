@@ -50,34 +50,66 @@ Produced by `flatten-branch.sh`:
 On branch `claude/cool-goodall-n93k4q`:
 
 - `.github/scripts/flatten-branch.sh` — `flatten-branch.sh <src> <dst> [limit] [base]`.
+  Builds an independent orphan flat branch (empty root + v1.0.0 reset + advance).
   `limit` = advance only the FIRST N first-parent commits after the base
   (0 = all). `base` defaults to v1.0.0. Re-runs are deterministic.
+- `.github/scripts/flatten-onto.sh` — `flatten-onto.sh <src> <dst> <parent-flat> <parent-src>`.
+  Builds a flat branch for a sibling release branch by GRAFTING onto an already
+  built flat branch at flat(M), where M = `git merge-base <parent-src> <src>`,
+  so `merge-base(<parent-flat>, <dst>)` == flat(M) (corresponds to the real
+  merge base). Requires M to be on `<parent-src>`'s first-parent path.
 - `.github/scripts/sync-flat-branches.sh` — discovers `^(v1\.4-|v1\.5-|v2\.0$)`
   source branches (excluding `-flat`), flattens each (full history from v1.0.0),
-  force-pushes.
+  force-pushes. NOTE: this still flattens each branch INDEPENDENTLY; it does not
+  yet use flatten-onto.sh, so sibling merge bases are not preserved by the sync
+  workflow (see step 1 below).
 - `.github/workflows/SyncFlatBranches.yml` — triggers: `push` (v1.4-*/v1.5-*/v2.0),
   `schedule` (hourly), `workflow_dispatch`. `contents: write`, concurrency-guarded,
   `fetch-depth: 0`.
 
-Prototype pushed to origin: **`v2.0-flat`** = 5 commits
-(`empty root` -> `v1.0.0` reset -> 3 advancing commits, tip `9aeaf1a132`),
-built with `flatten-branch.sh origin/v2.0 v2.0-flat 3`.
+Pushed to origin:
+- **`v2.0-flat`** = 5 commits (prototype, tip `9aeaf1a132`), built with
+  `flatten-branch.sh origin/v2.0 v2.0-flat 3`.
+- **`v1.4-andium-flat`** = 2690 commits (full, tip `90b24fa9de`), built with
+  `flatten-branch.sh origin/v1.4-andium v1.4-andium-flat`.
+- **`v1.5-variegata-flat`** = 3938 commits (full, tip `150ebebb81`), built with
+  `flatten-onto.sh origin/v1.5-variegata v1.5-variegata-flat v1.4-andium-flat origin/v1.4-andium`.
+
+## Sibling merge bases (important)
+
+`flatten-branch.sh` linearizes by `--first-parent`, so two INDEPENDENTLY
+flattened orphans share an identical-SHA prefix only as long as their
+first-parent sequences agree. Their flat merge base = longest common
+first-parent prefix, which equals the real merge base ONLY when that merge base
+lies on BOTH branches' first-parent paths.
+
+For v1.4 ∩ v1.5 the real merge base is `M = ca5f01efe` ("backport
+GetLocalFileSystem improvements to andium (#23130)"), which v1.5 absorbed via a
+back-merge: M is on v1.4's first-parent path but NOT on v1.5's. So an
+independent flatten of v1.5 would mis-place the flat merge base ~404 commits too
+early (at `605eaf76`, 2025-09). The fix is `flatten-onto.sh`: build the branch
+whose first-parent path CONTAINS the merge base first (v1.4), then graft the
+sibling (v1.5) onto flat(M). Verified:
+`merge-base(v1.4-andium-flat, v1.5-variegata-flat)` == flat(M), trailer ->
+`ca5f01efe`; both tip trees match their sources; shared inception identical.
 
 ## Next steps
 
-1. **Validate shared SHAs across all three flats.** Build prototypes for
-   `v1.4-andium` and `v1.5-variegata` (deepen each past v1.0.0 first) and
-   confirm the empty root, the v1.0.0 reset, and the early advancing commits
-   have identical SHAs across all three `-flat` branches.
-2. **Full rollout.** Drop the `limit` (advance all the way to each tip) and run
-   `sync-flat-branches.sh`. Confirm `v2.0-flat`/`v1.5-variegata-flat`/
-   `v1.4-andium-flat` reach their real tips and tip trees match the sources.
-3. **Borrow the scrubbing code from the `duckdb-r` repo.** The flat snapshots
-   should be scrubbed the same way `duckdb-r` scrubs the vendored duckdb source
-   (strip/clean files) before committing. Locate that code in `krlmlr/duckdb-r`
-   and apply the scrub to each tree before `commit-tree` in `flatten-branch.sh`.
-   NOTE: GitHub MCP is scoped to `krlmlr/duckdb` only — use
-   `mcp__claude-code-remote__list_repos` then `add_repo` to access `duckdb-r`.
+1. **Teach `sync-flat-branches.sh` about sibling merge bases.** It currently
+   flattens each branch independently, which breaks the v1.4∩v1.5 merge base
+   (see above). Make it build the trunk(s) first and graft siblings with
+   `flatten-onto.sh`, ordering branches so each merge base is on its parent's
+   first-parent path. Decide the trunk topology for all of v1.4/v1.5/v2.0
+   (note: v2.0 ∩ v1.5 = `40721d560`, v2.0 ∩ v1.4 = `ddbb5e2e4`).
+2. **Full rollout / re-sync.** Re-flatten v2.0 in full (drop the `limit`) and
+   confirm all three flat branches reach their real tips with matching trees and
+   correct pairwise merge bases.
+3. **Borrow the file-scrubbing code from the `duckdb-r` repo.** Commit MESSAGES
+   are already scrubbed (`#NNN` -> redirect.github.com, as in duckdb-r). Still
+   TODO: scrub the snapshot TREES the same way duckdb-r scrubs vendored sources
+   (e.g. `scripts/rconfigure.py` / `vendor-one.sh`) before `commit-tree`.
+   GitHub MCP is scoped to `krlmlr/duckdb` only — `duckdb-r` is checked out at
+   `/home/user/duckdb-r` (or use `list_repos` + `add_repo`).
 
 ## Open questions for the user (confirm before full rollout)
 
