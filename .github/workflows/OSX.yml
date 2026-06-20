@@ -31,6 +31,8 @@ on:
     paths:
       - '**'
       - '!**.md'
+      - '!.claude/**'
+      - '!.gitignore'
       - '!test/configs/**'
       - '!tools/**'
       - 'tools/shell/**'

@@ -15,7 +15,10 @@ upstream-tracking branch (`v1.4-andium`, `v1.5-variegata`, `v2.0`, ...). Layout:
    `Upstream-commit` trailer.
 
 Builds are deterministic: re-running yields identical SHAs (unchanged source =
-no-op push). Scripts live in `.github/scripts/`. Run from the repo root.
+no-op push). The scripts live alongside this skill in
+`.claude/skills/add-flat-branch/`; run them from the repo root. They are kept
+out of `.github/` on purpose, so duckdb's CI does not run on flat-branch tooling
+changes (the workflows exclude `.claude/**`).
 
 `v1.0.0` = `1f98600c2cf8722a6d2f2d805bb4af5e701319fc` (the shared base; a
 predecessor of every mirror branch).
@@ -27,8 +30,8 @@ incremental replayer, which appends only the new upstream first-parent commits
 (deterministic, fast-forward push):
 
 ```bash
-bash .github/scripts/replay-flat-branches.sh            # all -flat branches
-bash .github/scripts/replay-flat-branches.sh v2.0-flat  # one branch
+bash .claude/skills/add-flat-branch/replay-flat-branches.sh            # all -flat branches
+bash .claude/skills/add-flat-branch/replay-flat-branches.sh v2.0-flat  # one branch
 # DRY_RUN=1 builds/verifies without pushing
 ```
 
@@ -85,7 +88,7 @@ If not CONNECTED, deepen more (`--shallow-since=2024-05-20`, or
 ## Step 2a — build (trunk)
 
 ```bash
-bash .github/scripts/flatten-branch.sh origin/<SRC> <SRC>-flat
+bash .claude/skills/add-flat-branch/flatten-branch.sh origin/<SRC> <SRC>-flat
 # optional last arg = limit: only the first N commits after v1.0.0 (quick prototype)
 ```
 
@@ -94,7 +97,7 @@ bash .github/scripts/flatten-branch.sh origin/<SRC> <SRC>-flat
 The older sibling's flat branch must already exist locally.
 
 ```bash
-bash .github/scripts/flatten-onto.sh origin/<SRC> <SRC>-flat <OLDER-FLAT> origin/<OLDER-SRC>
+bash .claude/skills/add-flat-branch/flatten-onto.sh origin/<SRC> <SRC>-flat <OLDER-FLAT> origin/<OLDER-SRC>
 ```
 
 ## Step 3 — verify

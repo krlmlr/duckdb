@@ -11,6 +11,8 @@ on:
     paths:
       - '**'
       - '!**.md'
+      - '!.claude/**'
+      - '!.gitignore'
       - '!tools/**'
       - '!.github/patches/duckdb-wasm/**'
       - '!.github/workflows/**'

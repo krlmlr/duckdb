@@ -22,6 +22,8 @@ on:
     paths:
       - '**'
       - '!**.md'
+      - '!.claude/**'
+      - '!.gitignore'
       - '!tools/**'
       - 'tools/shell/**'
       - 'tools/juliapkg/**'
@@ -38,6 +40,8 @@ on:
     paths:
       - '**'
       - '!**.md'
+      - '!.claude/**'
+      - '!.gitignore'
       - '!tools/**'
       - 'tools/shell/**'
       - 'tools/juliapkg/**'
