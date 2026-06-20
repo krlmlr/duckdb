@@ -15,7 +15,8 @@
 #      toward the source tip.
 #
 # Each flat commit snapshots the merged tree and rewrites the message to the
-# original message plus a link to the upstream commit. Feature-branch
+# original message (with #NNN references scrubbed into redirect.github.com URLs,
+# as in duckdb-r vendoring) plus a link to the upstream commit. Feature-branch
 # sub-commits are squashed away.
 #
 # Commits are reproduced deterministically (author + committer identity and
@@ -57,7 +58,11 @@ flat_commit() {
 	GIT_COMMITTER_NAME=$(git log -1 --format=%cn "$c")
 	GIT_COMMITTER_EMAIL=$(git log -1 --format=%ce "$c")
 	GIT_COMMITTER_DATE=$(git log -1 --format=%cI "$c")
+	# Scrub PR/issue references (#NNN) into redirect.github.com URLs so the
+	# imported messages do not create cross-reference backlinks on the wrong
+	# repo (same scrub as duckdb-r vendoring), then append the upstream trailer.
 	message=$(git log -1 --format=%B "$c" |
+		sed -r 's%#([0-9]+)%https://redirect.github.com/duckdb/duckdb/pull/\1%g' |
 		git interpret-trailers --trailer "Upstream-commit: $UPSTREAM_URL/$c")
 	printf '%s' "$message" | git commit-tree "$tree" -p "$parent"
 }
