@@ -1,0 +1,44 @@
+name: Sync flat branches
+
+# Keeps the flat (squashed) orphan branches v1.4-*-flat, v1.5-*-flat and
+# v2.0-flat in sync with their upstream-tracking source branches.
+#
+# NOTE: a `push` event resolves the workflow file from the branch that was
+# pushed. The source branches mirror upstream duckdb/duckdb and should not be
+# modified, so the push trigger below only fires once this workflow file is
+# present on those branches. The `schedule` trigger (which always runs from the
+# default branch) is what guarantees the -flat branches stay current; the push
+# trigger is an optional low-latency optimization for branches that carry it.
+
+on:
+  push:
+    branches:
+      - 'v1.4-*'
+      - 'v1.5-*'
+      - 'v2.0'
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-flat-branches
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Flatten and push
+        run: bash .github/scripts/sync-flat-branches.sh
