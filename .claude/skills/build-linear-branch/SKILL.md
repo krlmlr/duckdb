@@ -89,12 +89,18 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    of overlapping fixes, so conflicts are *expected* here (unlike the purely
    mechanical `add-flat-branch` skill).
    ```bash
-   git cherry-pick "$C"        # keeps author + message (incl. Upstream-commit)
+   git cherry-pick "$C"        # message incl. Upstream-commit; resolve conflicts
    ```
-   - Resolve conflicts so the result is faithful to the dev change; **finish the
-     commit with the same message** (`git cherry-pick --continue` keeps it).
-   - If the pick is **empty** (the change is already in the base), the commit is
-     present in spirit — `git cherry-pick --skip` and move on.
+   - **Preserve the upstream author** (and message verbatim) on every commit,
+     including tweaked ones — `cherry-pick` keeps it; never `--reset-author`.
+     Set `git config user.email noreply@anthropic.com` / `user.name Claude` once
+     so the **committer** is us (author stays upstream). These commits show as
+     unverified on GitHub (committer ≠ signer); that is the accepted trade-off
+     for keeping upstream authorship, same as the `-flat` branches.
+   - **Converge to the target.** Resolve so each commit's touched files match the
+     dev line's content at that commit (= `v2.0-flat`'s version) — see Fidelity.
+   - If the pick is **empty** (already identical to the base / tag-equivalent),
+     it is present in spirit — `git cherry-pick --skip` and move on.
 
 3. **Build → test in a worktree.** Worktrees share ccache; the build phase
    prunes intermediates after link (minor for `release`, large for `reldebug`):
@@ -132,10 +138,30 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    cannot be made green without large refactoring, **stop and report** with the
    commit and the failure — do not push red and do not skip silently.
 
+## Fidelity — converge to `v2.0-flat`
+
+The branch's **content** must end equal to the dev line (`v2.0-flat` tip); the
+release base supplies only the git **ancestry**, not content. A plain 3-way
+cherry-pick drifts from that target — via resolved conflicts *and* silent
+auto-merges that blend base lines — so converge deliberately:
+
+- **Resolve toward the target.** For every file a commit touches, take the
+  **dev line's content** (the source commit's version, i.e. `git checkout <C> --
+  <file>`), not a base blend. A region that no later non-merge commit touches is
+  thereby pinned to its final `v2.0-flat` content; an active region takes the
+  current dev content and is revised by its later commits. This is the same
+  decision for conflicts and for would-be auto-merges.
+- **Back-merges are re-sync points.** At each "Merge … into main" commit the tree
+  should match `v2.0-flat` at that point; snapshot it there.
+- **Assert convergence.** The acceptance check is `git diff <TARGET>
+  <v2.0-flat>` empty at the tip (and ideally at each merge boundary). Any drift
+  the diff lists is a resolution defect to reconcile, not an accepted result.
+
 ## Step 3 — finishing & re-runs
 
-- When `linear-todo.sh env` reports `REMAINING=0`, the target tree should equal
-  the dev-flat tip's intent; the branch is complete and CI is the final word.
+- When `linear-todo.sh env` reports `REMAINING=0`, assert `git diff <TARGET>
+  origin/<dev>-flat` is empty (content converged); the branch is complete and CI
+  is the final word.
 - **New release base.** When `v1.5.5` lands, do not rewrite `v2.0-v1.5.4-linear`.
   Run the skill with the new tag → a new `v2.0-v1.5.5-linear` from a clean base
   (fewer conflicts, since the base already contains more upstream fixes). Old
