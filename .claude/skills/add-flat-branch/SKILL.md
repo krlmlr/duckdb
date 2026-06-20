@@ -1,6 +1,6 @@
 ---
 name: add-flat-branch
-description: Create, recreate, or refresh a "-flat" squashed orphan mirror branch (e.g. v2.0-flat, v1.5-variegata-flat) for a duckdb upstream-tracking branch. Each flat branch shares a deterministic inception (empty root + v1.0.0 reset) and, for siblings, preserves the real merge base. Use whenever asked to add/recreate/rebuild a flat branch.
+description: Create, recreate, or refresh a "-flat" squashed orphan mirror branch (e.g. v2.0-flat, v1.5-variegata-flat) for a duckdb upstream-tracking branch. Each flat branch shares a deterministic inception (empty root + v1.0.0 reset); siblings are grafted at their first-parent divergence so every flat commit's diff matches upstream. Use whenever asked to add/recreate/rebuild a flat branch.
 ---
 
 # Add a flat branch
@@ -41,14 +41,18 @@ Use the rest of this skill only for **genuinely new** branches.
 
 The flatten linearizes by `--first-parent`, so two flat branches share an
 identical-SHA prefix only while their first-parent sequences agree; their flat
-merge base is that common prefix. To make a flat merge base equal the *real*
-merge base, the younger branch is **grafted** onto the older one at the real
-merge-base commit (`flatten-onto.sh`).
+merge base is that common prefix's end — the **first-parent divergence** point.
+A younger branch is **grafted** there onto the older one (`flatten-onto.sh`):
+the anchor is the deepest commit on the younger branch's first-parent path that
+is also reproduced in the older flat branch.
 
-Flat orphans form a tree, so for three branches only **adjacent** pairs can have
-exact merge bases. We chain by age (oldest = trunk; each younger branch grafts
-onto the next-older sibling), which keeps the adjacent (release-to-next-release)
-merge bases exact and sacrifices only the oldest-vs-youngest pair:
+Anchor at the first-parent divergence, NOT at `git merge-base`. A real merge
+base is often a back-merge commit that sits OFF the first-parent path; grafting
+there parents the first appended commit on the wrong tree and yields a huge
+bogus diff (e.g. ~2000 changed files where upstream changed 2). The first-parent
+divergence keeps every flat commit's diff faithful to upstream.
+
+Chain by age (oldest = trunk; each younger branch grafts onto the next-older):
 
 ```
 v1.4-andium (trunk)  <-  v1.5-variegata  <-  v2.0   (youngest)
@@ -58,8 +62,8 @@ Canonical builds (each reuses the previous branch's flat history):
 
 ```bash
 flatten-branch.sh origin/v1.4-andium    v1.4-andium-flat
-flatten-onto.sh   origin/v1.5-variegata v1.5-variegata-flat v1.4-andium-flat    origin/v1.4-andium
-flatten-onto.sh   origin/v2.0           v2.0-flat           v1.5-variegata-flat origin/v1.5-variegata
+flatten-onto.sh   origin/v1.5-variegata v1.5-variegata-flat v1.4-andium-flat
+flatten-onto.sh   origin/v2.0           v2.0-flat           v1.5-variegata-flat
 ```
 
 ## Step 0 — connect history (shallow clones)
@@ -81,9 +85,9 @@ If not CONNECTED, deepen more (`--shallow-since=2024-05-20`, or
 - **Oldest mirror (the trunk, e.g. `v1.4-andium`)** — build a standalone orphan
   with `flatten-branch.sh`.
 - **Any younger mirror** — graft onto the **nearest older sibling**'s flat
-  branch with `flatten-onto.sh`. The real merge base `M` must lie on the older
-  sibling's first-parent path (so its flat branch contains `flat(M)`); verify:
-  `M=$(git merge-base origin/<OLDER-SRC> origin/<SRC>); git rev-list --first-parent origin/<OLDER-SRC> | grep -Fxc -- "$M"` → must be `1`.
+  branch with `flatten-onto.sh`. The script finds the anchor itself (the deepest
+  commit on `<SRC>`'s first-parent path that the older flat branch reproduces),
+  so you only pass the source, dest, and the older flat branch.
 
 ## Step 2a — build (trunk)
 
@@ -97,7 +101,7 @@ bash .claude/skills/add-flat-branch/flatten-branch.sh origin/<SRC> <SRC>-flat
 The older sibling's flat branch must already exist locally.
 
 ```bash
-bash .claude/skills/add-flat-branch/flatten-onto.sh origin/<SRC> <SRC>-flat <OLDER-FLAT> origin/<OLDER-SRC>
+bash .claude/skills/add-flat-branch/flatten-onto.sh origin/<SRC> <SRC>-flat <OLDER-FLAT>
 ```
 
 ## Step 3 — verify
@@ -107,9 +111,16 @@ bash .claude/skills/add-flat-branch/flatten-onto.sh origin/<SRC> <SRC>-flat <OLD
 [ "$(git rev-parse <SRC>-flat^{tree})" = "$(git rev-parse origin/<SRC>^{tree})" ] && echo TREE_OK
 # shared inception
 git log --oneline --reverse <SRC>-flat | head -2   # expect 4f757efa9 Empty root, 14c089fa5 🦆
-# sibling only: flat merge base corresponds to the real one
-git merge-base <SRC>-flat <OLDER-FLAT>             # == flat(M)
-# determinism (optional): rebuild into a temp branch, compare tips, delete temp
+
+# NO BOGUS DIFFS: every flat commit must change the same files as its upstream
+# commit. Check the FIRST commit after the merge base (the graft seam) and a
+# few others — flat diff size must equal the upstream diff size.
+fmb=$(git merge-base <SRC>-flat <OLDER-FLAT>)       # the graft seam (flat merge base)
+seam=$(git rev-list --reverse --ancestry-path ${fmb}..<SRC>-flat | head -1)
+up=$(git log -1 $seam --format='%(trailers:key=Upstream-commit,valueonly)' | sed -E 's#.*/commit/##')
+echo "flat: $(git diff --name-only ${seam}^1 $seam | wc -l)  upstream: $(git diff --name-only ${up}^1 $up | wc -l)"
+# the two counts MUST match; a large flat count vs small upstream count = the
+# anchor bug (graft landed off <SRC>'s first-parent path).
 ```
 
 ## Step 4 — push

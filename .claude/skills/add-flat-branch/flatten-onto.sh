@@ -1,45 +1,43 @@
 #!/usr/bin/env bash
 #
-# Build a flat branch for a release branch whose REAL merge base with an
-# already-flattened sibling is NOT on its own first-parent path, so that the
-# flat branches' merge base corresponds to the real (IRL) merge base.
+# Build a flat branch for a sibling release branch by grafting it onto an
+# already-built flat branch, keeping per-commit diffs faithful to upstream.
 #
-# Why this is needed: flatten-branch.sh linearizes a branch by --first-parent.
-# Two independently flattened orphan branches share an identical-SHA prefix only
-# as long as their first-parent sequences agree, so their flat merge base is the
-# longest common first-parent prefix -- which is the real merge base ONLY when
-# that merge base lies on both branches' first-parent paths. For siblings where
-# the merge base was absorbed via a back-merge (a non-first-parent edge), the
-# naive flat merge base lands much earlier than reality.
+# flatten-branch.sh linearizes by --first-parent. A sibling shares the common
+# first-parent trunk with the parent branch up to the point where their
+# first-parent lines diverge. We graft the sibling onto the parent flat branch
+# at that divergence -- the DEEPEST commit on the sibling's own first-parent
+# path that is also reproduced in the parent flat branch -- and then append the
+# sibling's remaining first-parent commits. Because the anchor is on the
+# sibling's first-parent path, every appended commit is parented on the flat
+# reproduction of its REAL first-parent, so each flat commit's diff matches the
+# upstream commit's diff exactly.
 #
-# Construction: the merge base M = `git merge-base <parent-src> <src>` must lie
-# on the first-parent path of <parent-src> (so <parent-flat>, built by
-# flatten-branch.sh, already contains a flat commit reproducing M). We reuse
-# <parent-flat>'s history up to that flat(M) commit and append one flat commit
-# per first-parent commit in M..<src>. Result:
-#     git merge-base <parent-flat> <dest-branch>  ==  flat(M)
-# which corresponds to the real merge base M. Fully deterministic.
+# IMPORTANT: the anchor is the first-parent divergence, NOT `git merge-base`.
+# When a real merge base was absorbed via a back-merge it sits off the
+# first-parent path; grafting there parents the first appended commit on the
+# wrong tree and produces a huge bogus diff. The resulting flat merge base is
+# therefore the first-parent divergence point, which is what makes the diffs
+# faithful.
 #
-# Usage: flatten-onto.sh <src> <dest-branch> <parent-flat> <parent-src>
-#   src          release branch to flatten, e.g. origin/v1.5-variegata
+# Usage: flatten-onto.sh <src> <dest-branch> <parent-flat>
+#   src          sibling branch to flatten, e.g. origin/v1.5-variegata
 #   dest-branch  branch to (re)create, e.g. v1.5-variegata-flat
-#   parent-flat  already-built flat branch containing flat(M), e.g. v1.4-andium-flat
-#   parent-src   source of parent-flat, e.g. origin/v1.4-andium
+#   parent-flat  already-built flat branch to graft onto, e.g. v1.4-andium-flat
 #
-# History must be connected locally past M (deepen a shallow clone first; CI
-# uses actions/checkout with fetch-depth: 0).
+# History must be connected locally along src's first-parent path down to the
+# anchor (deepen a shallow clone first; CI uses fetch-depth: 0).
 
 set -euo pipefail
 
 SRC="${1:?source ref required}"
 DST="${2:?destination branch required}"
 PFLAT="${3:?parent flat branch required}"
-PSRC="${4:?parent source ref required}"
 
 UPSTREAM_URL="https://github.com/duckdb/duckdb/commit"
 
-# Reproduce an upstream commit as a flat commit on top of $2 (parent); same
-# reproduction as flatten-branch.sh (tree + scrubbed message + trailer + ident).
+# Reproduce one upstream commit as a flat commit on top of $2 (parent); same
+# reproduction as flatten-branch.sh.
 flat_commit() {
 	local c="$1" parent="$2" tree message
 	tree=$(git rev-parse "$c^{tree}")
@@ -57,31 +55,35 @@ flat_commit() {
 	printf '%s' "$message" | git commit-tree "$tree" -p "$parent"
 }
 
-M=$(git merge-base "$PSRC" "$SRC")
-echo "merge base $PSRC ∩ $SRC = $M" >&2
+# Upstream commits reproduced in the parent flat branch.
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+git log "$PFLAT" --format='%(trailers:key=Upstream-commit,valueonly)' |
+	sed -E 's#.*/commit/##; /^$/d' | sort -u >"$tmp"
 
-# M must be on the parent's first-parent path so parent-flat contains flat(M).
-# (grep -c / awk read all input -- avoid -q/exit which SIGPIPE under pipefail.)
-on_fp=$(git rev-list --first-parent "$PSRC" | grep -Fxc -- "$M" || true)
-if [ "${on_fp:-0}" -eq 0 ]; then
-	echo "ERROR: merge base $M is not on the first-parent path of $PSRC." >&2
-	echo "       Swap the roles (flatten $SRC first and graft $PSRC onto it)," >&2
-	echo "       or pick a trunk whose first-parent path contains the merge base." >&2
+# Anchor = deepest commit on src's first-parent path that is also reproduced in
+# the parent flat branch (the first-parent divergence point). awk reads all
+# input (no early exit) to avoid SIGPIPE under pipefail; src's first-parent log
+# is newest-first, so the first match is the deepest.
+anchor_up=$(git rev-list --first-parent "$SRC" |
+	awk 'NR==FNR { s[$1]; next } (!found && ($1 in s)) { print $1; found = 1 }' "$tmp" -)
+if [ -z "$anchor_up" ]; then
+	echo "ERROR: no common first-parent commit between $SRC and $PFLAT." >&2
 	exit 1
 fi
+echo "anchor (first-parent divergence) = $anchor_up" >&2
 
-# Locate flat(M) in parent-flat via its Upstream-commit trailer.
+# flat(anchor_up) in the parent flat branch.
 anchor=$(git log "$PFLAT" \
 	--format='%H %(trailers:key=Upstream-commit,valueonly)' |
-	awk -v m="$M" 'index($0, m) && !found { print $1; found = 1 }')
+	awk -v m="$anchor_up" 'index($0, m) && !f { print $1; f = 1 }')
 if [ -z "$anchor" ]; then
-	echo "ERROR: flat($M) not found in $PFLAT (was it built with flatten-branch.sh?)." >&2
+	echo "ERROR: flat($anchor_up) not found in $PFLAT." >&2
 	exit 1
 fi
-echo "anchor flat(M) in $PFLAT = $anchor" >&2
+echo "anchor flat commit in $PFLAT = $anchor" >&2
 
-# Append one flat commit per first-parent commit after M on the source branch.
-mapfile -t commits < <(git rev-list --first-parent --reverse "$M..$SRC")
+mapfile -t commits < <(git rev-list --first-parent --reverse "$anchor_up..$SRC")
 echo "Grafting ${#commits[@]} commit(s) from $SRC onto $anchor into $DST" >&2
 
 parent="$anchor"
