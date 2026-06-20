@@ -20,6 +20,20 @@ no-op push). Scripts live in `.github/scripts/`. Run from the repo root.
 `v1.0.0` = `1f98600c2cf8722a6d2f2d805bb4af5e701319fc` (the shared base; a
 predecessor of every mirror branch).
 
+## Refreshing existing branches
+
+To keep an EXISTING flat branch current, do NOT rebuild it — run the
+incremental replayer, which appends only the new upstream first-parent commits
+(deterministic, fast-forward push):
+
+```bash
+bash .github/scripts/replay-flat-branches.sh            # all -flat branches
+bash .github/scripts/replay-flat-branches.sh v2.0-flat  # one branch
+# DRY_RUN=1 builds/verifies without pushing
+```
+
+Use the rest of this skill only for **genuinely new** branches.
+
 ## Topology: a chain by age
 
 The flatten linearizes by `--first-parent`, so two flat branches share an
