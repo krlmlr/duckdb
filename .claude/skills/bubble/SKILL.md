@@ -311,13 +311,15 @@ bash $SK/gen-replay-log.sh "$BIF" origin/main-dag > $SK/REPLAY-LOG.md
 
 Identity per commit = the upstream **PR** (`#NNNNN` → `duckdb/duckdb`) and its
 `-dag` commit (→ `krlmlr/duckdb`); commit SHAs always link to `krlmlr/duckdb`.
-Completed runs are overlaid with the derived commit and its role (**replayed** /
-**empty (absorbed)** / **pending**). When a run lands, extend the generator's
-per-run segment map (the `fill R1 …` lines) with the new run's de-merged range,
-and add any conflict-resolution note as an inline bullet on the affected commit.
-`origin/main` (the fork's main) is **not** used as a source — it isn't a faithful
-mirror of `duckdb/duckdb` (some PRs, e.g. #20369, are absent); the `-dag`
-substrate + PR number are authoritative.
+**Every completed run** carries a per-commit SHA with a role: **replayed** (in
+that run's de-merge segment), **copied** (above the de-merge point — reattached
+tree-verbatim, new SHA), or **empty (absorbed)** (went empty that run; no SHA).
+When a run lands, add its two range maps to the generator (`fill R<N> "<de-merged
+segment>"` and `fill R<N>ALL "<full result branch>"`) and a per-run role line, and
+add any conflict-resolution note as an inline bullet. `origin/main` (the fork's
+main) is **not** used as a source — it isn't a faithful mirror of `duckdb/duckdb`
+(some PRs, e.g. #20369, are absent); the `-dag` substrate + PR number are
+authoritative.
 
 ## Hard rules
 
