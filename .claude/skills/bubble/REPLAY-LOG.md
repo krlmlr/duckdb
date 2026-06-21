@@ -37,7 +37,8 @@ single attributable v1.5 PR).
   - run #1: replayed [`0ffd087cd`](https://github.com/krlmlr/duckdb/commit/0ffd087cddb5813d90a65de6b82a7814cc7f2069)
   - from run #2: empty (absorbed — base already has the change; stays absorbed)
 
-- **[checkpoint] Run #1 back-merge** [#20488](https://github.com/duckdb/duckdb/pull/20488) "Merge v1.5-variegata into main" — `-dag` [`7eebd3393`](https://github.com/krlmlr/duckdb/commit/7eebd33939ea53afb4269e7fdcae809fc8b09bf9)
+- **[checkpoint] Run #1 back-merge** [#20488](https://github.com/duckdb/duckdb/pull/20488) "Merge v1.5-variegata into main"
+  - `-dag`: [`7eebd3393`](https://github.com/krlmlr/duckdb/commit/7eebd33939ea53afb4269e7fdcae809fc8b09bf9)
   - run #1: linearized (clean; checkpoint == segment tail, tree == merge tree)
   - run #2: gone (de-merged in run #1; now below the bifurcation)
 
@@ -51,7 +52,8 @@ single attributable v1.5 PR).
   - run #1: copied [`2ae326514`](https://github.com/krlmlr/duckdb/commit/2ae32651415c32c88553418cb0bc1d5c85ae2034)
   - run #2: replayed [`a576264fc`](https://github.com/krlmlr/duckdb/commit/a576264fcd8006d3597bbd83ce95c5dc74c6bba3)
 
-- **[checkpoint] Run #2 back-merge** [#20588](https://github.com/duckdb/duckdb/pull/20588) "Merge 1.5 -> Main" — `-dag` [`5d91a654f`](https://github.com/krlmlr/duckdb/commit/5d91a654fd2d6aeddcb1a731cf3b363f44a2131d)
+- **[checkpoint] Run #2 back-merge** [#20588](https://github.com/duckdb/duckdb/pull/20588) "Merge 1.5 -> Main"
+  - `-dag`: [`5d91a654f`](https://github.com/krlmlr/duckdb/commit/5d91a654fd2d6aeddcb1a731cf3b363f44a2131d)
   - run #1: copied (merge) [`bafa967fe`](https://github.com/krlmlr/duckdb/commit/bafa967feeab0f5d6426bdd0cca7e6ecccef13a1)
   - run #2: linearized → reconcile [`d0ab64a4c`](https://github.com/krlmlr/duckdb/commit/d0ab64a4c3232b381bbb058cc23cece04d19f0ee) (tree `e337ce86` == merge tree); removed NOT-elimination (#20394) + regenerated churn
 
@@ -69,7 +71,8 @@ single attributable v1.5 PR).
   - run #1: copied [`2b4820e61`](https://github.com/krlmlr/duckdb/commit/2b4820e61ce3dbc63ad3e046e5dfc6247309c729)
   - run #2: copied [`f7ea59b06`](https://github.com/krlmlr/duckdb/commit/f7ea59b0690068d212f775f146aa0992c1cd0d90)
 
-- **[checkpoint] Run #3 back-merge** [#20644](https://github.com/duckdb/duckdb/pull/20644) "Merge 1.5 -> Main" — `-dag` [`1030024db`](https://github.com/krlmlr/duckdb/commit/1030024db369e6317448e87341036aea3778ce1b)
+- **[checkpoint] Run #3 back-merge** [#20644](https://github.com/duckdb/duckdb/pull/20644) "Merge 1.5 -> Main"
+  - `-dag`: [`1030024db`](https://github.com/krlmlr/duckdb/commit/1030024db369e6317448e87341036aea3778ce1b)
   - run #1: copied (merge) [`426073d9b`](https://github.com/krlmlr/duckdb/commit/426073d9bb98d3d5257f9d0182776393055572c2)
   - run #2: copied (merge) [`419073fa4`](https://github.com/krlmlr/duckdb/commit/419073fa46d15d76cb66f25f88a90d6c2eebf6e7)
 
@@ -119,7 +122,8 @@ single attributable v1.5 PR).
   - run #1: copied [`d1ace55a6`](https://github.com/krlmlr/duckdb/commit/d1ace55a62d40c39f9f6ebcfb9cd0c0250b75f2a)
   - run #2: copied [`eb2ca782a`](https://github.com/krlmlr/duckdb/commit/eb2ca782add608cdaf58094b00146713ddd0517b)
 
-- **[checkpoint] Run #4 back-merge** [#20729](https://github.com/duckdb/duckdb/pull/20729) "Merge V1.5 -> Main" — `-dag` [`c403c86c5`](https://github.com/krlmlr/duckdb/commit/c403c86c50dba96228f7cf205211b192b00dfe3e)
+- **[checkpoint] Run #4 back-merge** [#20729](https://github.com/duckdb/duckdb/pull/20729) "Merge V1.5 -> Main"
+  - `-dag`: [`c403c86c5`](https://github.com/krlmlr/duckdb/commit/c403c86c50dba96228f7cf205211b192b00dfe3e)
   - run #1: copied (merge) [`0445866fc`](https://github.com/krlmlr/duckdb/commit/0445866fcbcaf53580fff7a0e4081c487075bf74)
   - run #2: copied (merge) [`f874222a1`](https://github.com/krlmlr/duckdb/commit/f874222a1619793517bd019330a2b4f978b1f8b5)
 
@@ -221,7 +225,8 @@ single attributable v1.5 PR).
   - run #1: copied [`bf15ed959`](https://github.com/krlmlr/duckdb/commit/bf15ed959c0f0fd6110e623e0d90c59b7707aa1e)
   - run #2: copied [`b02003599`](https://github.com/krlmlr/duckdb/commit/b020035996bade69da6815b5325b18da2c2782ac)
 
-- **[checkpoint] Run #5 back-merge** [#20893](https://github.com/duckdb/duckdb/pull/20893) "Merge v1.5-variegata into main" — `-dag` [`df8b451c2`](https://github.com/krlmlr/duckdb/commit/df8b451c2441f1f26ca80351f34b2f3fb2d92c75)
+- **[checkpoint] Run #5 back-merge** [#20893](https://github.com/duckdb/duckdb/pull/20893) "Merge v1.5-variegata into main"
+  - `-dag`: [`df8b451c2`](https://github.com/krlmlr/duckdb/commit/df8b451c2441f1f26ca80351f34b2f3fb2d92c75)
   - run #1: copied (merge) [`ecdea99ee`](https://github.com/krlmlr/duckdb/commit/ecdea99ee7ce13bc965d0e10f7ee5bcd994b8b52)
   - run #2: copied (merge) [`c6d208ba4`](https://github.com/krlmlr/duckdb/commit/c6d208ba4b1b424c85e459ca203ebe5040f1ae02)
 
@@ -347,7 +352,8 @@ single attributable v1.5 PR).
   - run #1: copied [`e8567932d`](https://github.com/krlmlr/duckdb/commit/e8567932d62a49f01860ba85fe879432227e9274)
   - run #2: copied [`4840dcf50`](https://github.com/krlmlr/duckdb/commit/4840dcf504bc6dca89e87c822733fc4b49e96f90)
 
-- **[checkpoint] Run #6 back-merge** [#21028](https://github.com/duckdb/duckdb/pull/21028) "Merge V1.5 -> Main" — `-dag` [`17eadf580`](https://github.com/krlmlr/duckdb/commit/17eadf580433b80f4ef06981c1497e0f1345894c)
+- **[checkpoint] Run #6 back-merge** [#21028](https://github.com/duckdb/duckdb/pull/21028) "Merge V1.5 -> Main"
+  - `-dag`: [`17eadf580`](https://github.com/krlmlr/duckdb/commit/17eadf580433b80f4ef06981c1497e0f1345894c)
   - run #1: copied (merge) [`2455370b1`](https://github.com/krlmlr/duckdb/commit/2455370b138e7c0852cfe7c88b606e419bcc2e7f)
   - run #2: copied (merge) [`a7af2bdf4`](https://github.com/krlmlr/duckdb/commit/a7af2bdf4fea1d09471ddee2502fa888029b5b44)
 
@@ -629,7 +635,8 @@ single attributable v1.5 PR).
   - run #1: copied [`48313b3a2`](https://github.com/krlmlr/duckdb/commit/48313b3a2e34f4062ca2e821541730efe66e4049)
   - run #2: copied [`c8b852533`](https://github.com/krlmlr/duckdb/commit/c8b852533ece8fdd5192dd3d20757aa8185dc14f)
 
-- **[checkpoint] Run #7 back-merge** [#21291](https://github.com/duckdb/duckdb/pull/21291) "Merge v1.5-variegata into main" — `-dag` [`6f5553941`](https://github.com/krlmlr/duckdb/commit/6f55539411e18461a7937f8f76a7db47d63afc1f)
+- **[checkpoint] Run #7 back-merge** [#21291](https://github.com/duckdb/duckdb/pull/21291) "Merge v1.5-variegata into main"
+  - `-dag`: [`6f5553941`](https://github.com/krlmlr/duckdb/commit/6f55539411e18461a7937f8f76a7db47d63afc1f)
   - run #1: copied (merge) [`43348cb86`](https://github.com/krlmlr/duckdb/commit/43348cb860b5119b61e7cc9580d395215822a89f)
   - run #2: copied (merge) [`565f5ce80`](https://github.com/krlmlr/duckdb/commit/565f5ce802002f748e5809c5cc794a0604184371)
 
@@ -647,7 +654,8 @@ single attributable v1.5 PR).
   - run #1: copied [`e6523b026`](https://github.com/krlmlr/duckdb/commit/e6523b0266a3b79d59be97b5f5dc152fb348c5f3)
   - run #2: copied [`bc6c2acc6`](https://github.com/krlmlr/duckdb/commit/bc6c2acc6befbc6d4abeb73c9a697c7806d3cfc4)
 
-- **[checkpoint] Run #8 back-merge** [#21317](https://github.com/duckdb/duckdb/pull/21317) "Merge variegata in main + revert MAIN_BRANCH_VERSIONING (so now it's back to regular)" — `-dag` [`f8ac1ef44`](https://github.com/krlmlr/duckdb/commit/f8ac1ef4457c634b045481700a4b24a294bb246c)
+- **[checkpoint] Run #8 back-merge** [#21317](https://github.com/duckdb/duckdb/pull/21317) "Merge variegata in main + revert MAIN_BRANCH_VERSIONING (so now it's back to regular)"
+  - `-dag`: [`f8ac1ef44`](https://github.com/krlmlr/duckdb/commit/f8ac1ef4457c634b045481700a4b24a294bb246c)
   - run #1: copied (merge) [`3247baa2d`](https://github.com/krlmlr/duckdb/commit/3247baa2da4839de7e1e061994bfab1b1c3dcb53)
   - run #2: copied (merge) [`b71624be1`](https://github.com/krlmlr/duckdb/commit/b71624be10c606bd6b518909ce9864ef97b4fa14)
 
@@ -729,7 +737,8 @@ single attributable v1.5 PR).
   - run #1: copied [`b7826c59d`](https://github.com/krlmlr/duckdb/commit/b7826c59d385848bb32944547d5d5d0ebd861699)
   - run #2: copied [`991455f6d`](https://github.com/krlmlr/duckdb/commit/991455f6dfc949dfc09e2c2b2a37af04ce461c4c)
 
-- **[checkpoint] Run #9 back-merge** [#21449](https://github.com/duckdb/duckdb/pull/21449) "Merge v1.5-variegata into main" — `-dag` [`aa28bee21`](https://github.com/krlmlr/duckdb/commit/aa28bee213fa6a04bc3104884199427447820ac9)
+- **[checkpoint] Run #9 back-merge** [#21449](https://github.com/duckdb/duckdb/pull/21449) "Merge v1.5-variegata into main"
+  - `-dag`: [`aa28bee21`](https://github.com/krlmlr/duckdb/commit/aa28bee213fa6a04bc3104884199427447820ac9)
   - run #1: copied (merge) [`b23fa3161`](https://github.com/krlmlr/duckdb/commit/b23fa3161efc748e32e6c60417627b2181e24936)
   - run #2: copied (merge) [`f42f6ffe6`](https://github.com/krlmlr/duckdb/commit/f42f6ffe64eb2071d904bd1d4ca79c123b42111b)
 
@@ -831,7 +840,8 @@ single attributable v1.5 PR).
   - run #1: copied [`36d067f2c`](https://github.com/krlmlr/duckdb/commit/36d067f2cfc1a7676993e90cb090f20a573b46f1)
   - run #2: copied [`297db5311`](https://github.com/krlmlr/duckdb/commit/297db53115099efb9599a26fab8abe8ba45aad01)
 
-- **[checkpoint] Run #10 back-merge** [#21555](https://github.com/duckdb/duckdb/pull/21555) "Merge v1.5-variegata into main" — `-dag` [`62768edeb`](https://github.com/krlmlr/duckdb/commit/62768edebb259acdb10c67f7d9c5a395e49e7cf1)
+- **[checkpoint] Run #10 back-merge** [#21555](https://github.com/duckdb/duckdb/pull/21555) "Merge v1.5-variegata into main"
+  - `-dag`: [`62768edeb`](https://github.com/krlmlr/duckdb/commit/62768edebb259acdb10c67f7d9c5a395e49e7cf1)
   - run #1: copied (merge) [`99cf9b071`](https://github.com/krlmlr/duckdb/commit/99cf9b0714f800d51cbf5720b8135dd1f8ce3423)
   - run #2: copied (merge) [`66f97cd46`](https://github.com/krlmlr/duckdb/commit/66f97cd46f0c18265c38dafa39944de7d75b9a32)
 
@@ -1021,7 +1031,8 @@ single attributable v1.5 PR).
   - run #1: copied [`b2d56b1cc`](https://github.com/krlmlr/duckdb/commit/b2d56b1ccb03909c5e71c6df42d78e64102b495b)
   - run #2: copied [`f5a829a46`](https://github.com/krlmlr/duckdb/commit/f5a829a46ef5ae497dc86a73fe43b6b8c8a209bc)
 
-- **[checkpoint] Run #11 back-merge** [#21720](https://github.com/duckdb/duckdb/pull/21720) "Merge `v1.5-variegata` into main" — `-dag` [`141e65f33`](https://github.com/krlmlr/duckdb/commit/141e65f33935475b656251b476a060fe35b09337)
+- **[checkpoint] Run #11 back-merge** [#21720](https://github.com/duckdb/duckdb/pull/21720) "Merge `v1.5-variegata` into main"
+  - `-dag`: [`141e65f33`](https://github.com/krlmlr/duckdb/commit/141e65f33935475b656251b476a060fe35b09337)
   - run #1: copied (merge) [`e56d8e116`](https://github.com/krlmlr/duckdb/commit/e56d8e1164c4b111b7415f40d6ff10b89ada0a47)
   - run #2: copied (merge) [`b38175bf7`](https://github.com/krlmlr/duckdb/commit/b38175bf7c076b00bb6f0fb3b4da2c2a14517ac7)
 
@@ -1087,7 +1098,8 @@ single attributable v1.5 PR).
   - run #1: copied [`6ad46885f`](https://github.com/krlmlr/duckdb/commit/6ad46885fa36a7bf15dc60c45ac3eb3644669bfc)
   - run #2: copied [`7c66efb63`](https://github.com/krlmlr/duckdb/commit/7c66efb63943f461246cc273f4af6d0957dde281)
 
-- **[checkpoint] Run #12 back-merge** [#21768](https://github.com/duckdb/duckdb/pull/21768) "Merge `v1.5-variegata` into main" — `-dag` [`5bf60a1bd`](https://github.com/krlmlr/duckdb/commit/5bf60a1bd03e2cc33c5167f143c3df6865d36af5)
+- **[checkpoint] Run #12 back-merge** [#21768](https://github.com/duckdb/duckdb/pull/21768) "Merge `v1.5-variegata` into main"
+  - `-dag`: [`5bf60a1bd`](https://github.com/krlmlr/duckdb/commit/5bf60a1bd03e2cc33c5167f143c3df6865d36af5)
   - run #1: copied (merge) [`dc0683aec`](https://github.com/krlmlr/duckdb/commit/dc0683aec5de097bb6532be0e605801581ca89f6)
   - run #2: copied (merge) [`285b1208c`](https://github.com/krlmlr/duckdb/commit/285b1208c4be9bd30f88f8fa097d04cb2d5fd4ad)
 
@@ -1513,7 +1525,8 @@ single attributable v1.5 PR).
   - run #1: copied [`9c613981c`](https://github.com/krlmlr/duckdb/commit/9c613981c11fe8652f8a2e85a3b38950cb4cda72)
   - run #2: copied [`1a02f45c1`](https://github.com/krlmlr/duckdb/commit/1a02f45c17635c9b6144b52b93050a788065ebda)
 
-- **[checkpoint] Run #13 back-merge** [#22087](https://github.com/duckdb/duckdb/pull/22087) "Merge `v1.5-variegata` into main" — `-dag` [`8a0014afa`](https://github.com/krlmlr/duckdb/commit/8a0014afab9f46d04b01730d3ec9517de4176ae5)
+- **[checkpoint] Run #13 back-merge** [#22087](https://github.com/duckdb/duckdb/pull/22087) "Merge `v1.5-variegata` into main"
+  - `-dag`: [`8a0014afa`](https://github.com/krlmlr/duckdb/commit/8a0014afab9f46d04b01730d3ec9517de4176ae5)
   - run #1: copied (merge) [`4580f87e2`](https://github.com/krlmlr/duckdb/commit/4580f87e28598397510458b7cd55430e02f09583)
   - run #2: copied (merge) [`29a0a7d7c`](https://github.com/krlmlr/duckdb/commit/29a0a7d7c3f195f1f4737aabe8d1c1ba8701790b)
 
@@ -1875,7 +1888,8 @@ single attributable v1.5 PR).
   - run #1: copied [`e511c5ded`](https://github.com/krlmlr/duckdb/commit/e511c5ded14235cc26171ac4c7fb89c50207d3d9)
   - run #2: copied [`d8ca729bd`](https://github.com/krlmlr/duckdb/commit/d8ca729bd8b1d63a2bd6bb4faa920ebf5d7062ad)
 
-- **[checkpoint] Run #14 back-merge** [#22283](https://github.com/duckdb/duckdb/pull/22283) "Merge `v1.5-variegata` into main" — `-dag` [`c4e33e271`](https://github.com/krlmlr/duckdb/commit/c4e33e271a9bb2c6c744ca9d84efe69a9b50e389)
+- **[checkpoint] Run #14 back-merge** [#22283](https://github.com/duckdb/duckdb/pull/22283) "Merge `v1.5-variegata` into main"
+  - `-dag`: [`c4e33e271`](https://github.com/krlmlr/duckdb/commit/c4e33e271a9bb2c6c744ca9d84efe69a9b50e389)
   - run #1: copied (merge) [`350a792c7`](https://github.com/krlmlr/duckdb/commit/350a792c7b79348228c8bc2cfc90508c0ecbcae4)
   - run #2: copied (merge) [`a826a6b25`](https://github.com/krlmlr/duckdb/commit/a826a6b25bec5904ca9c88050c63a09d9f7028c6)
 
@@ -2697,7 +2711,8 @@ single attributable v1.5 PR).
   - run #1: copied [`38e447eea`](https://github.com/krlmlr/duckdb/commit/38e447eea05d7b25e666651fb8bf703ad0762f1e)
   - run #2: copied [`4cb420cca`](https://github.com/krlmlr/duckdb/commit/4cb420cca66b40dd796d661f936fd4b576e2a686)
 
-- **[checkpoint] Run #15 back-merge** [#22751](https://github.com/duckdb/duckdb/pull/22751) "Merge `v1.5-variegata` into main" — `-dag` [`706584f1b`](https://github.com/krlmlr/duckdb/commit/706584f1bb0ccbb153da4ea564850980a7e05bd2)
+- **[checkpoint] Run #15 back-merge** [#22751](https://github.com/duckdb/duckdb/pull/22751) "Merge `v1.5-variegata` into main"
+  - `-dag`: [`706584f1b`](https://github.com/krlmlr/duckdb/commit/706584f1bb0ccbb153da4ea564850980a7e05bd2)
   - run #1: copied (merge) [`2f336aa3f`](https://github.com/krlmlr/duckdb/commit/2f336aa3fdc8771c322760ac9f8a8699c1c4032a)
   - run #2: copied (merge) [`000081bb0`](https://github.com/krlmlr/duckdb/commit/000081bb0608a303253246bf15b5728b53c26853)
 
@@ -3271,7 +3286,8 @@ single attributable v1.5 PR).
   - run #1: copied [`3955b7649`](https://github.com/krlmlr/duckdb/commit/3955b7649c097ca64044b5d4fe785eb7e9a80eef)
   - run #2: copied [`aab068239`](https://github.com/krlmlr/duckdb/commit/aab06823950872cf878c7815e7dacc0615c81b47)
 
-- **[checkpoint] Run #16 back-merge** [#23039](https://github.com/duckdb/duckdb/pull/23039) "Merge `v1.5-variegata` into main" — `-dag` [`6e952d6fd`](https://github.com/krlmlr/duckdb/commit/6e952d6fd9f97f8a2ce61ba166ad20caa599e089)
+- **[checkpoint] Run #16 back-merge** [#23039](https://github.com/duckdb/duckdb/pull/23039) "Merge `v1.5-variegata` into main"
+  - `-dag`: [`6e952d6fd`](https://github.com/krlmlr/duckdb/commit/6e952d6fd9f97f8a2ce61ba166ad20caa599e089)
   - run #1: copied (merge) [`68df30cd4`](https://github.com/krlmlr/duckdb/commit/68df30cd44a5d4cd50e0a1198d267efc19b8cd55)
   - run #2: copied (merge) [`e88f068c7`](https://github.com/krlmlr/duckdb/commit/e88f068c75f1af607fc518f0af7c91c6d383e6ad)
 

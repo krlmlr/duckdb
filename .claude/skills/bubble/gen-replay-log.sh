@@ -69,7 +69,8 @@ while IFS=$'\t' read -r sha parents subj; do
   if [ "$np" -ge 2 ]; then
     k=$((run+1))
     echo
-    echo "- **[checkpoint] Run #$k back-merge** $(prlink "$pr")\"$t\" — \`-dag\` $(link "$sha")"
+    echo "- **[checkpoint] Run #$k back-merge** $(prlink "$pr")\"$t\""
+    echo "  - \`-dag\`: $(link "$sha")"
     # run #1 column
     if   [ "$k" -eq 1 ]; then echo "  - run #1: linearized (clean; checkpoint == segment tail, tree == merge tree)"
     elif [ -n "${R1ALL[$pr]:-}" ]; then echo "  - run #1: copied (merge) $(link "${R1ALL[$pr]}")"
