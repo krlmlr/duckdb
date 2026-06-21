@@ -51,7 +51,16 @@ echo "BRANCH=$BR"; echo "MAIN=$MAIN"; echo "RELEASE=$REL"; echo "PREV_RELEASE=${
 echo "MAIN_TREE=$(git rev-parse "${MAIN}^{tree}")"
 echo "RELEASE_BACKMERGES_ON_MAIN=${#MAIN_BM[@]}"
 echo "RELEASE_BACKMERGES_REMAINING=${#BR_BM[@]}"
-echo "DEMERGED_SO_FAR=$(( ${#MAIN_BM[@]} - ${#BR_BM[@]} ))"
+DEMERGED=$(( ${#MAIN_BM[@]} - ${#BR_BM[@]} ))
+echo "DEMERGED_SO_FAR=$DEMERGED"
+# Per-run branches, named by de-merges already applied (0-padded):
+#   GATE_BRANCH (<branch>-NN) snapshots the pre-de-merge state (claimed by a
+#     positively-detected create push) and is the immutable audit trail.
+#   WIP_BRANCH (<branch>-NN-wip) holds the verified reconstruction RECON, pushed
+#     before the build so a restarted/later agent resumes without redoing the
+#     manual de-merge. Deleted on publish.
+printf 'GATE_BRANCH=%s-%02d\n' "$BR" "$DEMERGED"
+printf 'WIP_BRANCH=%s-%02d-wip\n' "$BR" "$DEMERGED"
 
 NEXT="${BR_BM[0]:-}"
 if [ -n "$NEXT" ]; then
