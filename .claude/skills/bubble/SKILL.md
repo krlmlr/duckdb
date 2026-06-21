@@ -177,10 +177,30 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    checkpoint. **Do not build the commits *past* the merge:** the upper history is
    re-attached unchanged (its trees still equal `main`'s, already green upstream),
    so it carries no new risk — it gets certified in the future run whose
-   bifurcation reaches it. Green-certify the segment; if anything is red, **fix in
-   place, retest, and repeat until that segment is green** — message preserved,
-   content amended/squashed minimally. (The tip-tree assertion in step 5 is what
-   guarantees the unbuilt upper part is still byte-for-byte `main`.)
+   bifurcation reaches it. Green-certify the segment; if a commit is red, **fix in
+   place, retest, repeat** — message preserved, content amended/squashed minimally.
+   (The tip-tree assertion in step 5 guarantees the unbuilt upper part is still
+   byte-for-byte `main`.)
+
+   **What "escalate a hard break" means here: try harder, don't stop.** A red
+   intermediate commit is reconciled by *more* work, not by bailing:
+   - **forward-port** the fix from the later mainline commit that owns it; or
+   - introduce a **transient measure** (a temporary shim/patch) that holds only
+     *within* the segment. It needs no manual cleanup: the checkpoint/reconcile
+     commit restores the merge tree, which doesn't contain it, so it's gone **per
+     construction**. Hence **inter-segment boundaries (the checkpoints) come out
+     clean** — transient hacks never cross a checkpoint.
+
+   **Greenness flows from the merge commit.** The checkpoint/reconcile commit
+   reproduces `MERGE_TREE`, and the upstream merge was green (CI passed on it);
+   same tree ⇒ same build/test result, so the reconcile commit **inherits** that
+   greenness — rely on it. If the reconcile/cleanup commit nonetheless comes out
+   red, **split it into a green part and a red part**: the red is almost always
+   something mainline fixes or reverts very soon, so a later run absorbs the
+   resolution. Keep the red isolated, minimal, and **documented in a verbose
+   commit message** (what's broken, why it's isolated, the expected mainline
+   resolution). Use verbose messages throughout — record forward-ports, transient
+   measures, and any split.
 
    **Build budget — never pay a cold build per run.** A cold `release` build is
    expensive (tens of minutes); avoid paying it on every run. The tree-≡-main
@@ -284,17 +304,23 @@ the reconcile commit's message and the run notes.
   the *next* run, which re-syncs via step 1 and recomputes `START_TREE`.)
 - **Green only what you rewrote.** Build + test the de-merged segment
   (`CURRENT_FORK..` the merge checkpoint); never build the unchanged history past
-  the merge — it equals `main` and is certified by a later run. Push only a green
-  segment; CI re-checks the tip. A break needing a large refactor is escalated,
-  not pushed red.
+  the merge — it equals `main` and is certified by a later run. CI re-checks the
+  tip. **Escalate a hard break by trying harder, not by stopping**: forward-port
+  the owning fix, or add a transient in-segment measure (gone at the checkpoint
+  per construction — boundaries stay clean). The reconcile commit inherits the
+  merge commit's greenness; if it's still red, split off a minimal, verbosely
+  documented red part (mainline soon fixes/reverts it; a later run absorbs it).
 - **Sequential, one merge per run.** Anchor each de-merge on the previous
   checkpoint, never on a bare second parent; never attempt batches in parallel.
 - **Checkpoints are law.** Each de-merge reproduces its `tree(M)`; the tip
   reproduces `START_TREE` (`tree(main)` at run start). Divergence is a defect to
   reconcile.
-- **Preserve authorship & messages.** Carry each source commit's message and
-  upstream author; the committer is us (`noreply@anthropic.com`). Generated, not
-  authored — don't hand-edit tracked source outside conflict resolution.
+- **Preserve authorship; write verbose messages.** Carry each source commit's
+  message and upstream author; the committer is us (`noreply@anthropic.com`).
+  Generated, not authored — don't hand-edit tracked source outside conflict
+  resolution. For commits *we* synthesize (reconcile/checkpoint, forward-ports,
+  transient measures, green/red splits), write **verbose** messages: what was done
+  and why, which merge/PR it reconciles, and any expected mainline resolution.
 - **`--force-with-lease`, never blind `--force`.** A lease failure means main or
   the branch moved — re-run the cursor, don't clobber.
 - **ccache is the budget — warm, not cold.** Each rewritten commit's tree matches
