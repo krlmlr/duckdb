@@ -42,7 +42,7 @@ of `M`** with `git commit-tree`, **reusing each commit's tree verbatim**. No
 conflicts, no build, v1.5-side commits (and the remaining merges' `^2`) stay
 intact, and `tip tree == tree(main)` is guaranteed.
 
-## What the first run did (merge #16, `7eebd33`)
+## What run #1 did (de-merge of #20488, `7eebd33`)
 
 - Replayed the 4-commit main-side segment onto `M^2` (`00528f79`); dropped empties.
 - **Checkpoint verified:** tip tree `== tree(7eebd33) = 358030af…`.
@@ -53,7 +53,7 @@ intact, and `tip tree == tree(main)` is guaranteed.
 - Pushed new branch `main-v1.5-variegata`; cursor on it now reports
   `DEMERGED_SO_FAR=1, REMAINING=15, NEXT_MERGE=bafa967f…`.
 
-## Next run preview (merge #17, `bafa967f`, "Merge 1.5 → Main")
+## Run #2 (de-merge of #20588, `bafa967f`, "Merge 1.5 → Main")
 
 - New bifurcation `3710298a` (+36 v1.5 commits); checkpoint `tree e337ce86`.
 - Incremental new work vs run #1 = **2 commits**, both touching generated/
