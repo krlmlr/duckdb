@@ -14,7 +14,7 @@ SHA (→ `krlmlr/duckdb`) with a role:
 
 Back-merges (checkpoints): **copied (merge)** until de-merged; then **linearized**
 — if the de-merge needed a reconcile commit it is re-created every run with a new
-SHA (**linearized → reconcile** , per run); a **clean** checkpoint folds into
+SHA (**linearized → reconcile** `sha`, per run); a **clean** checkpoint folds into
 the base and reads **from run #N: absorbed** thereafter.
 
 Each run re-roots the de-merged-so-far spine onto the next back-merge's second
