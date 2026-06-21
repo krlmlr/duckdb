@@ -1,7 +1,33 @@
 ---
 name: build-linear-branch
-description: Build or resume a "-linear" vendored DuckDB branch (e.g. v2.0-v1.5.4-linear) — a linear, test-gated replay of a dev "-flat" branch's commits on top of the flat commit for a release tag. Each commit keeps its original message and must build + pass its own tests before being pushed. The branch is the state: a fresh agent resumes from its tip. Use when asked to create, advance, resume, or rebuild a -linear branch.
+description: "[OUTDATED — superseded by the `bubble` skill] Build or resume a \"-linear\" vendored DuckDB branch (e.g. v2.0-v1.5.4-linear) — a linear, test-gated replay of a dev \"-flat\" branch's commits on top of the flat commit for a release tag. Kept for reference; do not use for new work — use `bubble` instead."
 ---
+
+> [!WARNING]
+> **OUTDATED — superseded by the [`bubble`](../bubble/SKILL.md) skill. Do not use for new work.**
+>
+> This skill cherry-picks each dev PR onto a **fixed** release base (`flat(<TAG>)`).
+> Validation showed that is the expensive, drift-prone path: it works from the
+> first-parent **bifurcation**, so it must bridge the full v1.5.4→v2.0 divergence
+> (~8,500 files) one conflicted commit at a time, with no re-sync — conflicts
+> recur on roughly every overlapping PR and resolutions can silently drift from
+> the target.
+>
+> The `bubble` skill replaces it: a perpetual `main-<release>` branch that keeps
+> `tree ≡ main` and advances the **bifurcation** one back-merge per run (onto the
+> merge's second parent), using each merge tree as a deterministic checkpoint and
+> per-file numstat as proof of work. It confines conflict to the v1.5-side delta
+> between consecutive checkpoints and cannot drift undetected.
+>
+> Why this skill's foundations don't hold:
+> - It sources from `-flat` branches, whose merge base is the **first-parent
+>   bifurcation (Jan)**, not the real merge base (Jun) — the back-merge
+>   convergence is discarded, inflating apparent divergence ~1,600→8,500 files.
+> - It treats conflicts as per-commit cherry-pick resolutions; the real conflicts
+>   (external callers, generated files, ABI drift) surface only at build/test and
+>   need **regeneration** or **forward-porting**, not marker resolution.
+>
+> The historical notes below remain accurate for what was attempted.
 
 # Build a linear branch
 
