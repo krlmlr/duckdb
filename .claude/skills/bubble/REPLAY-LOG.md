@@ -12,6 +12,11 @@ SHA (→ `krlmlr/duckdb`) with a role:
 - **empty (absorbed)** — went empty that run (change already in that run's base);
   no SHA. Once absorbed it stays absorbed, so it is written once as **from run #N**.
 
+Back-merges (checkpoints): **copied (merge)** until de-merged; then **linearized**
+— if the de-merge needed a reconcile commit it is re-created every run with a new
+SHA (**linearized → reconcile** , per run); a **clean** checkpoint folds into
+the base and reads **from run #N: absorbed** thereafter.
+
 Each run re-roots the de-merged-so-far spine onto the next back-merge's second
 parent, so a commit replayed by an earlier run can later go **empty** once the
 advancing v1.5 base already reflects it (cherry-pick onto the base is empty —
@@ -40,8 +45,7 @@ single attributable v1.5 PR). **Completed runs: 3 of 16.**
 - **[checkpoint] Run #1 back-merge** [#20488](https://github.com/duckdb/duckdb/pull/20488) "Merge v1.5-variegata into main"
   - `-dag`: [`7eebd3393`](https://github.com/krlmlr/duckdb/commit/7eebd33939ea53afb4269e7fdcae809fc8b09bf9)
   - run #1: linearized (clean; checkpoint == segment tail, tree == merge tree)
-  - run #2: gone (de-merged in run #1; now below the bifurcation)
-  - run #3: gone (de-merged in run #1; now below the bifurcation)
+  - from run #2: absorbed (clean checkpoint; its segment is now in the v1.5 base)
 
 ### Run #2 segment
 - [#20485](https://github.com/duckdb/duckdb/pull/20485) Optimize DELETE RETURNING by passing columns through from scan
@@ -59,7 +63,7 @@ single attributable v1.5 PR). **Completed runs: 3 of 16.**
   - `-dag`: [`5d91a654f`](https://github.com/krlmlr/duckdb/commit/5d91a654fd2d6aeddcb1a731cf3b363f44a2131d)
   - run #1: copied (merge) [`bafa967fe`](https://github.com/krlmlr/duckdb/commit/bafa967feeab0f5d6426bdd0cca7e6ecccef13a1)
   - run #2: linearized → reconcile [`d0ab64a4`](https://github.com/krlmlr/duckdb/commit/d0ab64a4c3232b381bbb058cc23cece04d19f0ee) (tree `e337ce86` == merge tree); removed NOT-elimination (#20394) + regenerated churn
-  - run #3: gone (de-merged in run #2; now below the bifurcation)
+  - run #3: linearized → reconcile [`823edec57`](https://github.com/krlmlr/duckdb/commit/823edec5756b57f3aa9c4d32a531f3a240ec5193) (re-created; same cross-side reconciliation)
 
 ### Run #3 segment
 - [#20578](https://github.com/duckdb/duckdb/pull/20578) Support generated columns in DELETE RETURNING optimization

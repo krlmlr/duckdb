@@ -10,8 +10,9 @@
 #   copied    - above that run's de-merge point; reattached tree-verbatim (new SHA)
 #   empty     - went empty that run (change already in that run's base); no SHA.
 #               Once absorbed it stays absorbed -> written once as "from run #N".
-# Back-merges per run: linearized (the run that de-merged it) / copied (merge)
-#   (not yet de-merged that run) / gone (de-merged by an earlier run).
+# Back-merges: copied (merge) until de-merged, then written once as
+#   "from run #N: linearized ..." (stays linearized thereafter, like the
+#   "from run #N" form used for absorbed commits).
 #
 # To add a run: append one line to RUNS (label|de-merged-range|full-result-ref|
 #   checkpoint-PR|checkpoint-note). Full-result-ref for run N is the branch state
@@ -60,11 +61,25 @@ emit_roles(){ local pr="$1" n dmv allv
     else echo "  - from run #$n: empty (absorbed — base already has the change; stays absorbed)"; return; fi
   done; }
 
-emit_ckpt(){ local k="$1" pr="$2" n allv
+# A back-merge is identified by its PR# (p). Per run:
+#   n < k             : still a merge above the de-merge point  -> copied (merge) [ALL_n]
+#   n >= k, DM_n has p : a reconcile commit exists this run (re-created, new SHA)
+#                        -> linearized -> reconcile [DM_n] (note on the first run)
+#   n >= k, DM_n lacks p: clean checkpoint (no reconcile); content folds into the
+#                        base -> linearized (clean) at run k, then "from run #N"
+#                        (collapse, like absorbed) thereafter.
+emit_ckpt(){ local k="$1" p="$2" n dmv allv
   for n in "${RUN_NS[@]}"; do
-    if   [ "$n" -eq "$k" ]; then echo "  - run #$n: ${CKPT_NOTE[$k]}"
-    elif [ "$n" -lt "$k" ]; then allv="ALL_$n[$pr]"; [ -n "${!allv:-}" ] && echo "  - run #$n: copied (merge) $(link "${!allv}")" || echo "  - run #$n: copied (merge)"
-    else echo "  - run #$n: gone (de-merged in run #$k; now below the bifurcation)"; fi
+    dmv="DM_$n[$p]"; allv="ALL_$n[$p]"
+    if [ "$n" -lt "$k" ]; then
+      [ -n "${!allv:-}" ] && echo "  - run #$n: copied (merge) $(link "${!allv}")" || echo "  - run #$n: copied (merge)"
+    elif [ -n "${!dmv:-}" ]; then          # reconcile commit present this run (persists, per-run SHA)
+      if [ "$n" -eq "$k" ]; then echo "  - run #$n: ${CKPT_NOTE[$k]}"
+      else echo "  - run #$n: linearized → reconcile $(link "${!dmv}") (re-created; same cross-side reconciliation)"; fi
+    else                                   # clean checkpoint: no reconcile commit
+      if [ "$n" -eq "$k" ]; then echo "  - run #$n: ${CKPT_NOTE[$k]}"
+      else echo "  - from run #$n: absorbed (clean checkpoint; its segment is now in the v1.5 base)"; return; fi
+    fi
   done; }
 
 MAXRUN=$(git rev-list --count --first-parent --merges "${BIF}..${MAINDAG}" 2>/dev/null)
@@ -83,6 +98,11 @@ SHA (→ \`krlmlr/duckdb\`) with a role:
   the graft (new SHA, byte-identical tree);
 - **empty (absorbed)** — went empty that run (change already in that run's base);
   no SHA. Once absorbed it stays absorbed, so it is written once as **from run #N**.
+
+Back-merges (checkpoints): **copied (merge)** until de-merged; then **linearized**
+— if the de-merge needed a reconcile commit it is re-created every run with a new
+SHA (**linearized → reconcile** `sha`, per run); a **clean** checkpoint folds into
+the base and reads **from run #N: absorbed** thereafter.
 
 Each run re-roots the de-merged-so-far spine onto the next back-merge's second
 parent, so a commit replayed by an earlier run can later go **empty** once the
