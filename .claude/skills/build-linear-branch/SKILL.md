@@ -103,15 +103,27 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
      the dev side splits a declaration from its definition and breaks the build.
      `-X theirs` (or `git checkout <C> -- <every file C touches>`) keeps the
      changeset internally consistent; partial `--ours`/`--theirs` does not.
-   - **Conflict markers are red herrings — take the dev side and move on.**
-     `-X theirs` is the correct disposition for *textual* conflicts; do not
-     hand-pick hunks. The conflicts that matter (external callers, type/ABI
-     drift, behavioural mismatch) are invisible to the merge and surface only at
-     **build + test** (next steps). A region a later non-merge commit re-touches
-     is **transient** — its intermediate content need only build+test, not match
-     target — but you make it build by **forward-porting**, not by reverting to
-     base (see Red → fix). Only the *last* commit to touch a region must match
-     target.
+   - **`-X theirs` is a provisional tree-fill, not a resolution.** It silences
+     textual markers by taking the dev hunk, but that is only *sometimes* right
+     and it **silently drops base-side edits** in the same region. Treat it as a
+     starting point that **build + test must validate**; the conflicts that
+     matter (external callers, type/ABI drift, behaviour) are invisible to the
+     merge anyway. Classify each conflict by *type* (next two bullets) rather
+     than hand-picking markers.
+   - **Generated files → regenerate, never merge.** Conflicts in generated
+     output (`settings.hpp`/`config.cpp` from `src/common/settings.json` via
+     `scripts/generate_settings.py`; serialization from the `*.json` specs;
+     `enum_util`; the C-API) are over machine-assigned indices/order — *both*
+     sides are wrong for the cumulative set, and `-X theirs` mis-maps them while
+     still compiling (the build gate will not catch it). Take the dev side of the
+     **source** (e.g. `settings.json`, which merges cleanly), discard the merged
+     generated files, and `make generate-files` to rebuild them from the union.
+   - **Code conflicts: build+test gate, then forward-port.** A region a later
+     non-merge commit re-touches is **transient** — its intermediate content need
+     only build+test, not match target — but you make it build by
+     **forward-porting** the dev reconciliation, not by reverting to base (see
+     Red → fix). Inspect for base-side edits `-X theirs` dropped. Only the *last*
+     commit to touch a region must match target.
    - **Release→main back-merges are no-ops here.** A "Merge v1.5 → main" commit
      re-syncs the dev line with release content the `v<TAG>` base *already* has,
      so it carries nothing new onto this base — `--skip` it. (Resolving it
