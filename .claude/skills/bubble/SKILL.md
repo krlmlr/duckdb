@@ -85,6 +85,12 @@ new bifurcation; `MERGE_TREE` is the checkpoint the de-merge must reproduce;
 `SEGMENT_FROM..NEXT_P1` is the first-parent segment to replay. `NEXT_MERGE=` empty
 means fully bubbled — only the tracking step (below) runs.
 
+The cursor also emits `GATE_BRANCH` (`<branch>-NN`) and `WIP_BRANCH`
+(`<branch>-NN-wip`). The branch tip plus these two refs *are* the resumable state:
+`GATE_BRANCH` present means this step is claimed/interrupted; `WIP_BRANCH` present
+holds a verified reconstruction to resume from (step 0). A restart or reclaim
+therefore costs at most a rebuild, never the manual de-merge.
+
 ## The run (one self-contained invocation)
 
 ```bash
@@ -96,23 +102,28 @@ git config rerere.enabled true
 export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives worktrees
 ```
 
-0. **Snapshot the original state & claim the run (the gate).** Before rewriting
-   anything, push the pre-de-merge tip `$START` to the run's snapshot branch
-   `$GATE_BRANCH` (= `<branch>-<NN>`, `NN` = `DEMERGED_SO_FAR`, 0-padded). This
-   preserves the exact state the later force-push will overwrite, *and* is the
-   concurrency gate. **Do not assume the push fails when the ref exists** — a
-   push of the same value to an existing ref is a no-op *success*. Instead,
-   **detect positively that this push created the branch** (`[new branch]` in the
-   output) and abort otherwise; an already-existing ref means another run holds
-   this step.
-   ```bash
-   out=$(git push origin "$START:refs/heads/$GATE_BRANCH" 2>&1)
-   echo "$out" | grep -q '\[new branch\]' || { echo "run $GATE_BRANCH already claimed (not created by this push) — abort"; exit 1; }
-   ```
-   (A non-fast-forward/divergent ref is also rejected, so it likewise produces no
-   `[new branch]` and aborts.) The snapshots form a numbered, immutable audit
-   trail (`-00` = the original `main`, `-01` = after one de-merge, …); they are
-   never force-updated.
+0. **Claim or resume the run (gate + wip).** Fetch `$GATE_BRANCH` and
+   `$WIP_BRANCH` (`<branch>-<NN>` and `<branch>-<NN>-wip`, `NN` =
+   `DEMERGED_SO_FAR`, 0-padded).
+   - **Fresh run** — `$GATE_BRANCH` absent: snapshot the pre-de-merge tip `$START`
+     to it and confirm **this push created the branch** (`[new branch]` in the
+     output). A same-value push to an existing ref is a no-op *success*, so never
+     infer the claim from exit status. The `-NN` snapshots are a numbered,
+     **immutable** audit trail (`-00` = original `main`, `-01` = after one
+     de-merge, …); never force-updated.
+     ```bash
+     out=$(git push origin "$START:refs/heads/$GATE_BRANCH" 2>&1)
+     echo "$out" | grep -q '\[new branch\]' || { echo "claim race on $GATE_BRANCH — abort"; exit 1; }
+     ```
+   - **Resume** — `$GATE_BRANCH` already exists ⇒ a prior run of *this* step was
+     interrupted (runs are sequential, so treat it as resumable, not a live
+     concurrent run):
+     - if `$WIP_BRANCH` exists → set `RECON = origin/$WIP_BRANCH`, assert
+       `tree(RECON) == MERGE_TREE`, **skip the de-merge (steps 1–3)** and go
+       straight to the build. This reuses the prior **manual reconciliation**
+       exactly — no re-resolving, no drift.
+     - else → the prior run died before checkpointing a reconstruction; redo the
+       de-merge (steps 1–3) on top of the existing gate.
 
 1. **Track main (append what's missing).** If `main` advanced since the branch's
    tip, append the new first-parent commits so the tip tree matches `main` again.
@@ -125,6 +136,11 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
      `tree == MERGE_TREE`. If a cross-side reconciliation remains (changes the
      merge made beyond any replayed PR), add **one** reconcile/checkpoint commit
      carrying `NEXT`'s message whose tree **is** `MERGE_TREE`.
+   - **Checkpoint `RECON` to `$WIP_BRANCH` before building** — this is the resume
+     point that preserves the manual reconciliation across a restart/reclaim:
+     ```bash
+     git push --force origin "$RECON:refs/heads/$WIP_BRANCH"
+     ```
    - **Re-attach with the tree-preserving graft**, not `git rebase --rebase-merges`
      (which RE-merges the upper back-merges and conflicts, e.g. on generated
      `config.cpp`). `reattach.sh` replaces `NEXT` with `RECON` and re-commits only
@@ -194,10 +210,14 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    - Size the run so the chain you must green-certify fits the budget *after* the
      cache is warm; if you find yourself paying a cold build inside the budget,
      warm the cache first (build `main` once) rather than shrinking the chain.
-5. **Publish only if the tree is unchanged.** Force-push is allowed *only* after:
+5. **Publish only if the tree is unchanged, then drop the resume point.**
+   Force-push is allowed *only* after the tip tree matches `START_TREE`; on
+   success, delete `$WIP_BRANCH` (the reconstruction now lives in the published
+   branch; the `-NN` gate snapshot remains as the audit trail):
    ```bash
    test "$(git rev-parse "${BRANCH}^{tree}")" = "$START_TREE" || { echo "TREE CHANGED — abort"; exit 1; }
    git push --force-with-lease origin "$BRANCH"
+   git push origin --delete "$WIP_BRANCH" 2>/dev/null || true   # resume point no longer needed
    ```
    The rewrite changed history; it must not have changed content.
 
