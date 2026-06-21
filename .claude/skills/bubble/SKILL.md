@@ -182,7 +182,7 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
      **reproduced from the merge tree**: take the file's `tree(NEXT)` version, or
      forward-port the owning commit's change. The checkpoint assertion (step 2)
      verifies it; the reconciliation audit (below) reviews it.
-4. **Commit optimistically, then build the segment; test the checkpoint.**
+4. **Commit optimistically, build the segment; test the commit before the back-merge.**
    Commit the chain first; then **compile-certify every commit this run rewrote**
    (`make release`, shared ccache; `CURRENT_FORK..` the checkpoint) in the
    dedicated build worktree — successive builds are incremental. **Do not build
