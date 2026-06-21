@@ -60,9 +60,20 @@ plan from refs only:
 
 ```bash
 SK=.claude/skills/bubble
-eval "$(bash $SK/bubble-cursor.sh origin/v1.5-variegata origin/main)"
+# pass the immediately-OLDER release so only THIS release's back-merges count:
+eval "$(bash $SK/bubble-cursor.sh origin/v1.5-variegata origin/main origin/v1.4-andium)"
 echo "$BRANCH: de-merged=$DEMERGED_SO_FAR remaining=$RELEASE_BACKMERGES_REMAINING next=$NEXT_MERGE"
 ```
+
+**Release scope — exclude the predecessor.** Each release line is built on the
+previous one and back-merges it, so `v1.5-variegata` contains `v1.4-andium`'s
+history; a naïve "second parent is an ancestor of the release" filter therefore
+sweeps in every `v1.4→main` back-merge too (e.g. 31 = 15 `v1.4` + 16 `v1.5`).
+Always pass the **predecessor release** (`origin/v1.4-andium` here) so the cursor
+keeps only back-merges whose second parent is on *this* release but **not** the
+predecessor's — the 16 genuine `v1.5→main` merges. The `v1.4→main` merges belong
+to the `main-v1.4-andium` spine; v1.4's content is already in the v1.5 base. A
+base release with no predecessor takes no third argument.
 
 `NEXT_MERGE` is the oldest release back-merge still on the branch; `NEXT_P2` is the
 new bifurcation; `MERGE_TREE` is the checkpoint the de-merge must reproduce;

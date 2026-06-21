@@ -9,25 +9,34 @@
 # reports the next one plus the deterministic checkpoints that validate it.
 # It computes only — it never writes refs.
 #
-# Usage: bubble-cursor.sh <release-ref> <main-ref> [branch]
-#   release-ref  the release line, e.g. origin/v1.5-variegata
-#   main-ref     the upstream-main mirror the branch tracks, e.g. origin/main
-#   branch       perpetual branch (default main-<release-basename>)
+# Usage: bubble-cursor.sh <release-ref> <main-ref> [prev-release-ref] [branch]
+#   release-ref       the release line, e.g. origin/v1.5-variegata
+#   main-ref          the upstream-main mirror tracked, e.g. origin/main
+#   prev-release-ref  the immediately-OLDER release whose back-merges to EXCLUDE
+#                     (e.g. origin/v1.4-andium for the v1.5 spine). Empty for a
+#                     base release with no predecessor.
+#   branch            perpetual branch (default main-<release-basename>)
 #
-# A "release back-merge" is a first-parent merge on <main> whose SECOND parent
-# is an ancestor of <release> (i.e. it pulls the release line into main). These,
-# oldest-first, are the bubble steps. The branch's de-merge frontier = the
-# count of release back-merges it has already linearised away (it carries fewer
-# than main); the next step is the oldest release back-merge still present.
+# A "release back-merge" is a first-parent merge on <main> whose SECOND parent is
+# on <release> but NOT on <prev-release> — it pulls THIS release line (not an
+# older one it descends from) into main. The predecessor exclusion is required:
+# <release> back-merges <prev-release>, so every prev→main merge's second parent
+# is also an ancestor of <release> and would be swept in otherwise (e.g. v1.4→main
+# merges polluting the v1.5 spine). These, oldest-first, are the bubble steps;
+# the branch's de-merge frontier is how many it has linearised away (it carries
+# fewer than main), and the next step is the oldest still present.
 
 set -uo pipefail
 REL="${1:?release ref required}"
 MAIN="${2:?main ref required}"
-BR="${3:-main-$(basename "$REL")}"
+PREV="${3:-}"
+BR="${4:-main-$(basename "$REL")}"
 
-relmerges() { # ordered oldest-first release back-merges on $1's first-parent line
+relmerges() { # oldest-first back-merges of REL (excluding the predecessor line) on $1's first-parent
 	git rev-list --reverse --first-parent --merges "$1" 2>/dev/null | while read -r m; do
-		git merge-base --is-ancestor "${m}^2" "$REL" 2>/dev/null && echo "$m"
+		git merge-base --is-ancestor "${m}^2" "$REL" 2>/dev/null || continue           # 2nd parent on the release line
+		[ -n "$PREV" ] && git merge-base --is-ancestor "${m}^2" "$PREV" 2>/dev/null && continue  # but not the predecessor's
+		echo "$m"
 	done
 }
 
@@ -38,7 +47,7 @@ else
 	BR_BM=("${MAIN_BM[@]}"); EXISTS=no
 fi
 
-echo "BRANCH=$BR"; echo "MAIN=$MAIN"; echo "RELEASE=$REL"; echo "EXISTS=$EXISTS"
+echo "BRANCH=$BR"; echo "MAIN=$MAIN"; echo "RELEASE=$REL"; echo "PREV_RELEASE=${PREV:-<none>}"; echo "EXISTS=$EXISTS"
 echo "MAIN_TREE=$(git rev-parse "${MAIN}^{tree}")"
 echo "RELEASE_BACKMERGES_ON_MAIN=${#MAIN_BM[@]}"
 echo "RELEASE_BACKMERGES_REMAINING=${#BR_BM[@]}"
