@@ -115,6 +115,27 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    ```
    The rewrite changed history; it must not have changed content.
 
+## Proof of work: per-commit numstat (before vs after)
+
+A faithful de-merge carries each PR's diff verbatim. After replaying a segment,
+compare every commit's numstat to the original and record the table — it is the
+run's proof of work and its sharpest drift detector:
+
+```bash
+ns(){ git show --numstat --format="" "$1" | awk '{f++;a+=$1;d+=$2} END{printf "%df +%d -%d",f,a,d}'; }
+# for each source commit C and its replayed C': compare  ns C  vs  ns C'
+```
+
+Identical numstat ⇒ the PR was carried exactly. A divergence (`*`) flags where
+resolution altered the patch — almost always a **generated file** (`-X theirs`
+pulled in regenerated index churn) needing `make generate-files`, or a genuine
+**forward-port**. Investigate every `*`; a clean run is all `=`.
+
+Measured on this repo (validation, no build): a clean segment reproduced every
+commit identically (e.g. `3f +278 -71 → 3f +278 -71`); the one drift was
+`Replace magic number…` going `1f +2 -1 → 1f +111 -136` — exactly the generated
+`config.cpp` index churn, correctly flagged for regeneration.
+
 ## Hard rules
 
 - **Tree ≡ main, always.** The publish gate asserts `tip tree == start tree`.
