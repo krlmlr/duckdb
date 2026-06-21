@@ -89,16 +89,37 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    of overlapping fixes, so conflicts are *expected* here (unlike the purely
    mechanical `add-flat-branch` skill).
    ```bash
-   git cherry-pick "$C"        # message incl. Upstream-commit; resolve conflicts
+   git config rerere.enabled true             # record/replay resolutions across rebuilds
+   git cherry-pick -n -X theirs "$C"          # 3-way favouring the dev side on conflicts
+   git commit -C "$C"                         # message + Upstream-commit + upstream author
    ```
+   - **In source order, resolved in place.** Apply commits strictly oldest-first
+     and resolve each conflict *before* moving on. Never defer a conflicting
+     commit to a "backlog" and let a later commit land in its slot — that breaks
+     ordering *and* changes the resolution context (a conflict resolved against a
+     later tree is a different, wrong answer).
+   - **Resolve the whole commit to one side, never a subset.** A PR is atomic:
+     taking base for one conflicted file while its counterpart auto-merges from
+     the dev side splits a declaration from its definition and breaks the build.
+     `-X theirs` (or `git checkout <C> -- <every file C touches>`) keeps the
+     changeset internally consistent; partial `--ours`/`--theirs` does not.
+   - **Default to the dev side; you have freedom in transient regions.** Favour
+     the incoming (dev) content — it is the intent and it drives convergence.
+     But a region a *later* non-merge commit re-touches is **transient**: its
+     intermediate value need only **build + test**, not match the target, since
+     the later commit re-pins it. So when the dev version references an API the
+     diverged base lacks, resolving that region toward **base** is legitimate
+     (see Red → fix). Only the *last* commit to touch a region must match target.
+   - **Release→main back-merges are no-ops here.** A "Merge v1.5 → main" commit
+     re-syncs the dev line with release content the `v<TAG>` base *already* has,
+     so it carries nothing new onto this base — `--skip` it. (Resolving it
+     partially is a reliable way to manufacture a mixed-state build break.)
    - **Preserve the upstream author** (and message verbatim) on every commit,
-     including tweaked ones — `cherry-pick` keeps it; never `--reset-author`.
+     including tweaked ones — `cherry-pick -C` keeps it; never `--reset-author`.
      Set `git config user.email noreply@anthropic.com` / `user.name Claude` once
      so the **committer** is us (author stays upstream). These commits show as
      unverified on GitHub (committer ≠ signer); that is the accepted trade-off
      for keeping upstream authorship, same as the `-flat` branches.
-   - **Converge to the target.** Resolve so each commit's touched files match the
-     dev line's content at that commit (= `v2.0-flat`'s version) — see Fidelity.
    - If the pick is **empty** (already identical to the base / tag-equivalent),
      it is present in spirit — `git cherry-pick --skip` and move on.
 
@@ -128,15 +149,22 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    git worktree remove --force "$WT"     # reclaim disk; keep CCACHE_DIR
    ```
 
-5. **Red → fix in place (still "in spirit").** Make the smallest change that
-   greens the commit while preserving its message:
+5. **Red → fix in place (still "in spirit"), escalate last.** Make the smallest
+   change that greens the commit while preserving its message, in order of
+   preference:
+   - **Re-resolve a transient region toward base.** If the break is dev content
+     referencing an API the base lacks *and* a later commit re-touches that
+     region, take base there and rebuild — convergence is restored downstream.
+     (`-X theirs` always picks dev; a manual 3-way mimicking it is identical
+     wherever dev builds and only earns its cost on exactly these breaks.)
    - amend a minimal fix into the commit (API drift, a moved symbol, a test
      expectation), or
    - squash a non-building intermediate forward into the commit that completes
      it.
-   Rebuild (ccache makes the retry cheap), then push when green. If a commit
-   cannot be made green without large refactoring, **stop and report** with the
-   commit and the failure — do not push red and do not skip silently.
+   Rebuild (ccache makes the retry cheap), then push when green. Use the build
+   window: while commit `N` builds, resolve `N+1` in the main checkout. If a
+   commit cannot be made green without large refactoring, **stop and report**
+   with the commit and the failure — do not push red and do not skip silently.
 
 ## Fidelity — converge to `v2.0-flat`
 
@@ -145,12 +173,15 @@ release base supplies only the git **ancestry**, not content. A plain 3-way
 cherry-pick drifts from that target — via resolved conflicts *and* silent
 auto-merges that blend base lines — so converge deliberately:
 
-- **Resolve toward the target.** For every file a commit touches, take the
-  **dev line's content** (the source commit's version, i.e. `git checkout <C> --
-  <file>`), not a base blend. A region that no later non-merge commit touches is
-  thereby pinned to its final `v2.0-flat` content; an active region takes the
-  current dev content and is revised by its later commits. This is the same
-  decision for conflicts and for would-be auto-merges.
+- **Resolve toward the target — but convergence is a *tip* property, not a
+  per-commit one.** Default every touched region to the **dev line's content**
+  (the source commit's version). A region no later non-merge commit touches is
+  thereby pinned to its final `v2.0-flat` content and **must** match it. A region
+  a later commit re-touches is **transient**: it is re-pinned downstream, so its
+  only obligation mid-stream is to build + test — if the dev content there needs
+  an API the diverged base lacks, take base for that region and let the later
+  commit converge it. The acceptance check is convergence at the **tip** (and at
+  back-merge boundaries), not byte-for-byte at every commit.
 - **Back-merges are re-sync points.** At each "Merge … into main" commit the tree
   should match `v2.0-flat` at that point; snapshot it there.
 - **Assert convergence.** The acceptance check is `git diff <TARGET>
