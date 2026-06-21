@@ -25,8 +25,11 @@ a fixed base (`build-linear-branch`). The merge trees are the checkpoints.
 1. **Tree ≡ main.** `tree(main-<release>) == tree(main)` at the tip. The branch
    only ever rewrites *history* (where/how the release line is merged), never
    content. This is the force-push safety check (below).
-2. **Green per commit.** Every commit on the rewritten chain builds (`release`)
-   and passes the fast unit tests before the branch is published. CI re-verifies.
+2. **Green per commit, certified once.** Every commit a run *rewrites* builds
+   (`release`) and passes the fast unit tests before that run publishes. Commits
+   left unchanged (the history past the de-merged merge, whose trees still equal
+   `main`'s) are not rebuilt — they were green as `main` and get certified by the
+   future run that linearises them. CI re-verifies the tip regardless.
 
 ## Why one merge per run, and why it cannot be parallelised
 
@@ -115,10 +118,34 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    - A real semantic break surfaces at build/test; **forward-port** the
      reconciliation from the later main commit that owns it (the merge tree is
      the oracle for what the end state should be).
-4. **Commit optimistically, then test.** Commit the chain first; then build +
-   run the fast suite (`release`, shared ccache). If anything is red, **fix in
-   place, retest, and repeat until the *whole* chain is green** — message
-   preserved, content amended/squashed minimally.
+4. **Commit optimistically, then test — only the rewritten segment.** Commit the
+   chain first; then build + run the fast suite (`release`, shared ccache) on the
+   **commits this run rewrote**, i.e. `CURRENT_FORK..` up to the de-merged merge's
+   checkpoint. **Do not build the commits *past* the merge:** the upper history is
+   re-attached unchanged (its trees still equal `main`'s, already green upstream),
+   so it carries no new risk — it gets certified in the future run whose
+   bifurcation reaches it. Green-certify the segment; if anything is red, **fix in
+   place, retest, and repeat until that segment is green** — message preserved,
+   content amended/squashed minimally. (The tip-tree assertion in step 5 is what
+   guarantees the unbuilt upper part is still byte-for-byte `main`.)
+
+   **Build budget — never pay a cold build per run.** A cold `release` build is
+   ~10–17 min and will eat an entire session on its own. Don't let it: the
+   tree-≡-main invariant makes builds cheap once the cache is warm.
+   - **Persist and pre-warm the shared `CCACHE_DIR`.** Each de-merged commit's
+     tree matches a real `main`/merge tree, so its object files are *identical*
+     to a `main` build — a ccache warmed by building `main` (or simply kept from
+     the previous run) gives near-total cache hits. Restore/keep `CCACHE_DIR`
+     across runs; treat the one cold population as a setup cost, paid once, not
+     per run (`ccache -s` to confirm a high hit rate).
+   - **Build the chain in one persistent worktree, advancing commit by commit** —
+     successive `make release` invocations relink incrementally and only the few
+     files a commit actually touches recompile (and even those usually hit
+     ccache). So a *sequence* of rewritten commits builds in seconds-to-minutes
+     each after the first, not the cold ~17 min — adjacent commits differ little.
+   - Size the run so the chain you must green-certify fits the window *after* the
+     cache is warm; if you find yourself paying a cold build inside the budget,
+     warm the cache first (build `main` once) rather than shrinking the chain.
 5. **Publish only if the tree is unchanged.** Force-push is allowed *only* after:
    ```bash
    test "$(git rev-parse "${BRANCH}^{tree}")" = "$START_TREE" || { echo "TREE CHANGED — abort"; exit 1; }
@@ -155,8 +182,11 @@ named and flagged for regeneration.
 
 - **Tree ≡ main, always.** The publish gate asserts `tip tree == start tree`.
   Never force-push a tree that differs from `main`.
-- **Green per commit.** Push only a fully-green chain; CI re-checks. A break that
-  needs a large refactor is escalated, not pushed red.
+- **Green only what you rewrote.** Build + test the de-merged segment
+  (`CURRENT_FORK..` the merge checkpoint); never build the unchanged history past
+  the merge — it equals `main` and is certified by a later run. Push only a green
+  segment; CI re-checks the tip. A break needing a large refactor is escalated,
+  not pushed red.
 - **Sequential, one merge per run.** Anchor each de-merge on the previous
   checkpoint, never on a bare second parent; never attempt batches in parallel.
 - **Checkpoints are law.** Each de-merge reproduces its `tree(M)`; the tip
@@ -166,8 +196,11 @@ named and flagged for regeneration.
   authored — don't hand-edit tracked source outside conflict resolution.
 - **`--force-with-lease`, never blind `--force`.** A lease failure means main or
   the branch moved — re-run the cursor, don't clobber.
-- **ccache is the budget.** Adjacent commits differ little; the shared
-  `CCACHE_DIR` is what makes per-commit `release` builds affordable. Keep it.
+- **ccache is the budget — warm, not cold.** Each rewritten commit's tree matches
+  a `main` tree, so a persisted/pre-warmed `CCACHE_DIR` builds it from near-total
+  cache hits; build the segment in one worktree so successive commits relink
+  incrementally. Pay the cold build once (warm from `main`), never per run. Keep
+  `CCACHE_DIR`.
 
 ## Relationship to the other skills
 
