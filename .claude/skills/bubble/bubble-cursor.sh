@@ -51,7 +51,13 @@ echo "BRANCH=$BR"; echo "MAIN=$MAIN"; echo "RELEASE=$REL"; echo "PREV_RELEASE=${
 echo "MAIN_TREE=$(git rev-parse "${MAIN}^{tree}")"
 echo "RELEASE_BACKMERGES_ON_MAIN=${#MAIN_BM[@]}"
 echo "RELEASE_BACKMERGES_REMAINING=${#BR_BM[@]}"
-echo "DEMERGED_SO_FAR=$(( ${#MAIN_BM[@]} - ${#BR_BM[@]} ))"
+DEMERGED=$(( ${#MAIN_BM[@]} - ${#BR_BM[@]} ))
+echo "DEMERGED_SO_FAR=$DEMERGED"
+# Snapshot/gate branch for THIS run: the pre-de-merge state, named by de-merges
+# already applied (0-padded). A create-only push to it backs up the state that
+# force-push will overwrite AND atomically claims the run (an existing ref means
+# another run already holds this step — abort to avoid concurrent runs).
+printf 'GATE_BRANCH=%s-%02d\n' "$BR" "$DEMERGED"
 
 NEXT="${BR_BM[0]:-}"
 if [ -n "$NEXT" ]; then

@@ -94,6 +94,20 @@ git config rerere.enabled true
 export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives worktrees
 ```
 
+0. **Snapshot the original state & claim the run (the gate).** Before rewriting
+   anything, push the pre-de-merge tip `$START` to the run's snapshot branch
+   `$GATE_BRANCH` (= `<branch>-<NN>`, `NN` = `DEMERGED_SO_FAR`, 0-padded) with a
+   **create-only** push. This preserves the exact state the later force-push will
+   overwrite, *and* is the concurrency gate: the push **fails if the ref already
+   exists**, meaning another run already holds this step — abort rather than run
+   concurrently.
+   ```bash
+   git push --force-with-lease="refs/heads/$GATE_BRANCH:" origin \
+     "$START:refs/heads/$GATE_BRANCH" || { echo "run $GATE_BRANCH already claimed — abort"; exit 1; }
+   ```
+   The snapshots form a numbered, immutable audit trail (`-00` = the original
+   `main`, `-01` = after one de-merge, …); they are never force-updated.
+
 1. **Track main (append what's missing).** If `main` advanced since the branch's
    tip, append the new first-parent commits so the tip tree matches `main` again.
    New back-merges simply extend the to-de-merge list for future runs.
