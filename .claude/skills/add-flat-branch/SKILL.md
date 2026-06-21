@@ -129,5 +129,28 @@ echo "flat: $(git diff --name-only ${seam}^1 $seam | wc -l)  upstream: $(git dif
 for i in 1 2 3 4; do git push -f origin <SRC>-flat && break || sleep $((2**i)); done
 ```
 
+## Variant: merge-DAG branches (`-dag`)
+
+The `-flat` branches are linear: cross-branch merges are squashed. The `-dag`
+variant instead replays each "Merge `<older>` into `<current>`" as a real
+two-parent commit — first parent = the linear chain (so trees and first-parent
+diffs stay identical to `-flat`), second parent = the corresponding flat commit
+in the older branch's dag. The second parent is found by merge-base recovery
+(`git merge-base <commit> <older-source>`), so it works whether the merge is
+clean or recorded via an intermediate "merge fixes" commit.
+
+```bash
+# trunk dag == trunk flat (no older branch)
+git branch -f v1.4-andium-dag v1.4-andium-flat
+# younger siblings: graft + add merge second parents into the older dag
+bash .claude/skills/add-flat-branch/flatten-dag-onto.sh origin/v1.5-variegata v1.5-variegata-dag v1.4-andium-dag    origin/v1.4-andium
+bash .claude/skills/add-flat-branch/flatten-dag-onto.sh origin/v2.0           v2.0-dag           v1.5-variegata-dag origin/v1.5-variegata
+```
+
+Verify as in Step 3 (tip tree, inception, no bogus diffs), and additionally
+confirm the merge links exist: the "Merge `<older>`" commits should have two
+parents, the second resolving into the older dag, e.g.
+`git rev-list --merges --parents <SRC>-dag | head`.
+
 Flat branches are generated, not authored — do not commit tracked files or touch
 development branches.
