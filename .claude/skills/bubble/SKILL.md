@@ -96,42 +96,63 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
 
 0. **Snapshot the original state & claim the run (the gate).** Before rewriting
    anything, push the pre-de-merge tip `$START` to the run's snapshot branch
-   `$GATE_BRANCH` (= `<branch>-<NN>`, `NN` = `DEMERGED_SO_FAR`, 0-padded) with a
-   **create-only** push. This preserves the exact state the later force-push will
-   overwrite, *and* is the concurrency gate: the push **fails if the ref already
-   exists**, meaning another run already holds this step — abort rather than run
-   concurrently.
+   `$GATE_BRANCH` (= `<branch>-<NN>`, `NN` = `DEMERGED_SO_FAR`, 0-padded). This
+   preserves the exact state the later force-push will overwrite, *and* is the
+   concurrency gate. **Do not assume the push fails when the ref exists** — a
+   push of the same value to an existing ref is a no-op *success*. Instead,
+   **detect positively that this push created the branch** (`[new branch]` in the
+   output) and abort otherwise; an already-existing ref means another run holds
+   this step.
    ```bash
-   git push --force-with-lease="refs/heads/$GATE_BRANCH:" origin \
-     "$START:refs/heads/$GATE_BRANCH" || { echo "run $GATE_BRANCH already claimed — abort"; exit 1; }
+   out=$(git push origin "$START:refs/heads/$GATE_BRANCH" 2>&1)
+   echo "$out" | grep -q '\[new branch\]' || { echo "run $GATE_BRANCH already claimed (not created by this push) — abort"; exit 1; }
    ```
-   The snapshots form a numbered, immutable audit trail (`-00` = the original
-   `main`, `-01` = after one de-merge, …); they are never force-updated.
+   (A non-fast-forward/divergent ref is also rejected, so it likewise produces no
+   `[new branch]` and aborts.) The snapshots form a numbered, immutable audit
+   trail (`-00` = the original `main`, `-01` = after one de-merge, …); they are
+   never force-updated.
 
 1. **Track main (append what's missing).** If `main` advanced since the branch's
    tip, append the new first-parent commits so the tip tree matches `main` again.
    New back-merges simply extend the to-de-merge list for future runs.
-2. **Advance the bifurcation one merge.** Re-root the de-merged-so-far linear
-   base **plus the next segment** onto `NEXT_P2`, dropping `NEXT_MERGE`, and
-   re-attach the still-merged upper history unchanged:
-   ```bash
-   # conceptually: rebase (SEGMENT_FROM..NEXT^1) onto NEXT_P2, drop NEXT, keep the rest
-   git rebase --rebase-merges --onto "$NEXT_P2" "$SEGMENT_FROM"   # mark NEXT for de-merge
-   ```
-   The de-merge **must** reproduce the checkpoint: `tree(at NEXT's position) ==
-   MERGE_TREE`. Assert it; a mismatch is a resolution defect, not an accepted
-   result.
-3. **Resolve conflicts in the main agent** (this is the semantic work; do not
-   delegate it):
-   - `-X theirs` is a **provisional** fill, validated by build+test — never the
-     final word.
+2. **Advance the bifurcation one merge (tree-preserving graft).** Re-root the
+   de-merged-so-far linear base **plus the next segment** onto `NEXT_P2`,
+   reproducing `MERGE_TREE`, then re-attach the upper history **unchanged**.
+   - **Build the reconstruction `RECON`:** replay `merge-base(NEXT^1,NEXT^2)..NEXT^1`
+     onto `NEXT_P2`, dropping empties and reconciling per step 3, until
+     `tree == MERGE_TREE`. If a cross-side reconciliation remains (changes the
+     merge made beyond any replayed PR), add **one** reconcile/checkpoint commit
+     carrying `NEXT`'s message whose tree **is** `MERGE_TREE`.
+   - **Re-attach with the tree-preserving graft**, not `git rebase --rebase-merges`
+     (which RE-merges the upper back-merges and conflicts, e.g. on generated
+     `config.cpp`). `reattach.sh` replaces `NEXT` with `RECON` and re-commits only
+     the **true descendants of `NEXT`**, reusing each commit's tree verbatim — no
+     conflicts, no build, tip tree guaranteed `== tree(main)`:
+     ```bash
+     bash $SK/reattach.sh "$NEXT_MERGE" "$RECON" "$START"
+     ```
+   - **Base = `$START` (the previous run's branch `origin/$BRANCH`), never
+     `main-dag`.** Each run builds on the prior result; only the first run (no
+     branch yet) bases on `origin/main`. `NEXT_MERGE` from the cursor is that
+     branch's back-merge SHA, so it matches `$START` — don't substitute the
+     `main-dag` SHA of the same merge.
+
+   The de-merge **must** reproduce the checkpoint (`tree(RECON) == MERGE_TREE`) and
+   the re-attached tip **must** satisfy `tree == START_TREE == tree(main)`. A
+   mismatch is a resolution defect, not an accepted result.
+3. **Resolve every conflict manually in the main agent** (this is the semantic
+   work; do not delegate it, and **never use `-X theirs`/`-X ours`**). Every
+   conflict and red-herring hunk is reviewed and reconciled by hand, using the
+   **merge commit as the oracle**: `tree(NEXT)` (`MERGE_TREE`) is the
+   authoritative end state for each file.
    - **Generated files** (`settings.hpp`/`config.cpp` from `settings.json`; the
-     PEG grammar; serialization; `enum_util`) must be **regenerated** (`make
-     generate-files`), never merged — `-X theirs` mis-maps their indices and
-     still compiles.
-   - A real semantic break surfaces at build/test; **forward-port** the
-     reconciliation from the later main commit that owns it (the merge tree is
-     the oracle for what the end state should be).
+     PEG grammar; serialization; `enum_util`) are **regenerated** (`make
+     generate-files`), never hand-merged.
+   - A real semantic break — a cross-side reconciliation the merge itself
+     resolved (e.g. a feature added on one side and dropped on the other) — is
+     **reproduced from the merge tree**: take the file's `tree(NEXT)` version, or
+     forward-port the owning commit's change. The checkpoint assertion (step 2)
+     verifies it; the reconciliation audit (below) reviews it.
 4. **Commit optimistically, then test — only the rewritten segment.** Commit the
    chain first; then build + run the fast suite (`release`, shared ccache) on the
    **commits this run rewrote**, i.e. `CURRENT_FORK..` up to the de-merged merge's
@@ -144,20 +165,31 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    guarantees the unbuilt upper part is still byte-for-byte `main`.)
 
    **Build budget — never pay a cold build per run.** A cold `release` build is
-   ~10–17 min and will eat an entire session on its own. Don't let it: the
-   tree-≡-main invariant makes builds cheap once the cache is warm.
+   expensive (tens of minutes); avoid paying it on every run. The tree-≡-main
+   invariant makes builds cheap once the cache is warm.
    - **Persist and pre-warm the shared `CCACHE_DIR`.** Each de-merged commit's
      tree matches a real `main`/merge tree, so its object files are *identical*
      to a `main` build — a ccache warmed by building `main` (or simply kept from
      the previous run) gives near-total cache hits. Restore/keep `CCACHE_DIR`
      across runs; treat the one cold population as a setup cost, paid once, not
      per run (`ccache -s` to confirm a high hit rate).
-   - **Build the chain in one persistent worktree, advancing commit by commit** —
-     successive `make release` invocations relink incrementally and only the few
-     files a commit actually touches recompile (and even those usually hit
-     ccache). So a *sequence* of rewritten commits builds in seconds-to-minutes
-     each after the first, not the cold ~17 min — adjacent commits differ little.
-   - Size the run so the chain you must green-certify fits the window *after* the
+   - **Use a dedicated build/test worktree, separate from the de-merge worktree.**
+     Do the git surgery (replay, reconcile, graft) in the main worktree and keep a
+     persistent second worktree (`git worktree add`) bound to the same shared
+     `CCACHE_DIR` purely for `make release` + tests. This isolates the build from
+     history rewriting (a rebase/checkout in the main worktree won't disturb an
+     in-flight build) and lets build and review proceed concurrently.
+   - **Advance that worktree commit by commit.** Successive `make release`
+     invocations relink incrementally and only the few files a commit actually
+     touches recompile (and even those usually hit ccache). So a *sequence* of
+     rewritten commits builds in seconds-to-minutes each after the first, not the
+     cold build — adjacent commits differ little.
+   - **Tests run serially.** The `unittest` binary has no parallel option (test
+     cases run single-threaded); only the build parallelizes (`ninja`/`make -j`).
+     To speed the fast suite, shard test files across several `unittest`
+     invocations (e.g. one per core, or per build worktree) rather than expecting
+     in-process parallelism.
+   - Size the run so the chain you must green-certify fits the budget *after* the
      cache is warm; if you find yourself paying a cold build inside the budget,
      warm the cache first (build `main` once) rather than shrinking the chain.
 5. **Publish only if the tree is unchanged.** Force-push is allowed *only* after:
@@ -191,6 +223,31 @@ file identically (e.g. `src/.../physical_delete.hpp +278 -71` on both sides); th
 one drift was `Replace magic number…`, where `src/main/config.cpp` went
 `+2 -1 → +111 -136` — exactly the generated settings-index churn, correctly
 named and flagged for regeneration.
+
+## Reconciliation audit (review the merge's cross-side resolutions)
+
+A clean de-merge replays each PR verbatim. When the de-merge also needs a
+**reconcile/checkpoint commit** (step 2), that commit's own diff is exactly what
+the back-merge changed **beyond** the replayed PRs — the merge's cross-side
+resolutions (a feature added on one line and dropped on the other, generated
+re-syncs, etc.). Measured against the release-side replay base, it excludes
+everything the release line already carried, so it is small and high-signal.
+
+**Audit every reconcile commit** (`reconcile-audit.sh "$RECON"`). It classifies
+each file:
+
+- **generated** (`config.cpp`/`settings.hpp`/`settings.json`/`settings/*`, PEG
+  grammar, `enum_util`, serialization) — expected churn, not reviewed;
+- **deletions and semantic (modified) non-generated files — REVIEW**;
+- pure release-side **additions — skipped**.
+
+For each REVIEW item, record a **factual note** (what changed and which merge
+resolved it; for a feature-level deletion, a short history trace — was it ever on
+the release line, is it reinstated later, any replacement). State only what the
+code proves; the authoritative rationale lives in the PR threads. **The review is
+documentation, not a gate** — the merge tree is authoritative, so record and
+**proceed**; surface anything that looks like accidental loss. Put the findings in
+the reconcile commit's message and the run notes.
 
 ## Hard rules
 

@@ -70,10 +70,31 @@ segment tree is far enough from main that nearly every unity object misses, maki
 it effectively a cold build. The 4 commits are clean verbatim replays reproducing
 the maintainers' exact merge tree; CI re-verifies them.
 
+## Run #2 (de-merge "Merge 1.5 → Main", checkpoint tree e337ce86)
+
+Published: `main-v1.5-variegata` → `5bbadaa83` (`DEMERGED=2, REMAINING=14`).
+Gate/snapshot `-01` = run #1 result (the state this run overwrote).
+
+- **Base = the previous branch, not `main-dag`.** Run #2 starts from
+  `origin/main-v1.5-variegata` and de-merges that branch's back-merge (its SHA;
+  the same merge is a *different* SHA on `main-dag` after run #1's rewrite). A
+  first attempt that re-attached onto `main-dag` was wrong — corrected.
+- **Reconcile commit required.** The merge dropped the main-only "NOT
+  elimination" rule (PR #20394), which no main-side replay reproduces; a single
+  reconcile commit (tree == checkpoint) absorbs it. See its message for the audit.
+- **Reconciliation audit** (`reconcile-audit.sh`): reconcile delta = 7 files, all
+  the not_elimination removal (3 deletions + 4 semantic mods), **0 generated**.
+  Reviewed; factual note recorded; proceeded.
+- **Per-commit build times** (warm ccache, dedicated worktree, Ninja):
+  baseline(run#1 tip) 723s/429obj · NOT-elim (base jump to new v1.5 root)
+  308s/340 · DELETE-RETURNING 61s/20 · magic-number 42s/10 · reconcile 718s/301
+  (`expression_type.hpp` is high-fanout). Fast tests: all passed. Cross-tree
+  ccache hits were low (~12%) — unity builds bust on the v1.5↔main delta.
+
 ## Resume
 
 ```bash
 SK=.claude/skills/bubble
 eval "$(bash $SK/bubble-cursor.sh origin/v1.5-variegata-dag origin/main-dag origin/v1.4-andium-dag main-v1.5-variegata)"
-# NEXT_MERGE=bafa967f… → de-merge #17, etc.
+# de-merge the next back-merge on the branch; base each run on origin/main-v1.5-variegata
 ```
