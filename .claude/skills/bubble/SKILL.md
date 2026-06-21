@@ -22,9 +22,11 @@ a fixed base (`build-linear-branch`). The merge trees are the checkpoints.
 
 ## Two invariants (hold at every force-push)
 
-1. **Tree ≡ main.** `tree(main-<release>) == tree(main)` at the tip. The branch
-   only ever rewrites *history* (where/how the release line is merged), never
-   content. This is the force-push safety check (below).
+1. **Tree ≡ main.** At the tip, `tree(main-<release>) == tree(main)` as of the
+   run's start (`START_TREE`); each run re-syncs to any new upstream commits
+   first (step 1), so it tracks `main` over time without ever chasing a moving
+   target mid-run. The branch only ever rewrites *history* (where/how the release
+   line is merged), never content. This is the force-push safety check (below).
 2. **Green per commit, certified once.** Every commit a run *rewrites* builds
    (`release`) and passes the fast unit tests before that run publishes. Commits
    left unchanged (the history past the de-merged merge, whose trees still equal
@@ -201,10 +203,14 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
 
 ## Proof of work: per-commit numstat (before vs after)
 
-A faithful de-merge carries each PR's diff verbatim. After replaying a segment,
-compare every commit's **per-file** numstat to the original — not the aggregate
-shortstat, which hides *which* file moved. Diffing the two sorted per-file lists
-is exact and cheap:
+Two bars. **Perfect** = each replayed PR's diff is carried **verbatim** (per-file
+numstat identical to the original). **Faithful** = the de-merge reproduces the
+merge's end state *in spirit* — perfect for every PR that survives, while empties
+are dropped, generated files are regenerated, and the merge's cross-side
+reconciliation is isolated in the reconcile commit. Aim for perfect per replayed
+PR and verify it: after replaying a segment, compare every commit's **per-file**
+numstat to the original — not the aggregate shortstat, which hides *which* file
+moved. Diffing the two sorted per-file lists is exact and cheap:
 
 ```bash
 nsf(){ git show --numstat --format="" "$1" | awk -v OFS='\t' '{print $3,$1,$2}' | sort; }
@@ -251,8 +257,11 @@ the reconcile commit's message and the run notes.
 
 ## Hard rules
 
-- **Tree ≡ main, always.** The publish gate asserts `tip tree == start tree`.
-  Never force-push a tree that differs from `main`.
+- **Tree ≡ main-at-run-start, always.** The publish gate asserts
+  `tip tree == START_TREE` — `tree(main)` as captured when the run began, *not*
+  live `main`. Never force-push a tree that differs from that. (`main` is assumed
+  never force-pushed, so it only ever fast-forwards; new upstream commits land on
+  the *next* run, which re-syncs via step 1 and recomputes `START_TREE`.)
 - **Green only what you rewrote.** Build + test the de-merged segment
   (`CURRENT_FORK..` the merge checkpoint); never build the unchanged history past
   the merge — it equals `main` and is certified by a later run. Push only a green
@@ -261,7 +270,8 @@ the reconcile commit's message and the run notes.
 - **Sequential, one merge per run.** Anchor each de-merge on the previous
   checkpoint, never on a bare second parent; never attempt batches in parallel.
 - **Checkpoints are law.** Each de-merge reproduces its `tree(M)`; the tip
-  reproduces `tree(main)`. Divergence is a defect to reconcile.
+  reproduces `START_TREE` (`tree(main)` at run start). Divergence is a defect to
+  reconcile.
 - **Preserve authorship & messages.** Carry each source commit's message and
   upstream author; the committer is us (`noreply@anthropic.com`). Generated, not
   authored — don't hand-edit tracked source outside conflict resolution.
