@@ -85,12 +85,15 @@ private:
 
 struct ParquetReadGlobalState : public GlobalTableFunctionState {
 	explicit ParquetReadGlobalState(optional_ptr<const PhysicalOperator> op_p)
-	    : row_group_index(0), batch_index(0), op(op_p) {
+	    : row_group_index(0), batch_index(0), total_row_groups_to_scan(0), op(op_p) {
 	}
 	//! Index of row group within file currently up for scanning
 	idx_t row_group_index;
 	//! Batch index of the next row group to be scanned
 	idx_t batch_index;
+	//! Total number of row groups dispatched for scanning across all files.
+	//! Updated under the MultiFileGlobalState lock as row groups are handed out.
+	idx_t total_row_groups_to_scan;
 	//! (Optional) pointer to physical operator performing the scan
 	optional_ptr<const PhysicalOperator> op;
 };
@@ -765,6 +768,8 @@ bool ParquetReader::TryInitializeScan(ClientContext &context, GlobalTableFunctio
 	// The current reader has rowgroups left to be scanned
 	lstate.group_indexes = {gstate.row_group_index};
 	gstate.row_group_index++;
+	// Count this row group towards the total to be scanned (called under the MultiFileGlobalState lock)
+	gstate.total_row_groups_to_scan++;
 	return true;
 }
 
