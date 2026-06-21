@@ -95,17 +95,23 @@ Gate/snapshot `-01` = run #1 result (the state this run overwrote).
 
 **Clean run — no reconcile commit** (like run #1): replaying the 7-commit spine
 onto `9c028743` reproduced the merge tree `ab8d98b8` exactly. 6 applied, 1 empty
-(#20624 azure-ref, already in the base). Now **`DEMERGED=3, REMAINING=13`**;
-gate/snapshot `-02` = run #2 result.
+(#20624 azure-ref, already in the base). **Published** `main-v1.5-variegata` →
+`cd70b7c3`; **`DEMERGED=3, REMAINING=13`**; gate/snapshot `-02` = run #2 result.
 
-Two script bugs hit and fixed this run (kept here as the cautionary record):
-- **Stale local ref / `origin/` gate name.** The cursor resolved a stale *local*
-  `main-v1.5-variegata` (run #1) and, when given `origin/…`, leaked the prefix
-  into the gate name. Fixed: the cursor now prefers `origin/<branch>` and derives
-  `GATE/WIP` from the bare basename.
-- **Cherry-pick empties.** `--empty=drop` and `--allow-empty=false` error here;
-  the replay loop must detect empties from the message and `--skip`. Captured in
-  `replay-segment.sh`.
+Green-certify: all 6 commits **compile** green (`702/57/39/647/26/10s`); the fast
+suite is run on **`a803d034`** (the last commit before the carried synthetic
+reconcile — its tree holds not_elimination on the v1.5 base, a combination
+upstream never had), **not** the tip (the tip == the real merge tree, green by
+construction).
+
+Three environment/script learnings, all folded into the skill:
+- **Stale local ref / `origin/` gate name** — the cursor now prefers
+  `origin/<branch>` and derives `GATE/WIP` from the bare basename.
+- **Cherry-pick empties** — `--empty=drop`/`--allow-empty=false` error here; the
+  replay loop detects empties from the message and `--skip`s (`replay-segment.sh`).
+- **Branch deletion is a no-op here** — `git push --delete` silently fails, so
+  `-02-wip` persists. Harmless (named by the advanced `DEMERGED`, never
+  re-consulted); the skill no longer depends on deleting it.
 
 ## Resume
 

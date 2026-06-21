@@ -10,14 +10,13 @@ SHA (→ `krlmlr/duckdb`) with a role:
 - **copied** `sha` — above that run's de-merge point; reattached tree-verbatim by
   the graft (new SHA, byte-identical tree);
 - **empty (absorbed)** — went empty that run (change already in that run's base);
-  no SHA. Once absorbed it stays absorbed, so it is written once as **from run
-  #N** and later runs are not repeated.
+  no SHA. Once absorbed it stays absorbed, so it is written once as **from run #N**.
 
 Each run re-roots the de-merged-so-far spine onto the next back-merge's second
 parent, so a commit replayed by an earlier run can later go **empty** once the
 advancing v1.5 base already reflects it (cherry-pick onto the base is empty —
 confirmed; the v1.5 base reached the same state via other commits, so there is no
-single attributable v1.5 PR).
+single attributable v1.5 PR). **Completed runs: 3 of 16.**
 
 ### Run #1 segment
 - [#20369](https://github.com/duckdb/duckdb/pull/20369) feat(adbc): support the experimental `adbc.ingest.target_catalog` option and improve ingest name resolution
@@ -32,6 +31,7 @@ single attributable v1.5 PR).
   - `-dag`: [`d5da6c6af`](https://github.com/krlmlr/duckdb/commit/d5da6c6af935464e5e62f27994f222ed9dc3db2b)
   - run #1: replayed [`3b5f37a7f`](https://github.com/krlmlr/duckdb/commit/3b5f37a7fc9b9168d937d8f6b88e671065f5ad62)
   - run #2: replayed [`c82e14dff`](https://github.com/krlmlr/duckdb/commit/c82e14dfffe4e09429bdc790c7a56afccbb47926)
+  - run #3: replayed [`dc5852442`](https://github.com/krlmlr/duckdb/commit/dc5852442bfe68568cc59f66145efbe9f67f76a2)
 - [#20447](https://github.com/duckdb/duckdb/pull/20447) Expose ArenaAllocator from PlanGenerator
   - `-dag`: [`9a4ae087b`](https://github.com/krlmlr/duckdb/commit/9a4ae087b45b74ae899d36bbf27b1575d33ebb58)
   - run #1: replayed [`0ffd087cd`](https://github.com/krlmlr/duckdb/commit/0ffd087cddb5813d90a65de6b82a7814cc7f2069)
@@ -41,3866 +41,4821 @@ single attributable v1.5 PR).
   - `-dag`: [`7eebd3393`](https://github.com/krlmlr/duckdb/commit/7eebd33939ea53afb4269e7fdcae809fc8b09bf9)
   - run #1: linearized (clean; checkpoint == segment tail, tree == merge tree)
   - run #2: gone (de-merged in run #1; now below the bifurcation)
+  - run #3: gone (de-merged in run #1; now below the bifurcation)
 
 ### Run #2 segment
 - [#20485](https://github.com/duckdb/duckdb/pull/20485) Optimize DELETE RETURNING by passing columns through from scan
   - `-dag`: [`01cf68f21`](https://github.com/krlmlr/duckdb/commit/01cf68f21558c9038389901d27a46e60e092e290)
   - run #1: copied [`1131e35d4`](https://github.com/krlmlr/duckdb/commit/1131e35d4654b491369cfab00a20a79be3c7c09f)
   - run #2: replayed [`112bd5a8e`](https://github.com/krlmlr/duckdb/commit/112bd5a8ee361601a5d58f9578479f2b32651fc4)
+  - run #3: replayed [`09b7333e0`](https://github.com/krlmlr/duckdb/commit/09b7333e00f0ae8285311963dc55ac9bdcfcfdfd)
 - [#20510](https://github.com/duckdb/duckdb/pull/20510) Replace magic number with `DConstants::INVALID_INDEX` in `DBConfig`
   - `-dag`: [`8fba00c07`](https://github.com/krlmlr/duckdb/commit/8fba00c0750b5e9d219300914872ecd7b3c09e0f)
   - run #1: copied [`2ae326514`](https://github.com/krlmlr/duckdb/commit/2ae32651415c32c88553418cb0bc1d5c85ae2034)
   - run #2: replayed [`a576264fc`](https://github.com/krlmlr/duckdb/commit/a576264fcd8006d3597bbd83ce95c5dc74c6bba3)
+  - run #3: replayed [`a803d0346`](https://github.com/krlmlr/duckdb/commit/a803d0346340f93896fe0b16bfbb172bdcd998f8)
 
 - **[checkpoint] Run #2 back-merge** [#20588](https://github.com/duckdb/duckdb/pull/20588) "Merge 1.5 -> Main"
   - `-dag`: [`5d91a654f`](https://github.com/krlmlr/duckdb/commit/5d91a654fd2d6aeddcb1a731cf3b363f44a2131d)
   - run #1: copied (merge) [`bafa967fe`](https://github.com/krlmlr/duckdb/commit/bafa967feeab0f5d6426bdd0cca7e6ecccef13a1)
-  - run #2: linearized → reconcile [`d0ab64a4c`](https://github.com/krlmlr/duckdb/commit/d0ab64a4c3232b381bbb058cc23cece04d19f0ee) (tree `e337ce86` == merge tree); removed NOT-elimination (#20394) + regenerated churn
+  - run #2: linearized → reconcile [`d0ab64a4`](https://github.com/krlmlr/duckdb/commit/d0ab64a4c3232b381bbb058cc23cece04d19f0ee) (tree `e337ce86` == merge tree); removed NOT-elimination (#20394) + regenerated churn
+  - run #3: gone (de-merged in run #2; now below the bifurcation)
 
 ### Run #3 segment
 - [#20578](https://github.com/duckdb/duckdb/pull/20578) Support generated columns in DELETE RETURNING optimization
   - `-dag`: [`244b0392a`](https://github.com/krlmlr/duckdb/commit/244b0392a8eac90bd46c70e717f7ad5e20a50d67)
   - run #1: copied [`9f4d3c6e4`](https://github.com/krlmlr/duckdb/commit/9f4d3c6e4010449edc68b6b5fa90d6ebd3c7f4f1)
   - run #2: copied [`f1926fd18`](https://github.com/krlmlr/duckdb/commit/f1926fd18d6fba8bdcde8bda6c83d94d1240655a)
+  - run #3: replayed [`07c12921d`](https://github.com/krlmlr/duckdb/commit/07c12921da1f654360d22d93a65f162281d36823)
 - [#20624](https://github.com/duckdb/duckdb/pull/20624) update azure ref for main
   - `-dag`: [`f27b43d6d`](https://github.com/krlmlr/duckdb/commit/f27b43d6d809d15358ea7d15df2254812f2bf013)
   - run #1: copied [`d4652a532`](https://github.com/krlmlr/duckdb/commit/d4652a532f76daec06eebec267dd3eedbe5cfa9c)
   - run #2: copied [`460b3110a`](https://github.com/krlmlr/duckdb/commit/460b3110a8459ef71887fb937cd2dc29b0f55f30)
+  - from run #3: empty (absorbed — base already has the change; stays absorbed)
 - [#20574](https://github.com/duckdb/duckdb/pull/20574) chore(shell): Fix comment inconsistencies and typos
   - `-dag`: [`31655fc9f`](https://github.com/krlmlr/duckdb/commit/31655fc9fa4620713aa4119db73f40df89e7bcee)
   - run #1: copied [`2b4820e61`](https://github.com/krlmlr/duckdb/commit/2b4820e61ce3dbc63ad3e046e5dfc6247309c729)
   - run #2: copied [`f7ea59b06`](https://github.com/krlmlr/duckdb/commit/f7ea59b0690068d212f775f146aa0992c1cd0d90)
+  - run #3: replayed [`76e52d65c`](https://github.com/krlmlr/duckdb/commit/76e52d65cf043e2f0cddec2774bbaa0d39b63b61)
 
 - **[checkpoint] Run #3 back-merge** [#20644](https://github.com/duckdb/duckdb/pull/20644) "Merge 1.5 -> Main"
   - `-dag`: [`1030024db`](https://github.com/krlmlr/duckdb/commit/1030024db369e6317448e87341036aea3778ce1b)
   - run #1: copied (merge) [`426073d9b`](https://github.com/krlmlr/duckdb/commit/426073d9bb98d3d5257f9d0182776393055572c2)
   - run #2: copied (merge) [`419073fa4`](https://github.com/krlmlr/duckdb/commit/419073fa46d15d76cb66f25f88a90d6c2eebf6e7)
+  - run #3: linearized (clean; replay reproduced the merge tree, no reconcile)
 
 ### Run #4 segment
 - [#20585](https://github.com/duckdb/duckdb/pull/20585) Add max_execution_time setting for per-connection query time limit
   - `-dag`: [`2df21e445`](https://github.com/krlmlr/duckdb/commit/2df21e44594e767bb377d222db7144accb7a7b0c)
   - run #1: copied [`c848d4138`](https://github.com/krlmlr/duckdb/commit/c848d41387f1e7773f13ce28e6bb7a7207503359)
   - run #2: copied [`a71ab292a`](https://github.com/krlmlr/duckdb/commit/a71ab292aa419c2bf4037a7ea46506f2df61fc79)
+  - run #3: copied [`39dc03ccf`](https://github.com/krlmlr/duckdb/commit/39dc03ccf385f41aab2f212ec2c80de6bf218a90)
 - [#20482](https://github.com/duckdb/duckdb/pull/20482) Expose logical state layout for AGGREGATE_STATE
   - `-dag`: [`eb734b68d`](https://github.com/krlmlr/duckdb/commit/eb734b68d734da2683747382feaad8446094b5a5)
   - run #1: copied [`af27daeaa`](https://github.com/krlmlr/duckdb/commit/af27daeaa72b1479ab87c05655c54d6bfe8c7952)
   - run #2: copied [`b7384e052`](https://github.com/krlmlr/duckdb/commit/b7384e0524b75bc1676ec1c6ab86a97b42499802)
+  - run #3: copied [`b75c09041`](https://github.com/krlmlr/duckdb/commit/b75c09041da4ede78a8237f55ab242a03482efba)
 - [#20674](https://github.com/duckdb/duckdb/pull/20674) Update copyright year
   - `-dag`: [`9d49ef19b`](https://github.com/krlmlr/duckdb/commit/9d49ef19b484dad4d908bd796c3951f1dd019460)
   - run #1: copied [`239781206`](https://github.com/krlmlr/duckdb/commit/239781206bccee0a147f83211f2c26105dff1c00)
   - run #2: copied [`e4e28568f`](https://github.com/krlmlr/duckdb/commit/e4e28568f06eb473191c7eb3feb87fa1a03b3d43)
+  - run #3: copied [`2f0a6728b`](https://github.com/krlmlr/duckdb/commit/2f0a6728bbb4a7218d2998b793573b9d0ba1e247)
 - [#20663](https://github.com/duckdb/duckdb/pull/20663) Merge v1.5-variegata into main
   - `-dag`: [`e761d2e7d`](https://github.com/krlmlr/duckdb/commit/e761d2e7dbc9694d33ce5bcdbe525b6aa7321611)
   - run #1: copied [`6366e3c26`](https://github.com/krlmlr/duckdb/commit/6366e3c268fde1c9f151fc7c48d6b46b70e46b85)
   - run #2: copied [`52c7cabdf`](https://github.com/krlmlr/duckdb/commit/52c7cabdfb51fbac8f503ee06ddaa650424a1a73)
+  - run #3: copied [`e4c7f1cd6`](https://github.com/krlmlr/duckdb/commit/e4c7f1cd6ebe57979ab9e412a3c6dc97b45c346d)
 - [#20660](https://github.com/duckdb/duckdb/pull/20660) Expose LIMIT and OFFSET in EXPLAIN output for LIMIT operators
   - `-dag`: [`61f132930`](https://github.com/krlmlr/duckdb/commit/61f13293064affb4e01af7894e54d399d23fc843)
   - run #1: copied [`587f465c7`](https://github.com/krlmlr/duckdb/commit/587f465c7ad17b38a5595ad4b9ed3dad57dd038f)
   - run #2: copied [`98cf8c340`](https://github.com/krlmlr/duckdb/commit/98cf8c340232d0e80eaaa2dc269fa2c38db1a75b)
+  - run #3: copied [`08bd393f2`](https://github.com/krlmlr/duckdb/commit/08bd393f2f24dcd96a20467d6c94f28077dcc187)
 - [#20636](https://github.com/duckdb/duckdb/pull/20636) Optimize MERGE INTO DELETE RETURNING by passing columns through from scan
   - `-dag`: [`cf3fb15e0`](https://github.com/krlmlr/duckdb/commit/cf3fb15e02a3d04306ac4adbd37a3eb7fb534309)
   - run #1: copied [`8f12c5396`](https://github.com/krlmlr/duckdb/commit/8f12c53968b87769fe42e5e5add7f582aff711a0)
   - run #2: copied [`83060f028`](https://github.com/krlmlr/duckdb/commit/83060f028ec697437946f962c783b89f4e54ab83)
+  - run #3: copied [`85b7dda6d`](https://github.com/krlmlr/duckdb/commit/85b7dda6d626f88685e1f95e4c1cc0e1efdc4c3b)
 - [#20673](https://github.com/duckdb/duckdb/pull/20673) Skip aggregate state type test in PEG strict mode (CI fix)
   - `-dag`: [`35901bacd`](https://github.com/krlmlr/duckdb/commit/35901bacdced2508189f6191f5f68667627869b2)
   - run #1: copied [`88be4ea48`](https://github.com/krlmlr/duckdb/commit/88be4ea48bb7f454d054ca6be174648da3c01b30)
   - run #2: copied [`192f3052b`](https://github.com/krlmlr/duckdb/commit/192f3052b67c59dd81c0b3ebc1c4945c8368480b)
+  - run #3: copied [`2caa219b4`](https://github.com/krlmlr/duckdb/commit/2caa219b44a8bd3165725fff0ea3a74fa7b11fa9)
 - [#20327](https://github.com/duckdb/duckdb/pull/20327) Add support for residual predicates in hash joins
   - `-dag`: [`edba84aee`](https://github.com/krlmlr/duckdb/commit/edba84aee99fa06972c76a9e8940d1b14fa6a095)
   - run #1: copied [`e2dd80f2b`](https://github.com/krlmlr/duckdb/commit/e2dd80f2bd9c421bff988f2332ed24a70fa10e6c)
   - run #2: copied [`4eb5a0fc4`](https://github.com/krlmlr/duckdb/commit/4eb5a0fc4331060d1ff8f4d8aec94e849835d7d3)
+  - run #3: copied [`5a191222b`](https://github.com/krlmlr/duckdb/commit/5a191222b20e134c4857e5d099005244c9091aab)
 - [#20687](https://github.com/duckdb/duckdb/pull/20687) Fix compiler warnings on `main`
   - `-dag`: [`f4e383ee0`](https://github.com/krlmlr/duckdb/commit/f4e383ee0eecbaa75d4cd295f4529e34776fd9be)
   - run #1: copied [`5e9510d91`](https://github.com/krlmlr/duckdb/commit/5e9510d91e84be10b29a2f9e98f79ed47bba90a6)
   - run #2: copied [`23e34f50d`](https://github.com/krlmlr/duckdb/commit/23e34f50ddb5d359f15510adff84e39b0558cacf)
+  - run #3: copied [`501b73372`](https://github.com/krlmlr/duckdb/commit/501b733722f133b838f3fa9e27762ad9871edefc)
 - [#20368](https://github.com/duckdb/duckdb/pull/20368) Fix correlated scalar subqueries involving CTEs and derived tables
   - `-dag`: [`b235de650`](https://github.com/krlmlr/duckdb/commit/b235de6503c5289b8f310d9cb9f5f91c149e43ca)
   - run #1: copied [`163350b70`](https://github.com/krlmlr/duckdb/commit/163350b7002416901fe5436d2acea66f64d4d26b)
   - run #2: copied [`e92f804ad`](https://github.com/krlmlr/duckdb/commit/e92f804ad7b947c46edfbbeae1cbc22e38f12a7a)
+  - run #3: copied [`4f014b296`](https://github.com/krlmlr/duckdb/commit/4f014b2966d91909af56d369e7a4fea828e6acf8)
 - [#20682](https://github.com/duckdb/duckdb/pull/20682) Optimize DELETE by scanning indexed columns at bind time
   - `-dag`: [`0562a88ac`](https://github.com/krlmlr/duckdb/commit/0562a88aca300a94059a6968cba1c5b991334ec2)
   - run #1: copied [`d1ace55a6`](https://github.com/krlmlr/duckdb/commit/d1ace55a62d40c39f9f6ebcfb9cd0c0250b75f2a)
   - run #2: copied [`eb2ca782a`](https://github.com/krlmlr/duckdb/commit/eb2ca782add608cdaf58094b00146713ddd0517b)
+  - run #3: copied [`a3de38309`](https://github.com/krlmlr/duckdb/commit/a3de38309f92565adce98f8c0ff5f3356e656e50)
 
 - **[checkpoint] Run #4 back-merge** [#20729](https://github.com/duckdb/duckdb/pull/20729) "Merge V1.5 -> Main"
   - `-dag`: [`c403c86c5`](https://github.com/krlmlr/duckdb/commit/c403c86c50dba96228f7cf205211b192b00dfe3e)
   - run #1: copied (merge) [`0445866fc`](https://github.com/krlmlr/duckdb/commit/0445866fcbcaf53580fff7a0e4081c487075bf74)
   - run #2: copied (merge) [`f874222a1`](https://github.com/krlmlr/duckdb/commit/f874222a1619793517bd019330a2b4f978b1f8b5)
+  - run #3: copied (merge) [`5ec6dc57e`](https://github.com/krlmlr/duckdb/commit/5ec6dc57e9f7fa42cbb3952ddd8798c3647499a8)
 
 ### Run #5 segment
 - [#20219](https://github.com/duckdb/duckdb/pull/20219) Add operator_memory_limit setting for per-connection memory budgets
   - `-dag`: [`c5add4e59`](https://github.com/krlmlr/duckdb/commit/c5add4e591e1420dc720abbc9f2ab78e6fc85715)
   - run #1: copied [`245f14a26`](https://github.com/krlmlr/duckdb/commit/245f14a2640a4bc5e72f56c5d18b1d9cee2d5c8a)
   - run #2: copied [`c2d643404`](https://github.com/krlmlr/duckdb/commit/c2d6434044ddd6fc8249df19ca46c88c5b37fc3a)
+  - run #3: copied [`7c5d6e0e7`](https://github.com/krlmlr/duckdb/commit/7c5d6e0e756caf0445fbb2599c0acd1cced10be9)
 - [#20365](https://github.com/duckdb/duckdb/pull/20365) Allow linked_libs to be included statically in bundle target
   - `-dag`: [`8a3c5d072`](https://github.com/krlmlr/duckdb/commit/8a3c5d07298dec921230234eb9d423adeacf3f72)
   - run #1: copied [`9cccaa915`](https://github.com/krlmlr/duckdb/commit/9cccaa915ab4d38ff0e091c06a8d1da84ceec322)
   - run #2: copied [`50ff1afa2`](https://github.com/krlmlr/duckdb/commit/50ff1afa2709bab423c0a6015322183680d85a02)
+  - run #3: copied [`dc76c6302`](https://github.com/krlmlr/duckdb/commit/dc76c63021092123128b59a59eb154fde3ac6787)
 - [#20742](https://github.com/duckdb/duckdb/pull/20742) PhysicalEmptyResult should support partitioning
   - `-dag`: [`c5d153f85`](https://github.com/krlmlr/duckdb/commit/c5d153f85309ec32ea2d0b154ef1a011eb1f8786)
   - run #1: copied [`ad922ad20`](https://github.com/krlmlr/duckdb/commit/ad922ad2099fec6e06e903157ce9ade25f4d65f4)
   - run #2: copied [`a308eeb75`](https://github.com/krlmlr/duckdb/commit/a308eeb753ebf7540db4de02c5987ac9df477053)
+  - run #3: copied [`24a80c470`](https://github.com/krlmlr/duckdb/commit/24a80c4708e8b269ba6dc9432d97c459ee074be9)
 - [#20796](https://github.com/duckdb/duckdb/pull/20796) Bump Julia to v1.4.4
   - `-dag`: [`388dd59a7`](https://github.com/krlmlr/duckdb/commit/388dd59a758ff50cd598cf8c670669395fd77146)
   - run #1: copied [`2a49cd58e`](https://github.com/krlmlr/duckdb/commit/2a49cd58eccf599c5db9e12b82007e219f41c49a)
   - run #2: copied [`014c47553`](https://github.com/krlmlr/duckdb/commit/014c475530fcc0988ff0e62b6c6304baf3f04c73)
+  - run #3: copied [`6778ee92d`](https://github.com/krlmlr/duckdb/commit/6778ee92df2022df2ed52575a2adfc9fe223af4d)
 - [#20801](https://github.com/duckdb/duckdb/pull/20801) Add a benchmark with deeply nested macros to test for regressions
   - `-dag`: [`578eeef39`](https://github.com/krlmlr/duckdb/commit/578eeef39db78452486780f21d47c36390eabca9)
   - run #1: copied [`2d69f6619`](https://github.com/krlmlr/duckdb/commit/2d69f6619c706baf85ee150db1b95876adbac74e)
   - run #2: copied [`e06529bc9`](https://github.com/krlmlr/duckdb/commit/e06529bc9bb66b8053c484d9dfab2f9d128c46d8)
+  - run #3: copied [`2dae0e31f`](https://github.com/krlmlr/duckdb/commit/2dae0e31ff47df311455e69c3f98d01910309a9e)
 - [#20672](https://github.com/duckdb/duckdb/pull/20672) Issue https://redirect.github.com/duckdb/duckdb/pull/20672: Update ICU to 72-1
   - `-dag`: [`848185679`](https://github.com/krlmlr/duckdb/commit/848185679bee67674bd7874ee6d0387e3a60820a)
   - run #1: copied [`8c958b40b`](https://github.com/krlmlr/duckdb/commit/8c958b40b08697b89c5bfac97e29e454eb833324)
   - run #2: copied [`eb7751e72`](https://github.com/krlmlr/duckdb/commit/eb7751e72b1c0a6bc588ae5716b59eb60ea46385)
+  - run #3: copied [`4ef99c3f7`](https://github.com/krlmlr/duckdb/commit/4ef99c3f7f399640df3e10c12cc721ad32c12430)
 - [#19481](https://github.com/duckdb/duckdb/pull/19481) Feature: `USING KEY` with aggregation
   - `-dag`: [`10aec064c`](https://github.com/krlmlr/duckdb/commit/10aec064c41769d609393fb6feef2fb77bf76a95)
   - run #1: copied [`c6664288d`](https://github.com/krlmlr/duckdb/commit/c6664288d06aef62d940a07b0a138ec9034d6901)
   - run #2: copied [`883d2a7b6`](https://github.com/krlmlr/duckdb/commit/883d2a7b6a6b431d88c6fc630844e403bbc7c737)
+  - run #3: copied [`5e044ce7a`](https://github.com/krlmlr/duckdb/commit/5e044ce7aacd0d02e0f9f819c41a2a9ff34bc5c3)
 - [#20808](https://github.com/duckdb/duckdb/pull/20808) Optimizing String Serialization
   - `-dag`: [`64e9f789a`](https://github.com/krlmlr/duckdb/commit/64e9f789a29a025087328196bd46bbcfba0a52dc)
   - run #1: copied [`98a54cd7f`](https://github.com/krlmlr/duckdb/commit/98a54cd7f9dce57989afb1d2828d1f5232f88e3d)
   - run #2: copied [`c7083d019`](https://github.com/krlmlr/duckdb/commit/c7083d01905b7f804914166910deb5d94081a4b1)
+  - run #3: copied [`a35c50c60`](https://github.com/krlmlr/duckdb/commit/a35c50c60f64e3a1d6f770f03088fb766c6e5192)
 - [#7335](https://github.com/duckdb/duckdb/pull/7335) Internal https://redirect.github.com/duckdb/duckdb/pull/7335: Join Condition Statistics
   - `-dag`: [`c527f6e1c`](https://github.com/krlmlr/duckdb/commit/c527f6e1caa9ab3e469476f0e48b567bafad9bcf)
   - run #1: copied [`0fc1f52df`](https://github.com/krlmlr/duckdb/commit/0fc1f52dfbaabf2671eb400b13d760026fb7e774)
   - run #2: copied [`723ae6808`](https://github.com/krlmlr/duckdb/commit/723ae68087250747976ad11e62b7e8b4bbf051ac)
+  - run #3: copied [`adc3eb11e`](https://github.com/krlmlr/duckdb/commit/adc3eb11ed8679286aab53fab23f6c008badfd31)
 - [#20750](https://github.com/duckdb/duckdb/pull/20750) Support Hexadecimal String Cast to BITSTRING
   - `-dag`: [`7c95905bf`](https://github.com/krlmlr/duckdb/commit/7c95905bfaba2da45bca281876017c49e8b3c09e)
   - run #1: copied [`2454a0988`](https://github.com/krlmlr/duckdb/commit/2454a0988aba139c7c375391094cee5c56fdee41)
   - run #2: copied [`6fe447f73`](https://github.com/krlmlr/duckdb/commit/6fe447f7316075503a3bb43eaf260cb6fbfc7ebc)
+  - run #3: copied [`8df1225c9`](https://github.com/krlmlr/duckdb/commit/8df1225c928e6e07678164caa6bc91b139f69abe)
 - [#20849](https://github.com/duckdb/duckdb/pull/20849) Optimized calculate the number of bytes to skip directly in file decode_utils.hpp
   - `-dag`: [`7e5a610fd`](https://github.com/krlmlr/duckdb/commit/7e5a610fd08b8d9146c67bf2bde77af77e7f98c6)
   - run #1: copied [`f03ac78b3`](https://github.com/krlmlr/duckdb/commit/f03ac78b3e8df70f7312f77f92f872d7ca3d6a88)
   - run #2: copied [`f14f013db`](https://github.com/krlmlr/duckdb/commit/f14f013dba4a3c2cd3849b5049f817bf0fd6144d)
+  - run #3: copied [`4f89101de`](https://github.com/krlmlr/duckdb/commit/4f89101dea8433b370aad09b6aff4c5ec21aab46)
 - [#20858](https://github.com/duckdb/duckdb/pull/20858) Turn stats into a variant, and return variant from `stats` and as part of `pragma_storage_info`
   - `-dag`: [`731051e8e`](https://github.com/krlmlr/duckdb/commit/731051e8e93831b3b7fe6e6c81d63c4bfefbecc0)
   - run #1: copied [`7978acf36`](https://github.com/krlmlr/duckdb/commit/7978acf36da7214af3b0e32361ae2b0a13fe9c4c)
   - run #2: copied [`d1a35b063`](https://github.com/krlmlr/duckdb/commit/d1a35b0632935a74f03a4978252038ff3656a88c)
+  - run #3: copied [`9a38cfe05`](https://github.com/krlmlr/duckdb/commit/9a38cfe050acc31d72c1b569e0a498d08bbd3b24)
 - [#20681](https://github.com/duckdb/duckdb/pull/20681) Add EXPORT_STATE handling in PEG Transformer
   - `-dag`: [`529245837`](https://github.com/krlmlr/duckdb/commit/529245837885cd848592917501d3990200066409)
   - run #1: copied [`dbbaf1b03`](https://github.com/krlmlr/duckdb/commit/dbbaf1b037474c1d6c3864c35849fda90d8c30b6)
   - run #2: copied [`ebfc49611`](https://github.com/krlmlr/duckdb/commit/ebfc49611c48acc10023cdcb274ea21e4e068710)
+  - run #3: copied [`327a0aab7`](https://github.com/krlmlr/duckdb/commit/327a0aab7ed91a150c63c94e48f65bee79342891)
 - [#20784](https://github.com/duckdb/duckdb/pull/20784) Honor the desired serialization version set in the config in `DataChunk`'s, `LogicalOperator`'s `Verify` functions
   - `-dag`: [`97413e2f4`](https://github.com/krlmlr/duckdb/commit/97413e2f41d5d42b0582b74127a72de8a1b0842e)
   - run #1: copied [`4e169c506`](https://github.com/krlmlr/duckdb/commit/4e169c5067240c84a4713572d2d4ba6dcbf61306)
   - run #2: copied [`e7608482f`](https://github.com/krlmlr/duckdb/commit/e7608482f2ef80160ce0fd575359f6554a95dcb2)
+  - run #3: copied [`dfee9486a`](https://github.com/krlmlr/duckdb/commit/dfee9486ab7c3ae3e4e7300f6fd04f9683883898)
 - [#20572](https://github.com/duckdb/duckdb/pull/20572) Structured aggregate states with nested exported `AGGREGATED_STATE` types
   - `-dag`: [`ec7d9a457`](https://github.com/krlmlr/duckdb/commit/ec7d9a457d05536e7310a5a7e2c338a69787f240)
   - run #1: copied [`e05d0ed5c`](https://github.com/krlmlr/duckdb/commit/e05d0ed5c538cac1c039aa9dd8a8a8f0628ca4d8)
   - run #2: copied [`f5f2be081`](https://github.com/krlmlr/duckdb/commit/f5f2be0814f80b29e89e2517cc746d7585317c41)
+  - run #3: copied [`968a5b406`](https://github.com/krlmlr/duckdb/commit/968a5b406253864dfbc345c7c0600a3861d09a96)
 - [#20171](https://github.com/duckdb/duckdb/pull/20171) Improve tokenizer of new parser and use for highlighting
   - `-dag`: [`2375a6688`](https://github.com/krlmlr/duckdb/commit/2375a6688cf11ecc96e87b33d007ca48a9fa3280)
   - run #1: copied [`ec9f84681`](https://github.com/krlmlr/duckdb/commit/ec9f846816d4f2392f5a00c24221658684457335)
   - run #2: copied [`0005cddf5`](https://github.com/krlmlr/duckdb/commit/0005cddf53c8b0b93e3d7de6a181ceebd857f512)
+  - run #3: copied [`922ab71cf`](https://github.com/krlmlr/duckdb/commit/922ab71cf4e2e76bc6233fcd1a077b10409b4406)
 - [#20612](https://github.com/duckdb/duckdb/pull/20612) [ART] ConstNodeHandles
   - `-dag`: [`51c7d3a5a`](https://github.com/krlmlr/duckdb/commit/51c7d3a5a1f8a5826aefd4c73eff21a6ea1d9243)
   - run #1: copied [`37b320eb6`](https://github.com/krlmlr/duckdb/commit/37b320eb68f3ff0366ac4a4624d5bbe4d36975e5)
   - run #2: copied [`9faa49954`](https://github.com/krlmlr/duckdb/commit/9faa4995467f48db258357be8c7ed490343b9d06)
+  - run #3: copied [`b2d674fe1`](https://github.com/krlmlr/duckdb/commit/b2d674fe14057e85802c956598a5346192e46d03)
 - [#7360](https://github.com/duckdb/duckdb/pull/7360) Internal https://redirect.github.com/duckdb/duckdb/pull/7360: ICU 74-2 Update
   - `-dag`: [`4e1325edd`](https://github.com/krlmlr/duckdb/commit/4e1325eddeb6ce54a530c0b9e6701b85870efeae)
   - run #1: copied [`4ecc24a07`](https://github.com/krlmlr/duckdb/commit/4ecc24a07593100f036afa6452ca3a03e133b2f1)
   - run #2: copied [`6f9862f22`](https://github.com/krlmlr/duckdb/commit/6f9862f22f03f965842a57cd254b1c9d081572fb)
+  - run #3: copied [`aae980611`](https://github.com/krlmlr/duckdb/commit/aae980611e64c830c9aeccb92cee78f9639c07ef)
 - [#20774](https://github.com/duckdb/duckdb/pull/20774) Add DELETE RETURNING virtual columns support
   - `-dag`: [`8cea73d65`](https://github.com/krlmlr/duckdb/commit/8cea73d655998b61bfc08b20996400877ead3964)
   - run #1: copied [`907583a09`](https://github.com/krlmlr/duckdb/commit/907583a090f8ae1aa999fedc1ad53dfdf7f4e916)
   - run #2: copied [`ffd6dbc16`](https://github.com/krlmlr/duckdb/commit/ffd6dbc166522da2407937f6979a1da8ba61c97c)
+  - run #3: copied [`894b76c83`](https://github.com/krlmlr/duckdb/commit/894b76c831124bc019828438f11a355933d76f13)
 - [#7360](https://github.com/duckdb/duckdb/pull/7360) Internal https://redirect.github.com/duckdb/duckdb/pull/7360: ICU ARM Patch
   - `-dag`: [`fb095f2d1`](https://github.com/krlmlr/duckdb/commit/fb095f2d19908ff79e548f96448a0cadb08aa4ea)
   - run #1: copied [`4ecc24a07`](https://github.com/krlmlr/duckdb/commit/4ecc24a07593100f036afa6452ca3a03e133b2f1)
   - run #2: copied [`6f9862f22`](https://github.com/krlmlr/duckdb/commit/6f9862f22f03f965842a57cd254b1c9d081572fb)
+  - run #3: copied [`aae980611`](https://github.com/krlmlr/duckdb/commit/aae980611e64c830c9aeccb92cee78f9639c07ef)
 - [#20826](https://github.com/duckdb/duckdb/pull/20826) Respect affinity mask of main process when pinning
   - `-dag`: [`98f8bc798`](https://github.com/krlmlr/duckdb/commit/98f8bc7981d3d64973e4200e8cb675a748810c6e)
   - run #1: copied [`c1701e29d`](https://github.com/krlmlr/duckdb/commit/c1701e29d9f13bf7cbb4d9bddc92bb37a8c801b2)
   - run #2: copied [`051d0c702`](https://github.com/krlmlr/duckdb/commit/051d0c702bf350f2c6750bd036aafbae50f3e1a0)
+  - run #3: copied [`4f3d3d36f`](https://github.com/krlmlr/duckdb/commit/4f3d3d36f381e89f1405e107ab222f6982b4ed15)
 - [#20890](https://github.com/duckdb/duckdb/pull/20890) scalar:list: remove redundant clear() calls
   - `-dag`: [`ea8531ed8`](https://github.com/krlmlr/duckdb/commit/ea8531ed82238486077775c809ca2b47e06c58e4)
   - run #1: copied [`b9cce6632`](https://github.com/krlmlr/duckdb/commit/b9cce6632e8d087a039ee21eab82811c2726e30e)
   - run #2: copied [`6bcdaaa4a`](https://github.com/krlmlr/duckdb/commit/6bcdaaa4aa7d8ee09e0c06019c213e9fb27a234d)
+  - run #3: copied [`e49991aa9`](https://github.com/krlmlr/duckdb/commit/e49991aa9b2547162ea32e0bde592e89b31feb53)
 - [#20887](https://github.com/duckdb/duckdb/pull/20887) Fix deserialization for new string serialization method
   - `-dag`: [`c9d25c85c`](https://github.com/krlmlr/duckdb/commit/c9d25c85c3a6428d5c40a8821917e6af2cb8993f)
   - run #1: copied [`4981159cc`](https://github.com/krlmlr/duckdb/commit/4981159cc8eaf6bd7f068a14a84a7df17c69078b)
   - run #2: copied [`4bfa1d71f`](https://github.com/krlmlr/duckdb/commit/4bfa1d71fcd54efdcda3b2ae5261f1e006494bfd)
+  - run #3: copied [`ea385f305`](https://github.com/krlmlr/duckdb/commit/ea385f305c8792f40a741a2d325bd44d03d5ee38)
 - [#20876](https://github.com/duckdb/duckdb/pull/20876) Fix test issue with `approx_count_distinct` in `USING KEY`
   - `-dag`: [`573f2579d`](https://github.com/krlmlr/duckdb/commit/573f2579d043415379fca7d357252038803c9bbf)
   - run #1: copied [`bf15ed959`](https://github.com/krlmlr/duckdb/commit/bf15ed959c0f0fd6110e623e0d90c59b7707aa1e)
   - run #2: copied [`b02003599`](https://github.com/krlmlr/duckdb/commit/b020035996bade69da6815b5325b18da2c2782ac)
+  - run #3: copied [`41f43ac18`](https://github.com/krlmlr/duckdb/commit/41f43ac18d5f798a4d9b033ab49df7b29a261e60)
 
 - **[checkpoint] Run #5 back-merge** [#20893](https://github.com/duckdb/duckdb/pull/20893) "Merge v1.5-variegata into main"
   - `-dag`: [`df8b451c2`](https://github.com/krlmlr/duckdb/commit/df8b451c2441f1f26ca80351f34b2f3fb2d92c75)
   - run #1: copied (merge) [`ecdea99ee`](https://github.com/krlmlr/duckdb/commit/ecdea99ee7ce13bc965d0e10f7ee5bcd994b8b52)
   - run #2: copied (merge) [`c6d208ba4`](https://github.com/krlmlr/duckdb/commit/c6d208ba4b1b424c85e459ca203ebe5040f1ae02)
+  - run #3: copied (merge) [`1307255ec`](https://github.com/krlmlr/duckdb/commit/1307255ec62b98ae3a15fc2e0a3a2e13ec1faf5a)
 
 ### Run #6 segment
 - [#20891](https://github.com/duckdb/duckdb/pull/20891) Add missed throw
   - `-dag`: [`4f6175f64`](https://github.com/krlmlr/duckdb/commit/4f6175f64ef0a73e3fe88db6d3d3a6c83860af3a)
   - run #1: copied [`6d24fab91`](https://github.com/krlmlr/duckdb/commit/6d24fab9119c2ac94351cc6974bb269771e44626)
   - run #2: copied [`337782e55`](https://github.com/krlmlr/duckdb/commit/337782e55e3c6b1f26a28c5da28ef59aea4ad957)
+  - run #3: copied [`524c62b4f`](https://github.com/krlmlr/duckdb/commit/524c62b4fd79f24700e2a26413a8a6036c1d7552)
 - [#20763](https://github.com/duckdb/duckdb/pull/20763) Shell: normalize .duckdbrc path separators when printing loading message
   - `-dag`: [`4f6eb827c`](https://github.com/krlmlr/duckdb/commit/4f6eb827ca84038914f50823bcd3c46f32d91b7a)
   - run #1: copied [`e1f17ed25`](https://github.com/krlmlr/duckdb/commit/e1f17ed2533f835252f50eb4b039f0385f361d93)
   - run #2: copied [`2c155e150`](https://github.com/krlmlr/duckdb/commit/2c155e150bc83c2f048289f5a9457affc5c859d4)
+  - run #3: copied [`3b469f563`](https://github.com/krlmlr/duckdb/commit/3b469f563b4edc7714f7b9a1e0103d8a9eac4b85)
 - [#20809](https://github.com/duckdb/duckdb/pull/20809) WIP: Support struct-based aggregate state in `sum` aggregate function
   - `-dag`: [`66757d756`](https://github.com/krlmlr/duckdb/commit/66757d756661cb643f25b341741098d94b0037a6)
   - run #1: copied [`f45b648c1`](https://github.com/krlmlr/duckdb/commit/f45b648c1a3b518265df70a769cbadfc91e7de04)
   - run #2: copied [`d56cc5d59`](https://github.com/krlmlr/duckdb/commit/d56cc5d59a856154d60db2e16de4c89ba50f8367)
+  - run #3: copied [`3a2e67ef1`](https://github.com/krlmlr/duckdb/commit/3a2e67ef142acbc11f43820f57022813c87af0ef)
 - [#20716](https://github.com/duckdb/duckdb/pull/20716) Optimize `ExportAggregateFinalize` for SIMD loop transformation
   - `-dag`: [`15ee86c5c`](https://github.com/krlmlr/duckdb/commit/15ee86c5c7a27397fa90caf49e1fae36fec1bba8)
   - run #1: copied [`a06ff67ce`](https://github.com/krlmlr/duckdb/commit/a06ff67ce3262fe2c7772cfc3e4ead0aa53eff2c)
   - run #2: copied [`9fe7eba79`](https://github.com/krlmlr/duckdb/commit/9fe7eba79f77f1915d46570c899c598c89a98f5c)
+  - run #3: copied [`ad23cce6c`](https://github.com/krlmlr/duckdb/commit/ad23cce6cf351c0d06731b11be834c851ee168af)
 - [#20915](https://github.com/duckdb/duckdb/pull/20915) Exclude test with `USING KEY` for PEG Parser
   - `-dag`: [`6bb022677`](https://github.com/krlmlr/duckdb/commit/6bb022677f60591d32f3a4f1be837f74393ad9d7)
   - run #1: copied [`0c2427592`](https://github.com/krlmlr/duckdb/commit/0c24275922db1bd2fb1e3425ebd3f549a4d0a294)
   - run #2: copied [`6967c43e0`](https://github.com/krlmlr/duckdb/commit/6967c43e0206e780c3da3b58407dd28b83ad7fa0)
+  - run #3: copied [`091e68afc`](https://github.com/krlmlr/duckdb/commit/091e68afc65f55b7223f7580b3220243ba0fbf88)
 - [#20900](https://github.com/duckdb/duckdb/pull/20900) Fix internal error: Propagate bound columns from TRY() binder for GROUP BY validation
   - `-dag`: [`428491695`](https://github.com/krlmlr/duckdb/commit/428491695a1ff14634e107a6e33e33344dd2840a)
   - run #1: copied [`0e6eca2eb`](https://github.com/krlmlr/duckdb/commit/0e6eca2eb49379940ebff9e241a5dfc1f06d868d)
   - run #2: copied [`e664ade5d`](https://github.com/krlmlr/duckdb/commit/e664ade5d3c4ea444413c759238834fb589fb98c)
+  - run #3: copied [`c44174445`](https://github.com/krlmlr/duckdb/commit/c441744453f5c3f7e663ccac3ffb0e8d1c5fbff4)
 - [#20902](https://github.com/duckdb/duckdb/pull/20902) Rename `GetQueryMaxMemory` to `OperatorMemoryLimit`
   - `-dag`: [`1ae55862a`](https://github.com/krlmlr/duckdb/commit/1ae55862a64a64ec358a031c641879f021b90995)
   - run #1: copied [`ac84676ad`](https://github.com/krlmlr/duckdb/commit/ac84676ad63795437f9fb59af1543a0080c55d1a)
   - run #2: copied [`dbfc72ace`](https://github.com/krlmlr/duckdb/commit/dbfc72ace1b55fc43f3a599055681a632500624d)
+  - run #3: copied [`372dcd4b5`](https://github.com/krlmlr/duckdb/commit/372dcd4b562d0dc76a0be38c173d0c212f1c41c7)
 - [#20633](https://github.com/duckdb/duckdb/pull/20633) Feature: [Table Filter] Allow extensions to customize table filtering logic
   - `-dag`: [`5711813a6`](https://github.com/krlmlr/duckdb/commit/5711813a6f21da3efc3b9f2aa122b897a686737f)
   - run #1: copied [`5063906b0`](https://github.com/krlmlr/duckdb/commit/5063906b08093dafc7bf2d68e4558e9899613207)
   - run #2: copied [`9b2c9243a`](https://github.com/krlmlr/duckdb/commit/9b2c9243a876ee47c6f27c725bf48fc4ad984c36)
+  - run #3: copied [`a9415282a`](https://github.com/krlmlr/duckdb/commit/a9415282af29709f4e8a330f019e6675c6a2798e)
 - [#20603](https://github.com/duckdb/duckdb/pull/20603) Attempt IWYU for `storage` directory
   - `-dag`: [`09ec1c5a7`](https://github.com/krlmlr/duckdb/commit/09ec1c5a732a6a048133c9ecf10c65c14ef51bcf)
   - run #1: copied [`1f6e4c81f`](https://github.com/krlmlr/duckdb/commit/1f6e4c81f412718dc48e191dc002d9e7d186aeaa)
   - run #2: copied [`4000dc2e3`](https://github.com/krlmlr/duckdb/commit/4000dc2e3e1d840ee46cb01d3f4a52cf99036a3a)
+  - run #3: copied [`174bb9b4f`](https://github.com/krlmlr/duckdb/commit/174bb9b4f4b8ee2843e4e7198d034f9bdef736b0)
 - [#20912](https://github.com/duckdb/duckdb/pull/20912) Add support for `VectorType::SHREDDED`, which allows shredded variants to be emitted from storage and executed on 
   - `-dag`: [`ff65b7fdf`](https://github.com/krlmlr/duckdb/commit/ff65b7fdfbebda9720a58ee2360eecd3e4e4dd33)
   - run #1: copied [`d1a7edb5b`](https://github.com/krlmlr/duckdb/commit/d1a7edb5bc3b313a3f981ab3e5cfaa83cdd08e4b)
   - run #2: copied [`5c3f5984f`](https://github.com/krlmlr/duckdb/commit/5c3f5984fbde9aa1c4aeac1ef511a9298232495c)
+  - run #3: copied [`7903d8dab`](https://github.com/krlmlr/duckdb/commit/7903d8dab4b3d5309d40681d1e01a1f9ab516c87)
 - [#20920](https://github.com/duckdb/duckdb/pull/20920) Optimize parquet bitpack skip
   - `-dag`: [`dec44e604`](https://github.com/krlmlr/duckdb/commit/dec44e6040ee1480b9ae01632bd0b617b7a167eb)
   - run #1: copied [`5eb6124e1`](https://github.com/krlmlr/duckdb/commit/5eb6124e1e1810a8a25562d040c6d3d0a8c62932)
   - run #2: copied [`a25a96ba7`](https://github.com/krlmlr/duckdb/commit/a25a96ba74f423ac6b0fbf7008da15780c5ded70)
+  - run #3: copied [`3327cec72`](https://github.com/krlmlr/duckdb/commit/3327cec72c4619905b6f8c266f0b58eb0104a8c7)
 - [#20913](https://github.com/duckdb/duckdb/pull/20913) Physical Insert - avoid double constraint verification
   - `-dag`: [`8b06ba7e3`](https://github.com/krlmlr/duckdb/commit/8b06ba7e31bfe3d0d9de9cedeeaeae5dc69e7131)
   - run #1: copied [`778df9272`](https://github.com/krlmlr/duckdb/commit/778df9272b9c4b89a22ff139d9925d9c6db4cac7)
   - run #2: copied [`5a1cf4e59`](https://github.com/krlmlr/duckdb/commit/5a1cf4e59906142d2fafbaae4707991bee2f83d6)
+  - run #3: copied [`50bc91138`](https://github.com/krlmlr/duckdb/commit/50bc91138abdd9927116707ed774f99d335df324)
 - [#20940](https://github.com/duckdb/duckdb/pull/20940) Implement conversion between UUID and UHUGEINT
   - `-dag`: [`1fe0cbc7e`](https://github.com/krlmlr/duckdb/commit/1fe0cbc7ec9fd833e3e8031fd3520725f7af0529)
   - run #1: copied [`07b42cf04`](https://github.com/krlmlr/duckdb/commit/07b42cf04e9a61f25d8589796f8eecefbeeddaa8)
   - run #2: copied [`33ad7de4f`](https://github.com/krlmlr/duckdb/commit/33ad7de4f064d096f0a139ccf09d7bc4d607e488)
+  - run #3: copied [`f958378f4`](https://github.com/krlmlr/duckdb/commit/f958378f47d34aaacaa659b3a71854083880fd8f)
 - [#7316](https://github.com/duckdb/duckdb/pull/7316) Internal https://redirect.github.com/duckdb/duckdb/pull/7316: Window Function Catalog
   - `-dag`: [`1b7320ead`](https://github.com/krlmlr/duckdb/commit/1b7320ead705592529db18d43822fac5549bbb2b)
   - run #1: copied [`7247c97ce`](https://github.com/krlmlr/duckdb/commit/7247c97cea6577aac0410ce70f1b6acbfd075f39)
   - run #2: copied [`23e2205de`](https://github.com/krlmlr/duckdb/commit/23e2205de77bfb43ae74e112542e305b5acc5b14)
+  - run #3: copied [`93fa49676`](https://github.com/krlmlr/duckdb/commit/93fa4967612131a3905c64a3e82e9f24d733851e)
 - [#6540](https://github.com/duckdb/duckdb/pull/6540) Internal https://redirect.github.com/duckdb/duckdb/pull/6540: Join Condition Cardinalities
   - `-dag`: [`fef86c128`](https://github.com/krlmlr/duckdb/commit/fef86c128336589dd2ad1a8340bba0c0c2647a6f)
   - run #1: copied [`2698b0903`](https://github.com/krlmlr/duckdb/commit/2698b090366abcc715df877d4b52536b44a16f38)
   - run #2: copied [`7e09d85d8`](https://github.com/krlmlr/duckdb/commit/7e09d85d8f430ef0ff55edaef4fb34b3db3ee792)
+  - run #3: copied [`a25cae6ba`](https://github.com/krlmlr/duckdb/commit/a25cae6baed823fc9e4f53a75c1b0f7259f7684c)
 - [#20904](https://github.com/duckdb/duckdb/pull/20904) Loop tightening in `AggregateStateCombine` for SIMD friendly vectorized execution
   - `-dag`: [`a3fb68aa8`](https://github.com/krlmlr/duckdb/commit/a3fb68aa82cb6b0363c20047b5e248f551b9797b)
   - run #1: copied [`4431aff34`](https://github.com/krlmlr/duckdb/commit/4431aff34296d8f85acc0d3a7ff8ade947ef9525)
   - run #2: copied [`44ab8e387`](https://github.com/krlmlr/duckdb/commit/44ab8e387ca595eb7ca3c4e79c59f9bc0b679300)
+  - run #3: copied [`4fe9c093e`](https://github.com/krlmlr/duckdb/commit/4fe9c093ebcf3200960098bd3544e3a369e88505)
 - [#20971](https://github.com/duckdb/duckdb/pull/20971) Convert count aggregate to struct-based state
   - `-dag`: [`0b2f2f8a7`](https://github.com/krlmlr/duckdb/commit/0b2f2f8a7a1a05ca7fcc886b841eaf3af11ff9d3)
   - run #1: copied [`c140d642b`](https://github.com/krlmlr/duckdb/commit/c140d642bae27a3945cf35d522abc75c02ec83da)
   - run #2: copied [`5105760d9`](https://github.com/krlmlr/duckdb/commit/5105760d92244f63d527f10d2d91fb4aff9b281f)
+  - run #3: copied [`99ed55edb`](https://github.com/krlmlr/duckdb/commit/99ed55edbac4443e8f58ba70be09934e54cbe41d)
 - [#20963](https://github.com/duckdb/duckdb/pull/20963) Feature/etgarsh/aggregate state export/aggregate combine
   - `-dag`: [`29eac3240`](https://github.com/krlmlr/duckdb/commit/29eac32408ad8e35f727c6126653f29f1e1a9d43)
   - run #1: copied [`c81787881`](https://github.com/krlmlr/duckdb/commit/c81787881c7fe59c15bf6c1ace32172cd5986c1f)
   - run #2: copied [`b517f8900`](https://github.com/krlmlr/duckdb/commit/b517f8900a0ed06e6633adc0d6182e01f4657f26)
+  - run #3: copied [`3d4bd29b5`](https://github.com/krlmlr/duckdb/commit/3d4bd29b55e90eeb5592e276a53018c4b3bcae55)
 - [#20992](https://github.com/duckdb/duckdb/pull/20992) CVE-2026-22776 fix patch
   - `-dag`: [`b3ddcbbf3`](https://github.com/krlmlr/duckdb/commit/b3ddcbbf3d9368f87295e6f0cc608f766d32d16d)
   - run #1: copied [`03285dd2d`](https://github.com/krlmlr/duckdb/commit/03285dd2d2dd84a787ae5c63d35f168160a94a5f)
   - run #2: copied [`9d59a9939`](https://github.com/krlmlr/duckdb/commit/9d59a9939605fb3a86983a16844c91f5f4728401)
+  - run #3: copied [`362286514`](https://github.com/krlmlr/duckdb/commit/3622865145fbf4734d5a74b9d5ecbdc04104d3c0)
 - [#20967](https://github.com/duckdb/duckdb/pull/20967) Remove redundant projections
   - `-dag`: [`79dd2af38`](https://github.com/krlmlr/duckdb/commit/79dd2af388c9c45e4742e592d89ec1736366e3b5)
   - run #1: copied [`769da6fb3`](https://github.com/krlmlr/duckdb/commit/769da6fb3d0a92d86542e83b056497d3473f38d6)
   - run #2: copied [`dafcb8caf`](https://github.com/krlmlr/duckdb/commit/dafcb8cafb9e138d6ea79a51200d48ef7460aafc)
+  - run #3: copied [`3d6803979`](https://github.com/krlmlr/duckdb/commit/3d6803979909dbcde0de88a8d37e215c8e9262ca)
 - [#20984](https://github.com/duckdb/duckdb/pull/20984) Convert first, last, and any_value aggregates to struct-based state
   - `-dag`: [`40e04234f`](https://github.com/krlmlr/duckdb/commit/40e04234f58c02ad60bb6011eddf4789c2cc46f3)
   - run #1: copied [`bf176cd47`](https://github.com/krlmlr/duckdb/commit/bf176cd47f6368a4715526c06bc8e2308b4ced86)
   - run #2: copied [`49fc99bce`](https://github.com/krlmlr/duckdb/commit/49fc99bcece993dc9956e32d57cc86c7fb7f0f8e)
+  - run #3: copied [`47977fdd3`](https://github.com/krlmlr/duckdb/commit/47977fdd396cbb524779ade911ed5a3cfe94b4a2)
 - [#20929](https://github.com/duckdb/duckdb/pull/20929) clarify running local CI for PRs, and other pain points
   - `-dag`: [`d06373c91`](https://github.com/krlmlr/duckdb/commit/d06373c911507a5a8c54ecfb0d7a2b9bfb88000a)
   - run #1: copied [`e2c29b609`](https://github.com/krlmlr/duckdb/commit/e2c29b60965bf393f10bf8a0e091261e531d7630)
   - run #2: copied [`bb3c46fee`](https://github.com/krlmlr/duckdb/commit/bb3c46feedde136e362fddb9f1506cdde865a379)
+  - run #3: copied [`fa9f7d8f4`](https://github.com/krlmlr/duckdb/commit/fa9f7d8f4f5ead8af9f4aeabdbc4ebeb8b627daf)
 - [#20903](https://github.com/duckdb/duckdb/pull/20903) [minor] Update autoload exception comment
   - `-dag`: [`7535850b6`](https://github.com/krlmlr/duckdb/commit/7535850b65af4d88f0095e2fa3d1371d04595720)
   - run #1: copied [`6020e714d`](https://github.com/krlmlr/duckdb/commit/6020e714d352e13e3d9fddea1c90fe0af3eef09a)
   - run #2: copied [`083c00350`](https://github.com/krlmlr/duckdb/commit/083c003502ed92126719996daddbf8f81910ecc9)
+  - run #3: copied [`c5fb02457`](https://github.com/krlmlr/duckdb/commit/c5fb024574e352f27496d4756268fdec49331635)
 - [#20996](https://github.com/duckdb/duckdb/pull/20996) Fix class/struct warnings.
   - `-dag`: [`385d2f895`](https://github.com/krlmlr/duckdb/commit/385d2f895de9a08bda5e5c8c154445673c00ff26)
   - run #1: copied [`cb48f3ee3`](https://github.com/krlmlr/duckdb/commit/cb48f3ee3606736a56526c9a37284d1a7da7d6e6)
   - run #2: copied [`af52b58b9`](https://github.com/krlmlr/duckdb/commit/af52b58b9c946fbaba0117f4a3f191596f0fc1ca)
+  - run #3: copied [`faee028f1`](https://github.com/krlmlr/duckdb/commit/faee028f105f59d77c6a27f5ec4c946ed56a7452)
 - [#20895](https://github.com/duckdb/duckdb/pull/20895) Throw on export of self-referencing foreign keys 
   - `-dag`: [`167422af2`](https://github.com/krlmlr/duckdb/commit/167422af2689c6fb6e25718d2a87605bbfa61bed)
   - run #1: copied [`4512d7a46`](https://github.com/krlmlr/duckdb/commit/4512d7a46c4c3b48539af92e6e039c42a621b724)
   - run #2: copied [`982560c9a`](https://github.com/krlmlr/duckdb/commit/982560c9a31129b6eb95408da07f1a3b8b171b3e)
+  - run #3: copied [`25aebf8a5`](https://github.com/krlmlr/duckdb/commit/25aebf8a5b0e43fa077487f210933a0afc441fe8)
 - [#7263](https://github.com/duckdb/duckdb/pull/7263) Internal https://redirect.github.com/duckdb/duckdb/pull/7263: IEJoin Memory Footprint
   - `-dag`: [`a5a0a3c1e`](https://github.com/krlmlr/duckdb/commit/a5a0a3c1e403eae7e33422528a4e90f43f7329db)
   - run #1: copied [`bfe8715b0`](https://github.com/krlmlr/duckdb/commit/bfe8715b0fb8e760fbec65297541e11d6ab198fb)
   - run #2: copied [`c797de980`](https://github.com/krlmlr/duckdb/commit/c797de9805e8c5aac410d352f6f3f946bbc26bae)
+  - run #3: copied [`e29001d17`](https://github.com/krlmlr/duckdb/commit/e29001d173a14bfd84b6d1cb3343347a2ad84df8)
 - [#21016](https://github.com/duckdb/duckdb/pull/21016) Convert product aggregate to struct-based state
   - `-dag`: [`9d4c74eaa`](https://github.com/krlmlr/duckdb/commit/9d4c74eaa21f4997d60fc58198c4e28961c7559d)
   - run #1: copied [`ca01b295c`](https://github.com/krlmlr/duckdb/commit/ca01b295c322b689601a5ef6ded50a010c0042e2)
   - run #2: copied [`6a63a34da`](https://github.com/krlmlr/duckdb/commit/6a63a34da408d4ed2a2eb1627a18cf172097dd28)
+  - run #3: copied [`9c96a22fd`](https://github.com/krlmlr/duckdb/commit/9c96a22fdd0b6daaa69100dd17d0cc781d457d6d)
 - [#6979](https://github.com/duckdb/duckdb/pull/6979) Internal https://redirect.github.com/duckdb/duckdb/pull/6979: Window SelfJoin OrderBy
   - `-dag`: [`d29336672`](https://github.com/krlmlr/duckdb/commit/d29336672376aaf8ac93019c799360a59eda6d84)
   - run #1: copied [`a4c09106c`](https://github.com/krlmlr/duckdb/commit/a4c09106c784ba6a9b3aeca761e6e7b57101e177)
   - run #2: copied [`498e9e054`](https://github.com/krlmlr/duckdb/commit/498e9e054a3415ae969a9034b3a1085646fbc70f)
+  - run #3: copied [`5e94882f2`](https://github.com/krlmlr/duckdb/commit/5e94882f28e7f020a6018873907878fd23a7a8ed)
 - [#21027](https://github.com/duckdb/duckdb/pull/21027) Remove hardcoded list of exclude_archs for extensions
   - `-dag`: [`f1f0fcdd4`](https://github.com/krlmlr/duckdb/commit/f1f0fcdd44c5dd8965fe1f6477c3e8cf64105359)
   - run #1: copied [`01db790e5`](https://github.com/krlmlr/duckdb/commit/01db790e541be2a740bfcb4a79f8252bbd216629)
   - run #2: copied [`7578e3833`](https://github.com/krlmlr/duckdb/commit/7578e38333ea8ebae5e583809c1b93eb755231de)
+  - run #3: copied [`6673cbf1e`](https://github.com/krlmlr/duckdb/commit/6673cbf1ea3b6b8af9c5da70119554efe672005c)
 - [#21015](https://github.com/duckdb/duckdb/pull/21015) Add Recursive Struct-Based State Export Support for `corr` Aggregate Function
   - `-dag`: [`be39bf7fa`](https://github.com/krlmlr/duckdb/commit/be39bf7fac0ea6b56c94744eaa5214253a8e8bae)
   - run #1: copied [`e8567932d`](https://github.com/krlmlr/duckdb/commit/e8567932d62a49f01860ba85fe879432227e9274)
   - run #2: copied [`4840dcf50`](https://github.com/krlmlr/duckdb/commit/4840dcf504bc6dca89e87c822733fc4b49e96f90)
+  - run #3: copied [`b45b4934e`](https://github.com/krlmlr/duckdb/commit/b45b4934eaf3df16d504c9ceb84980a3c58ad4a7)
 
 - **[checkpoint] Run #6 back-merge** [#21028](https://github.com/duckdb/duckdb/pull/21028) "Merge V1.5 -> Main"
   - `-dag`: [`17eadf580`](https://github.com/krlmlr/duckdb/commit/17eadf580433b80f4ef06981c1497e0f1345894c)
   - run #1: copied (merge) [`2455370b1`](https://github.com/krlmlr/duckdb/commit/2455370b138e7c0852cfe7c88b606e419bcc2e7f)
   - run #2: copied (merge) [`a7af2bdf4`](https://github.com/krlmlr/duckdb/commit/a7af2bdf4fea1d09471ddee2502fa888029b5b44)
+  - run #3: copied (merge) [`d703706b8`](https://github.com/krlmlr/duckdb/commit/d703706b88ac746761b426acb1d40fb78c63b933)
 
 ### Run #7 segment
 - [#20910](https://github.com/duckdb/duckdb/pull/20910) Fix missing query location in table macro bind errors
   - `-dag`: [`079713e12`](https://github.com/krlmlr/duckdb/commit/079713e126f64b8aeb5a3250ee2e0bb0a5f7e28d)
   - run #1: copied [`76798aa76`](https://github.com/krlmlr/duckdb/commit/76798aa7683b6d520192a1ee02ee2d14b4266dc6)
   - run #2: copied [`e2667d93e`](https://github.com/krlmlr/duckdb/commit/e2667d93ee22ece382a2afda25120e276e04732b)
+  - run #3: copied [`3f6874712`](https://github.com/krlmlr/duckdb/commit/3f6874712a7541a5d6c55353fe7601c578678e61)
 - [#21052](https://github.com/duckdb/duckdb/pull/21052) Fix aggregate hashtable leak
   - `-dag`: [`fe5838db0`](https://github.com/krlmlr/duckdb/commit/fe5838db0626b0cb0f91e346a2052786fc1e889b)
   - run #1: copied [`ddf57c335`](https://github.com/krlmlr/duckdb/commit/ddf57c33586d7fdd119f9af1965ba5ade2461820)
   - run #2: copied [`77e65fa2a`](https://github.com/krlmlr/duckdb/commit/77e65fa2a622a95dab4882e6c5cf12994bf37f72)
+  - run #3: copied [`6a57f6e8a`](https://github.com/krlmlr/duckdb/commit/6a57f6e8a45a0740ca72f937906673250b6315b2)
 - [#21054](https://github.com/duckdb/duckdb/pull/21054) Reduce CI workload caused by Julia workflow runs
   - `-dag`: [`ea810a036`](https://github.com/krlmlr/duckdb/commit/ea810a036ccf7468179c512ff7f249d78e1a775f)
   - run #1: copied [`9ffe73888`](https://github.com/krlmlr/duckdb/commit/9ffe73888bc3c7d970219b2ff680c6e46aa922f5)
   - run #2: copied [`196409394`](https://github.com/krlmlr/duckdb/commit/19640939439a3e205b4d79543dbe44684bd669af)
+  - run #3: copied [`8442c8aa8`](https://github.com/krlmlr/duckdb/commit/8442c8aa8067fab55215f2d58f671c94310de9e4)
 - [#21043](https://github.com/duckdb/duckdb/pull/21043) Convert bool_and and bit operations aggregates to struct-based state
   - `-dag`: [`3de01bf4a`](https://github.com/krlmlr/duckdb/commit/3de01bf4ac560a48f8677be8aeeef420099a21b5)
   - run #1: copied [`6b91b658b`](https://github.com/krlmlr/duckdb/commit/6b91b658be61f2337ff3cf263d65c2ecc3cf8e70)
   - run #2: copied [`840b642c9`](https://github.com/krlmlr/duckdb/commit/840b642c9bd5614e71661e84ec599e465ad6fe76)
+  - run #3: copied [`536e52824`](https://github.com/krlmlr/duckdb/commit/536e52824e74f14fdb4933832355e3201c787e01)
 - [#20974](https://github.com/duckdb/duckdb/pull/20974) Use binary search replace loop in update_segment.cpp
   - `-dag`: [`f8c0f07ab`](https://github.com/krlmlr/duckdb/commit/f8c0f07ab1fa7f03dcfd2396d6bb1d4669f62d70)
   - run #1: copied [`697c5350b`](https://github.com/krlmlr/duckdb/commit/697c5350b8d843d7f3a93d3ebb5f21613d6f92ef)
   - run #2: copied [`8b623643f`](https://github.com/krlmlr/duckdb/commit/8b623643f694075cff0e1848ca64a026b96b518b)
+  - run #3: copied [`b02de67c3`](https://github.com/krlmlr/duckdb/commit/b02de67c371fdaf4a648c0300c946366dfbf7f49)
 - [#21060](https://github.com/duckdb/duckdb/pull/21060) Reduce CI workload by re-ordering linux CI jobs
   - `-dag`: [`7e24367b8`](https://github.com/krlmlr/duckdb/commit/7e24367b8c1609addedd1c3638a9ad91a738b151)
   - run #1: copied [`ef383789f`](https://github.com/krlmlr/duckdb/commit/ef383789fe33da6001712a4c631afd4969a74211)
   - run #2: copied [`85436d677`](https://github.com/krlmlr/duckdb/commit/85436d677af94d9f3491d7b5716a6715b0505761)
+  - run #3: copied [`9ddb62fa4`](https://github.com/krlmlr/duckdb/commit/9ddb62fa44204824fdb84bc6c1bab28c3a1e7087)
 - [#21059](https://github.com/duckdb/duckdb/pull/21059) Initial PR for thread annotation
   - `-dag`: [`09aa70670`](https://github.com/krlmlr/duckdb/commit/09aa70670aaa39d78143610a2084afdeab2e4e4f)
   - run #1: copied [`f9e8242ff`](https://github.com/krlmlr/duckdb/commit/f9e8242ffce36b30d6045b9347a472a95e8f7e53)
   - run #2: copied [`4043631fd`](https://github.com/krlmlr/duckdb/commit/4043631fd3b8f455a6fc4275ef847b04d70fc9c7)
+  - run #3: copied [`5261bf7d5`](https://github.com/krlmlr/duckdb/commit/5261bf7d52e11e33781064ce73374ac589d0362e)
 - [#21048](https://github.com/duckdb/duckdb/pull/21048) Add support for Parquet round-tripping of struct-based aggregate states
   - `-dag`: [`f1c56b201`](https://github.com/krlmlr/duckdb/commit/f1c56b2012e55c7150bb497c840f83ce98bbca54)
   - run #1: copied [`1cf84bc8a`](https://github.com/krlmlr/duckdb/commit/1cf84bc8a9e7ccb5e1665842a3332bdabe855f85)
   - run #2: copied [`b2db9e580`](https://github.com/krlmlr/duckdb/commit/b2db9e580386ce36bab990c3892696c2e41cfc20)
+  - run #3: copied [`210d4ad67`](https://github.com/krlmlr/duckdb/commit/210d4ad675d6abf44c1d2d505363116817d1fcc0)
 - [#21064](https://github.com/duckdb/duckdb/pull/21064) Allow deeper optimization below column order dependent operators
   - `-dag`: [`808e2dd80`](https://github.com/krlmlr/duckdb/commit/808e2dd8056243ada470d2b7f2bc9caa1c43a2cf)
   - run #1: copied [`13579801c`](https://github.com/krlmlr/duckdb/commit/13579801c5b6889ebcd4c7c1c4124ddef9aac3f4)
   - run #2: copied [`dfa2ae164`](https://github.com/krlmlr/duckdb/commit/dfa2ae164f37e74b76a5b9d958e15065e6616414)
+  - run #3: copied [`1a3a5ad1c`](https://github.com/krlmlr/duckdb/commit/1a3a5ad1c7faae261bd630242fe5fef07fd0e547)
 - [#21066](https://github.com/duckdb/duckdb/pull/21066) Optimize GitHub CI cache utilization
   - `-dag`: [`f23965153`](https://github.com/krlmlr/duckdb/commit/f239651534464c65568fe358b8a7d2cb059fb3fa)
   - run #1: copied [`488697678`](https://github.com/krlmlr/duckdb/commit/488697678a10f2f27e9e5b1deed6fcf09afb9950)
   - run #2: copied [`6514389a8`](https://github.com/krlmlr/duckdb/commit/6514389a81fd7efd8624206579870179b734f21c)
+  - run #3: copied [`e8860aa12`](https://github.com/krlmlr/duckdb/commit/e8860aa12ddad697af749b11409c672ef6863697)
 - [#21078](https://github.com/duckdb/duckdb/pull/21078) Allow projection removal optimization below `SEMI` Joins
   - `-dag`: [`0a94f4414`](https://github.com/krlmlr/duckdb/commit/0a94f4414bc72955b5712c0b83c6b91104d8756b)
   - run #1: copied [`43f1fe8c1`](https://github.com/krlmlr/duckdb/commit/43f1fe8c19713bfeb3e7395f42956ddb53691b06)
   - run #2: copied [`b0936a25c`](https://github.com/krlmlr/duckdb/commit/b0936a25cf7731bd0bad9b0ddac33c9e284451da)
+  - run #3: copied [`026cbbaed`](https://github.com/krlmlr/duckdb/commit/026cbbaedb8559c979b55312e6decb67537e0beb)
 - [#20916](https://github.com/duckdb/duckdb/pull/20916) Issue https://redirect.github.com/duckdb/duckdb/pull/20916: APPROX_COUNT_DISTINCT Error Rate
   - `-dag`: [`7276cc8d5`](https://github.com/krlmlr/duckdb/commit/7276cc8d58668ce490f7cd028227cc4a2cc89f74)
   - run #1: copied [`6a80f4dcc`](https://github.com/krlmlr/duckdb/commit/6a80f4dccf44c3c1e2355e6f728a3b1d88608ea2)
   - run #2: copied [`716b2059d`](https://github.com/krlmlr/duckdb/commit/716b2059d870d672e452a36bd07ab9705a29cc47)
+  - run #3: copied [`070664ab6`](https://github.com/krlmlr/duckdb/commit/070664ab6bfc2235765ffbcc7604a3a3f8e6f332)
 - [#7540](https://github.com/duckdb/duckdb/pull/7540) Internal https://redirect.github.com/duckdb/duckdb/pull/7540: Distribute Window Bounds
   - `-dag`: [`354ea5dc9`](https://github.com/krlmlr/duckdb/commit/354ea5dc95191fd5a9a867be49ffdb727fc001fd)
   - run #1: copied [`4c5ee8e23`](https://github.com/krlmlr/duckdb/commit/4c5ee8e23a1f6076ad4d2d8ff415832594058f5e)
   - run #2: copied [`73676b901`](https://github.com/krlmlr/duckdb/commit/73676b9015805cf3efd9f4183f3592820eb87447)
+  - run #3: copied [`04ae84413`](https://github.com/krlmlr/duckdb/commit/04ae844130f0db7d761f8a21a065bb8b3978d9b5)
 - [#20934](https://github.com/duckdb/duckdb/pull/20934) Fix few sast issies
   - `-dag`: [`815cc9956`](https://github.com/krlmlr/duckdb/commit/815cc9956abd494d73597473d4712c207cb1849f)
   - run #1: copied [`bfafe5974`](https://github.com/krlmlr/duckdb/commit/bfafe59743ce204da81032f9472e116e9120064d)
   - run #2: copied [`e6c8be728`](https://github.com/krlmlr/duckdb/commit/e6c8be728561585ed8c81a71455e15ce0cdb41d8)
+  - run #3: copied [`51565ca24`](https://github.com/krlmlr/duckdb/commit/51565ca2476e025f16d478311b45e3e62c7f72f1)
 - [#21085](https://github.com/duckdb/duckdb/pull/21085) Investigate ccache hit rate
   - `-dag`: [`4a2201075`](https://github.com/krlmlr/duckdb/commit/4a22010754843a5d4a3e78304ae0bf824d1f753f)
   - run #1: copied [`1aad130c4`](https://github.com/krlmlr/duckdb/commit/1aad130c48dadc63c98c0392355553fa3eab8ed3)
   - run #2: copied [`3fbef0da2`](https://github.com/krlmlr/duckdb/commit/3fbef0da2fb85929730381ed1ff7a5ec9e2fa84b)
+  - run #3: copied [`a71a76bf2`](https://github.com/krlmlr/duckdb/commit/a71a76bf2166b203cdf37be707fe098646a570a6)
 - [#21092](https://github.com/duckdb/duckdb/pull/21092) Use CI stages for jobs to reduce CI workload
   - `-dag`: [`587c6e6ee`](https://github.com/krlmlr/duckdb/commit/587c6e6ee321d3ff09607c3538782337c3a4adeb)
   - run #1: copied [`37f45a141`](https://github.com/krlmlr/duckdb/commit/37f45a1410fe9ba3cf59d6fbf13552e4c7673127)
   - run #2: copied [`654b06f19`](https://github.com/krlmlr/duckdb/commit/654b06f19efd2ad037ef5176e9c96f8f1f75e909)
+  - run #3: copied [`46aabd320`](https://github.com/krlmlr/duckdb/commit/46aabd320523502218fd844472bf3abb69945bfe)
 - [#21075](https://github.com/duckdb/duckdb/pull/21075) Parallel DELETE ... RETURNING (sink and source)
   - `-dag`: [`ae77eca50`](https://github.com/krlmlr/duckdb/commit/ae77eca506f60251c29f0b7a9f1a9091a490d83c)
   - run #1: copied [`d41c10aa8`](https://github.com/krlmlr/duckdb/commit/d41c10aa8dc56f279c13c43aa8300fc70f23661f)
   - run #2: copied [`ac14469e6`](https://github.com/krlmlr/duckdb/commit/ac14469e6b3828bd5aa98bf9f37fd447cc64f051)
+  - run #3: copied [`f0361e205`](https://github.com/krlmlr/duckdb/commit/f0361e2057ff63796244afbc8a9c014cc24f80c4)
 - [#21094](https://github.com/duckdb/duckdb/pull/21094) Convert regression aggregates to struct-based state export
   - `-dag`: [`7f39f11a5`](https://github.com/krlmlr/duckdb/commit/7f39f11a59f1e90478901069463f5925adb676ea)
   - run #1: copied [`ec0f7cdec`](https://github.com/krlmlr/duckdb/commit/ec0f7cdec4312a9ad0bb2706caf55530940c8539)
   - run #2: copied [`26482e69c`](https://github.com/krlmlr/duckdb/commit/26482e69ca3439e2eace4cbab1c75839058c1444)
+  - run #3: copied [`d929684cf`](https://github.com/krlmlr/duckdb/commit/d929684cff1a8469a0ad4789136f3f956bd14dec)
 - [#20975](https://github.com/duckdb/duckdb/pull/20975) [Memory] duckdb_eviction_queues function + dead node counting fixes
   - `-dag`: [`30a56db4c`](https://github.com/krlmlr/duckdb/commit/30a56db4c8b7bfb75451caf6488001cfd4dd1ce1)
   - run #1: copied [`621e01f4a`](https://github.com/krlmlr/duckdb/commit/621e01f4a7736601b2eee9d3e16ea3509b38136b)
   - run #2: copied [`4e53f8447`](https://github.com/krlmlr/duckdb/commit/4e53f84478af2b457752dfbffe5e1890d4d6cf27)
+  - run #3: copied [`102577586`](https://github.com/krlmlr/duckdb/commit/1025775864b966a41fa16db365ad25ecfbae38ac)
 - [#21093](https://github.com/duckdb/duckdb/pull/21093) Remove indirect extensions workflow and use its main branch
   - `-dag`: [`2c938bfe4`](https://github.com/krlmlr/duckdb/commit/2c938bfe4a384c5f1640629690127ad568934f52)
   - run #1: copied [`dcc39bd56`](https://github.com/krlmlr/duckdb/commit/dcc39bd56ce365d30e9c24ea85124e8f6da65256)
   - run #2: copied [`59e88cece`](https://github.com/krlmlr/duckdb/commit/59e88ceced38c2852c745c044939391d4067ae7a)
+  - run #3: copied [`16082b6d9`](https://github.com/krlmlr/duckdb/commit/16082b6d9ac83f6569bbb46a89025e801aec2f44)
 - [#21105](https://github.com/duckdb/duckdb/pull/21105) Perfect Hash Join Pushdown
   - `-dag`: [`d0aa56abb`](https://github.com/krlmlr/duckdb/commit/d0aa56abb411829b4e8de5d58dc31f461a6a9f85)
   - run #1: copied [`c2b525d93`](https://github.com/krlmlr/duckdb/commit/c2b525d9356e862b18b8121945348c88f78a62c5)
   - run #2: copied [`768fe4859`](https://github.com/krlmlr/duckdb/commit/768fe48595b30d5ed2015f1261bb62389770c01d)
+  - run #3: copied [`532842e32`](https://github.com/krlmlr/duckdb/commit/532842e32652edd457529f9a17fa6c0f3547dffa)
 - [#21045](https://github.com/duckdb/duckdb/pull/21045) Try namespace runners for linux-debug
   - `-dag`: [`bcd3ac4c5`](https://github.com/krlmlr/duckdb/commit/bcd3ac4c5030cd7caf35f26957a1a5b2e195ee06)
   - run #1: copied [`19edaad6c`](https://github.com/krlmlr/duckdb/commit/19edaad6cae53420bc99a27dd1e2c6cb1e565293)
   - run #2: copied [`bebcc2f4b`](https://github.com/krlmlr/duckdb/commit/bebcc2f4ba7923e40b981bd26ba943fd8d2db82f)
+  - run #3: copied [`5a23e7999`](https://github.com/krlmlr/duckdb/commit/5a23e799941c6a0beb436753534301566e172ddd)
 - [#21095](https://github.com/duckdb/duckdb/pull/21095) Run small subset of unit tests for linux-debug as smoke tests
   - `-dag`: [`4fb95e9bc`](https://github.com/krlmlr/duckdb/commit/4fb95e9bc8c61657192464d4ba515ad7967f501b)
   - run #1: copied [`6b4192e30`](https://github.com/krlmlr/duckdb/commit/6b4192e306c6f764d08132be3cabc63a92ffa0e7)
   - run #2: copied [`671a3034a`](https://github.com/krlmlr/duckdb/commit/671a3034ad53103d88cc21398e05bbed694e8cef)
+  - run #3: copied [`6a04824aa`](https://github.com/krlmlr/duckdb/commit/6a04824aa75ecef2157f640191eb6f597975cacc)
 - [#21101](https://github.com/duckdb/duckdb/pull/21101) Integrate csv file handle with cache filesystem
   - `-dag`: [`fb7849f95`](https://github.com/krlmlr/duckdb/commit/fb7849f95ad4cc7cfe05591ba6c901c2bd13a5ad)
   - run #1: copied [`059d2dc3c`](https://github.com/krlmlr/duckdb/commit/059d2dc3c357bb82b86621fcc1107edeb2b20c3d)
   - run #2: copied [`37932b145`](https://github.com/krlmlr/duckdb/commit/37932b145218e208079a09114266169a7eb72f7f)
+  - run #3: copied [`99e80538d`](https://github.com/krlmlr/duckdb/commit/99e80538da159ef6a0df4fd307a5551db0e2cbc0)
 - [#20353](https://github.com/duckdb/duckdb/pull/20353) [ART] Add lines to ART pretty printer
   - `-dag`: [`792848a75`](https://github.com/krlmlr/duckdb/commit/792848a7572fd56a6a94337c8a15ef73f3b6c280)
   - run #1: copied [`c1b2697df`](https://github.com/krlmlr/duckdb/commit/c1b2697df45944f8aafab9b88ea69c602c90d44d)
   - run #2: copied [`f40cbbaae`](https://github.com/krlmlr/duckdb/commit/f40cbbaae394869fdea05074ad803a3d3b7ff3a7)
+  - run #3: copied [`34e2c098b`](https://github.com/krlmlr/duckdb/commit/34e2c098b6de1b1e755dfc978bbf9bdb080eca9d)
 - [#20220](https://github.com/duckdb/duckdb/pull/20220) [ART] Index Key Function
   - `-dag`: [`a1e555977`](https://github.com/krlmlr/duckdb/commit/a1e555977ba05c951d37839c4d9268fd144c44a2)
   - run #1: copied [`ac8e44ae7`](https://github.com/krlmlr/duckdb/commit/ac8e44ae7656c659255818e48e7ff0dc142fdb9d)
   - run #2: copied [`dca032c63`](https://github.com/krlmlr/duckdb/commit/dca032c6335a47f7fe84e7bf937d61e713ab4412)
+  - run #3: copied [`e9e75eb8c`](https://github.com/krlmlr/duckdb/commit/e9e75eb8ccc0ab71613f2a7c5994a1ee00ab9490)
 - [#21122](https://github.com/duckdb/duckdb/pull/21122) [CLI] Add .about metadata command
   - `-dag`: [`326d0df7b`](https://github.com/krlmlr/duckdb/commit/326d0df7bfe8654015dc1cc607ed57b18b948190)
   - run #1: copied [`7bda80b29`](https://github.com/krlmlr/duckdb/commit/7bda80b29e466c61ef6f628ca6dc269d6c3c3c02)
   - run #2: copied [`7a2a6ac4e`](https://github.com/krlmlr/duckdb/commit/7a2a6ac4e4320a8d9c9c395e1ef77bc682a9fac3)
+  - run #3: copied [`eac710fb8`](https://github.com/krlmlr/duckdb/commit/eac710fb8ec816f03d0329d36793cf1346960c9c)
 - [#21132](https://github.com/duckdb/duckdb/pull/21132) [minor] Address some compile warning
   - `-dag`: [`2e1d6ec3b`](https://github.com/krlmlr/duckdb/commit/2e1d6ec3b7717fdce861be3fd76e76742b8b429e)
   - run #1: copied [`1806de037`](https://github.com/krlmlr/duckdb/commit/1806de037785bea043630f5c4bf5b73416221e9c)
   - run #2: copied [`a93c072c2`](https://github.com/krlmlr/duckdb/commit/a93c072c2ca916792d0fbc6598ff3df5d5fe28df)
+  - run #3: copied [`52314770a`](https://github.com/krlmlr/duckdb/commit/52314770a8489fa6c4a9abe5f74a959c8dd25ec8)
 - [#21128](https://github.com/duckdb/duckdb/pull/21128) Explicitly define regr count as uint64_t
   - `-dag`: [`b09f3c931`](https://github.com/krlmlr/duckdb/commit/b09f3c9312f1102a455d16467d7970b617aa20ca)
   - run #1: copied [`3bb9b7483`](https://github.com/krlmlr/duckdb/commit/3bb9b7483e297dac0de1633306dc48c662b4492c)
   - run #2: copied [`d30695912`](https://github.com/krlmlr/duckdb/commit/d3069591209980458bda55ff4fee63eec328bdc7)
+  - run #3: copied [`436234f47`](https://github.com/krlmlr/duckdb/commit/436234f471bd9a2bea3542492cedfbf16972ec8f)
 - [#21140](https://github.com/duckdb/duckdb/pull/21140) Run swift and windows CI after linux-debug
   - `-dag`: [`b96057cd4`](https://github.com/krlmlr/duckdb/commit/b96057cd48ce1a6c03a643c56e106a5ee98a8976)
   - run #1: copied [`f7925631f`](https://github.com/krlmlr/duckdb/commit/f7925631f01a65d0e5ca6ca757a863776e76b70a)
   - run #2: copied [`7c9a3573b`](https://github.com/krlmlr/duckdb/commit/7c9a3573b1f00c92a6e7bde898b7e51c6ebd90b0)
+  - run #3: copied [`05d5b8714`](https://github.com/krlmlr/duckdb/commit/05d5b8714260347150deb1add656eb308d1277a0)
 - [#21141](https://github.com/duckdb/duckdb/pull/21141) Parallellize smoke tests better and add more test runner flags
   - `-dag`: [`93591f377`](https://github.com/krlmlr/duckdb/commit/93591f37714e362b5754f52f6d77091d3ba24337)
   - run #1: copied [`47078203f`](https://github.com/krlmlr/duckdb/commit/47078203f56ca12e55dde1e38b3e73e8fb288752)
   - run #2: copied [`f4b7ebc3f`](https://github.com/krlmlr/duckdb/commit/f4b7ebc3f56c77e25c4187de241fad25c2a63ab8)
+  - run #3: copied [`9e62d04a4`](https://github.com/krlmlr/duckdb/commit/9e62d04a451138cf56345ceb45241f71c472e25e)
 - [#21130](https://github.com/duckdb/duckdb/pull/21130) Fix type promotion for negation of minimum integer values in prepared…
   - `-dag`: [`401cdf892`](https://github.com/krlmlr/duckdb/commit/401cdf89212b93a952dbaa21dc59164377dadda2)
   - run #1: copied [`41f57d695`](https://github.com/krlmlr/duckdb/commit/41f57d69525ce139ac63e205a9e86cd5aef2dc6f)
   - run #2: copied [`2bd0ae7c1`](https://github.com/krlmlr/duckdb/commit/2bd0ae7c180e71fad1819f4cdbbc21eb19532a2f)
+  - run #3: copied [`3d6b383d7`](https://github.com/krlmlr/duckdb/commit/3d6b383d7c079674dafc3056f97774529696cf62)
 - [#21136](https://github.com/duckdb/duckdb/pull/21136) Switch connection creation order
   - `-dag`: [`7a6cbb78a`](https://github.com/krlmlr/duckdb/commit/7a6cbb78ae9af2c004e588f361b3d007c4b8cdd2)
   - run #1: copied [`c96cfa15b`](https://github.com/krlmlr/duckdb/commit/c96cfa15be2d47436b53f7af69b6db1e563f0ab3)
   - run #2: copied [`9039641c3`](https://github.com/krlmlr/duckdb/commit/9039641c33e6260e660a9c4047b5882cc7a6b96a)
+  - run #3: copied [`ea70fde46`](https://github.com/krlmlr/duckdb/commit/ea70fde4644fc007dfbc056a4b6f61fa02196854)
 - [#21138](https://github.com/duckdb/duckdb/pull/21138) Add struct-based state export for covar_pop and var_pop
   - `-dag`: [`782c9730b`](https://github.com/krlmlr/duckdb/commit/782c9730bf0231aae5aff4e76b74be91dfe2fabd)
   - run #1: copied [`a840f6512`](https://github.com/krlmlr/duckdb/commit/a840f6512528dc52942380bc12beb7c1054370e8)
   - run #2: copied [`586086f52`](https://github.com/krlmlr/duckdb/commit/586086f52ea42e8930a4bcece3b362a83bc6f446)
+  - run #3: copied [`a818eba14`](https://github.com/krlmlr/duckdb/commit/a818eba142aa2eed91a63be038bf893c4f77ae82)
 - [#21155](https://github.com/duckdb/duckdb/pull/21155) Merge v1.5 into main
   - `-dag`: [`dfe18f10c`](https://github.com/krlmlr/duckdb/commit/dfe18f10cafc81e2c667326508b348f423381089)
   - run #1: copied [`84b38dbd1`](https://github.com/krlmlr/duckdb/commit/84b38dbd1dbd9695bbbce464dc449614973273e1)
   - run #2: copied [`832632674`](https://github.com/krlmlr/duckdb/commit/8326326746f3b4758a5c0ac19e0ae9b5ea79504a)
+  - run #3: copied [`4b3e4e0d2`](https://github.com/krlmlr/duckdb/commit/4b3e4e0d29d7ea5c298e1b1cbc53a76232802526)
 - [#21127](https://github.com/duckdb/duckdb/pull/21127) Fix parallelization of Bernoulli and system sampling
   - `-dag`: [`8e24d9b9e`](https://github.com/krlmlr/duckdb/commit/8e24d9b9e64444c0b1bc7d15244773ff11c2d16c)
   - run #1: copied [`9359366de`](https://github.com/krlmlr/duckdb/commit/9359366de0fbbc763b3c645e3a1ed3b55dd37421)
   - run #2: copied [`993695dd1`](https://github.com/krlmlr/duckdb/commit/993695dd18a74d21b660392d4a2615cfc4555de4)
+  - run #3: copied [`0a02d06f6`](https://github.com/krlmlr/duckdb/commit/0a02d06f648be4baf2363745072accf4dcf1f1aa)
 - [#21149](https://github.com/duckdb/duckdb/pull/21149) Rewrite `AVG(x) -> SUM(x) / COUNT(x)` and generalize `SumRewriterOptimizer` to `AggregateFunctionRewriter`
   - `-dag`: [`eb280aa90`](https://github.com/krlmlr/duckdb/commit/eb280aa906e1eee6abb623c7bf46d20dbb812bd0)
   - run #1: copied [`c3d702001`](https://github.com/krlmlr/duckdb/commit/c3d702001518cd1f20264801c0ba5d823172c639)
   - run #2: copied [`f474231d7`](https://github.com/krlmlr/duckdb/commit/f474231d756a734e49b316d094e35e4423fa4b1b)
+  - run #3: copied [`4e699b934`](https://github.com/krlmlr/duckdb/commit/4e699b934e3a7045922dc83dbcec73bf76f5c8bb)
 - [#21179](https://github.com/duckdb/duckdb/pull/21179) Disable automated converting PR to draft on sync
   - `-dag`: [`85751fbaf`](https://github.com/krlmlr/duckdb/commit/85751fbaf17d1bde6c1134ce632612642db8fd8c)
   - run #1: copied [`8d4d6b532`](https://github.com/krlmlr/duckdb/commit/8d4d6b53273e9cd9c8e9e6fc02163a4a715e5cea)
   - run #2: copied [`bc7721bd8`](https://github.com/krlmlr/duckdb/commit/bc7721bd8dff4fea81a4ba7b282cf6c60e47101c)
+  - run #3: copied [`8108f6667`](https://github.com/krlmlr/duckdb/commit/8108f6667f5f9184316f675deb886a9c11fdbd7d)
 - [#21152](https://github.com/duckdb/duckdb/pull/21152) Use parallel test runner
   - `-dag`: [`790555a51`](https://github.com/krlmlr/duckdb/commit/790555a51f676413a238961c50d3f1a6db126d84)
   - run #1: copied [`5d7b1ef6d`](https://github.com/krlmlr/duckdb/commit/5d7b1ef6d97303b39dee98e604902e5db1c333a5)
   - run #2: copied [`91badf9ce`](https://github.com/krlmlr/duckdb/commit/91badf9cee4e4aca8d21abb44603b43d47995ff7)
+  - run #3: copied [`ddc619a5b`](https://github.com/krlmlr/duckdb/commit/ddc619a5b35f21ca9231a267bed7c769ed126504)
 - [#21139](https://github.com/duckdb/duckdb/pull/21139) Make linux-debug CI job faster
   - `-dag`: [`ed7946d41`](https://github.com/krlmlr/duckdb/commit/ed7946d4130925a1ce53c1b237b25ad27eb3b437)
   - run #1: copied [`16720c4f7`](https://github.com/krlmlr/duckdb/commit/16720c4f7f29e06e8590ae6ad9801bc0dc0ddf0e)
   - run #2: copied [`8544327dc`](https://github.com/krlmlr/duckdb/commit/8544327dc2664eaf6c3a5f47f384e6d9ae2dc0b4)
+  - run #3: copied [`48dfb33af`](https://github.com/krlmlr/duckdb/commit/48dfb33affe38555a2c5711432ecbeaaff6ffcbc)
 - [#21182](https://github.com/duckdb/duckdb/pull/21182) Use shredded vectors for casts from primitive <> variant
   - `-dag`: [`fc180650b`](https://github.com/krlmlr/duckdb/commit/fc180650bf557040b0bd72a73056c56ea69da650)
   - run #1: copied [`934bca8f0`](https://github.com/krlmlr/duckdb/commit/934bca8f06f81b89e84751e2b0ca62a848782c0b)
   - run #2: copied [`fbdd4f648`](https://github.com/krlmlr/duckdb/commit/fbdd4f64845b565075cfacd323fcbc2a05291557)
+  - run #3: copied [`6c4705cf4`](https://github.com/krlmlr/duckdb/commit/6c4705cf40f0b897dcb6096b079cce07f7073cab)
 - [#21181](https://github.com/duckdb/duckdb/pull/21181) Use test runner in more CI jobs of main
   - `-dag`: [`8596fa508`](https://github.com/krlmlr/duckdb/commit/8596fa508d29bfd82fc47255095c1b0a96bf785c)
   - run #1: copied [`fdb13c6fe`](https://github.com/krlmlr/duckdb/commit/fdb13c6fefe83abfdca79ba4249f1f1c84850b43)
   - run #2: copied [`3e233688a`](https://github.com/krlmlr/duckdb/commit/3e233688a3e3f985f7813bfa511d68c8a31a54f2)
+  - run #3: copied [`5539f2dfe`](https://github.com/krlmlr/duckdb/commit/5539f2dfeac781a6467775ec44aaaefac9e2581f)
 - [#21212](https://github.com/duckdb/duckdb/pull/21212) Use shredded vectors for STRUCT -> Variant casts, and for `variant_extract`
   - `-dag`: [`8221a37b3`](https://github.com/krlmlr/duckdb/commit/8221a37b3648130e80e8365b9325950b5a1e9051)
   - run #1: copied [`66dac31e7`](https://github.com/krlmlr/duckdb/commit/66dac31e778857d8bf6657179706c1c5dd0cb7eb)
   - run #2: copied [`8aebdc07f`](https://github.com/krlmlr/duckdb/commit/8aebdc07f685975dfffb05b15c757ea0fafed4e7)
+  - run #3: copied [`47a92320a`](https://github.com/krlmlr/duckdb/commit/47a92320ac34c47afbaa925905538f2eedf3fff6)
 - [#21220](https://github.com/duckdb/duckdb/pull/21220) Improve variant extract pushdown so that it correctly works for nested structs, and enable variant extract pushdown for `VARIANT`
   - `-dag`: [`38476409a`](https://github.com/krlmlr/duckdb/commit/38476409a4757d130f0722e4f4598f2956c58c6d)
   - run #1: copied [`3bd0c7c6d`](https://github.com/krlmlr/duckdb/commit/3bd0c7c6d97d37d127dd8fa668ebf2add16300bf)
   - run #2: copied [`fcbbe6ce3`](https://github.com/krlmlr/duckdb/commit/fcbbe6ce3c6b46392e0cc59f835875c17e55f4ea)
+  - run #3: copied [`b97e5cc1b`](https://github.com/krlmlr/duckdb/commit/b97e5cc1b70c625b498faae4ca9469ed736833d0)
 - [#7691](https://github.com/duckdb/duckdb/pull/7691) Internal https://redirect.github.com/duckdb/duckdb/pull/7691: 2026a Time Zones
   - `-dag`: [`2918dcbd1`](https://github.com/krlmlr/duckdb/commit/2918dcbd17396ee2c3e2a9f2300ed79bc59a97cc)
   - run #1: copied [`eaea5f192`](https://github.com/krlmlr/duckdb/commit/eaea5f1923fcc2187fbc38f72a15e1503fabe300)
   - run #2: copied [`e62e10325`](https://github.com/krlmlr/duckdb/commit/e62e103257cc142749b0f3120032eceff1b672db)
+  - run #3: copied [`8e4779fb0`](https://github.com/krlmlr/duckdb/commit/8e4779fb0121014a0a5ce5eddf857bdbfeb1bac0)
 - [#21219](https://github.com/duckdb/duckdb/pull/21219) Outer join simplification
   - `-dag`: [`ca92bc56f`](https://github.com/krlmlr/duckdb/commit/ca92bc56f1590c238f199d5ba7866281e1899b6e)
   - run #1: copied [`ffffa233b`](https://github.com/krlmlr/duckdb/commit/ffffa233b365a227aa11e235072f14c40c25cb5b)
   - run #2: copied [`dc1a9b01b`](https://github.com/krlmlr/duckdb/commit/dc1a9b01b46680ad339d514fc3ea6eb5a038d806)
+  - run #3: copied [`2c2aba8b8`](https://github.com/krlmlr/duckdb/commit/2c2aba8b86598a7670cdfe38050e588b663554e0)
 - [#21223](https://github.com/duckdb/duckdb/pull/21223) Enable variant extract pushdown also for functions with table filters - just pull up the table filters out of the scan again
   - `-dag`: [`42d58a7f2`](https://github.com/krlmlr/duckdb/commit/42d58a7f29694571d3ba5910786e5ba16a332ff2)
   - run #1: copied [`8d66351e0`](https://github.com/krlmlr/duckdb/commit/8d66351e0054f12b61922118e8bf2786fd6ae7f2)
   - run #2: copied [`92c5ab48d`](https://github.com/krlmlr/duckdb/commit/92c5ab48d373b3a86720251d3b62d24780a7a5e5)
+  - run #3: copied [`3a08e0972`](https://github.com/krlmlr/duckdb/commit/3a08e097280755c57fe13b72a0f2e67373ff16dd)
 - [#21229](https://github.com/duckdb/duckdb/pull/21229) Clean-up `TableFilterSet` by making all members private and adding functions to access them
   - `-dag`: [`1453e8fc8`](https://github.com/krlmlr/duckdb/commit/1453e8fc841ea2352cbe6106ecbfeb305633d2b7)
   - run #1: copied [`0d20117c6`](https://github.com/krlmlr/duckdb/commit/0d20117c659fc561602a0c7b1531c8aa687d18de)
   - run #2: copied [`af125418f`](https://github.com/krlmlr/duckdb/commit/af125418f028ecd347e01357ffa220542118606b)
+  - run #3: copied [`829ad109d`](https://github.com/krlmlr/duckdb/commit/829ad109dc66bd594bedd48e18784ee40e042d6d)
 - [#20973](https://github.com/duckdb/duckdb/pull/20973) Support `min/max`, `stddev` and `covar` in struct-based aggregate states
   - `-dag`: [`612b2a094`](https://github.com/krlmlr/duckdb/commit/612b2a094eac9986294f25b6f1218d0313468830)
   - run #1: copied [`329fb0c30`](https://github.com/krlmlr/duckdb/commit/329fb0c30e1fd15b8767fe4fbab27f0e92d1080c)
   - run #2: copied [`960344577`](https://github.com/krlmlr/duckdb/commit/9603445771008dece49d4a88ae1b41f684cc5340)
+  - run #3: copied [`7d60403a0`](https://github.com/krlmlr/duckdb/commit/7d60403a0b2a1c7fa6ec6200034ed003bf097e9e)
 - [#7568](https://github.com/duckdb/duckdb/pull/7568) Internal https://redirect.github.com/duckdb/duckdb/pull/7568: AsOf Simple Joins 
   - `-dag`: [`7f6f5f512`](https://github.com/krlmlr/duckdb/commit/7f6f5f5120219713920a949ab159ce226b836a40)
   - run #1: copied [`3dcdbe83a`](https://github.com/krlmlr/duckdb/commit/3dcdbe83a169d8daaa0423e35668246fb608615d)
   - run #2: copied [`032d57174`](https://github.com/krlmlr/duckdb/commit/032d57174be1b299049a806e7835c4d7f22156bd)
+  - run #3: copied [`363aa9903`](https://github.com/krlmlr/duckdb/commit/363aa9903764cc7183edc5606e419e827d11499f)
 - [#20961](https://github.com/duckdb/duckdb/pull/20961) Add SQLNULL support to the parquet writer
   - `-dag`: [`037112673`](https://github.com/krlmlr/duckdb/commit/037112673d6e7fc902774a1a0c47f0e0c6fbf370)
   - run #1: copied [`feacffb64`](https://github.com/krlmlr/duckdb/commit/feacffb645ab20ef634d0c9f6a0a95e1534b77ed)
   - run #2: copied [`c0edb2206`](https://github.com/krlmlr/duckdb/commit/c0edb2206ef0876439e8ca57c279fbbf76725b94)
+  - run #3: copied [`46deb9c6c`](https://github.com/krlmlr/duckdb/commit/46deb9c6cefbf17d8a8c6c01dbbe45073bd364f0)
 - [#21032](https://github.com/duckdb/duckdb/pull/21032) Relax list_reduce Signature Restrictions
   - `-dag`: [`bde6c0164`](https://github.com/krlmlr/duckdb/commit/bde6c01648ef57961a72af2f29ebaa58164eecbe)
   - run #1: copied [`cc3ec6ad1`](https://github.com/krlmlr/duckdb/commit/cc3ec6ad1759ad5b36e64911450670f7c04422f4)
   - run #2: copied [`e51705635`](https://github.com/krlmlr/duckdb/commit/e51705635e26dfcbb3086b7a706c34967ed9504b)
+  - run #3: copied [`af562ebab`](https://github.com/krlmlr/duckdb/commit/af562ebab11e090fde3cfee0200c6ff6d733b226)
 - [#21025](https://github.com/duckdb/duckdb/pull/21025) Rewrite List Comprehension Expressions
   - `-dag`: [`51986140b`](https://github.com/krlmlr/duckdb/commit/51986140bd391c04dcd3118b30d63bc9af2ca944)
   - run #1: copied [`e9c5433f2`](https://github.com/krlmlr/duckdb/commit/e9c5433f21d8183a309da56f0f4be1daa2254980)
   - run #2: copied [`061eb1e06`](https://github.com/krlmlr/duckdb/commit/061eb1e0693a92898729b8d0a8d64139699709cf)
+  - run #3: copied [`9bf4964cd`](https://github.com/krlmlr/duckdb/commit/9bf4964cd3f77cd39dba819e1f9e0ec826dcb6c7)
 - [#21049](https://github.com/duckdb/duckdb/pull/21049) Add expression statement support to the PEG parser
   - `-dag`: [`6ab894211`](https://github.com/krlmlr/duckdb/commit/6ab8942112c3d04bd5562e82cc11650a3fadce5c)
   - run #1: copied [`fccded503`](https://github.com/krlmlr/duckdb/commit/fccded5035d99eba67ea1bed7cd8480bfb9c5c71)
   - run #2: copied [`5d0c2861c`](https://github.com/krlmlr/duckdb/commit/5d0c2861cc188dc337349d4ed84a637b45621f98)
+  - run #3: copied [`51b82ce3a`](https://github.com/krlmlr/duckdb/commit/51b82ce3a39b623143494dfb8aee045336310d08)
 - [#21211](https://github.com/duckdb/duckdb/pull/21211) Improve test runner
   - `-dag`: [`1dbb35a0e`](https://github.com/krlmlr/duckdb/commit/1dbb35a0ec1739bec9c28c59001d131059d74a72)
   - run #1: copied [`b25da8505`](https://github.com/krlmlr/duckdb/commit/b25da85053f5dd4ddfa354b330090448866b3bbc)
   - run #2: copied [`41d09fe00`](https://github.com/krlmlr/duckdb/commit/41d09fe00ec103ce4c4edf76f873d61e19401b78)
+  - run #3: copied [`e4f166888`](https://github.com/krlmlr/duckdb/commit/e4f1668888b8129ec964b7ed2699ec11283f4a2b)
 - [#21065](https://github.com/duckdb/duckdb/pull/21065) Fix the alias column cannot be found in the try function(FIX ISSUE 21004).
   - `-dag`: [`8305d1545`](https://github.com/krlmlr/duckdb/commit/8305d1545a920f46d99ad083e961daa7e5b256d8)
   - run #1: copied [`e262c9719`](https://github.com/krlmlr/duckdb/commit/e262c971993c40fbbae537e16ad0cdf5828c4b8e)
   - run #2: copied [`203f0d68b`](https://github.com/krlmlr/duckdb/commit/203f0d68b941d5811219be7488261da1712f868b)
+  - run #3: copied [`ea7f52908`](https://github.com/krlmlr/duckdb/commit/ea7f52908880dbfab475a91b4a6da3dbfbe1e099)
 - [#21237](https://github.com/duckdb/duckdb/pull/21237) Notify stale PRs after 30 days, close after 30
   - `-dag`: [`fbae4c516`](https://github.com/krlmlr/duckdb/commit/fbae4c516280a838fbb23c19ca9b13a2fd408f3c)
   - run #1: copied [`3e3e47a00`](https://github.com/krlmlr/duckdb/commit/3e3e47a00f8bdaf3c267795fb922ec2638706318)
   - run #2: copied [`c9ed32222`](https://github.com/krlmlr/duckdb/commit/c9ed3222221f9c1698559067954a87aa850247f2)
+  - run #3: copied [`51720c8e8`](https://github.com/krlmlr/duckdb/commit/51720c8e8c26776dd50794e38b95b4dff714db5b)
 - [#21231](https://github.com/duckdb/duckdb/pull/21231) Turn table index from an `idx_t` into a dedicated class (`TableIndex`)
   - `-dag`: [`9941be5d5`](https://github.com/krlmlr/duckdb/commit/9941be5d570432e95382037857ee7752ccfdcc68)
   - run #1: copied [`ad2dd5a97`](https://github.com/krlmlr/duckdb/commit/ad2dd5a97f75550405897a10bba8828ca532f5a9)
   - run #2: copied [`a4ebbbe3d`](https://github.com/krlmlr/duckdb/commit/a4ebbbe3dd3da69042f72a5c6a335e2b34cbd704)
+  - run #3: copied [`f69256b17`](https://github.com/krlmlr/duckdb/commit/f69256b17f36c6787187b1cd071076965968a1e2)
 - [#21217](https://github.com/duckdb/duckdb/pull/21217) Prepare Main workflow for unifying linux builds
   - `-dag`: [`0098424b9`](https://github.com/krlmlr/duckdb/commit/0098424b9b58cef3c6c60667ae3e4dccad89118e)
   - run #1: copied [`b81c03fff`](https://github.com/krlmlr/duckdb/commit/b81c03fff806cdb4e15bdf4cc7c4be30b7dfa6ea)
   - run #2: copied [`36f361b7f`](https://github.com/krlmlr/duckdb/commit/36f361b7fa3ae3e3773a2dc5ca3a9a6b4a526f8f)
+  - run #3: copied [`b8965e864`](https://github.com/krlmlr/duckdb/commit/b8965e8645ecca434818d79e7aa95348350a0187)
 - [#20292](https://github.com/duckdb/duckdb/pull/20292) add structured Path objects, update joinpath: normalize, support url/net/windows
   - `-dag`: [`f6c659991`](https://github.com/krlmlr/duckdb/commit/f6c659991f47b29c0aa65d6714059463566727e0)
   - run #1: copied [`4b2143ea6`](https://github.com/krlmlr/duckdb/commit/4b2143ea6b4d1cdc0bc1768e99740310e94c9701)
   - run #2: copied [`3ca1fda41`](https://github.com/krlmlr/duckdb/commit/3ca1fda41c7462bfea2353a2609f630e078b4eca)
+  - run #3: copied [`0a4a59c5d`](https://github.com/krlmlr/duckdb/commit/0a4a59c5d1f7a3f8eb26a4b7c45d5a34ef460fdc)
 - [#7611](https://github.com/duckdb/duckdb/pull/7611) Internal https://redirect.github.com/duckdb/duckdb/pull/7611: IESemiJoin Tail Comparisons
   - `-dag`: [`b58f5a47b`](https://github.com/krlmlr/duckdb/commit/b58f5a47b7b4ff837332d42ae01752960541f93d)
   - run #1: copied [`06e4950e8`](https://github.com/krlmlr/duckdb/commit/06e4950e83551e51fa4d072122772c6f723e68c0)
   - run #2: copied [`7f86bac00`](https://github.com/krlmlr/duckdb/commit/7f86bac00487630d218681c8a15c3853edf7ecf2)
+  - run #3: copied [`fa192bc14`](https://github.com/krlmlr/duckdb/commit/fa192bc1458796e9bec04ac5b2f7e39607aa62a6)
 - [#21221](https://github.com/duckdb/duckdb/pull/21221) Extract struct state roundtrip verification into VerifyStructStateRoundtrip
   - `-dag`: [`bdc09b23f`](https://github.com/krlmlr/duckdb/commit/bdc09b23f8f978110e71dd5aea86d30cf588830a)
   - run #1: copied [`7758e2cdf`](https://github.com/krlmlr/duckdb/commit/7758e2cdfa01832d66101afde8b54e624e474a67)
   - run #2: copied [`f0f50294f`](https://github.com/krlmlr/duckdb/commit/f0f50294f52a170e05fb161356f7c64b2d3c8f6b)
+  - run #3: copied [`c656a2b78`](https://github.com/krlmlr/duckdb/commit/c656a2b785333afd02301d52d151c15541680384)
 - [#21257](https://github.com/duckdb/duckdb/pull/21257) Fix test flag: --autoloading available, not --autoloading=available
   - `-dag`: [`962211678`](https://github.com/krlmlr/duckdb/commit/9622116780c953f9b78897cbbdc7813094a136bd)
   - run #1: copied [`dfac46db0`](https://github.com/krlmlr/duckdb/commit/dfac46db0dc4c12f26c1a25135fb3d6de6a00538)
   - run #2: copied [`382576a4d`](https://github.com/krlmlr/duckdb/commit/382576a4d048a6106a54a09f8983e591e3cf9daa)
+  - run #3: copied [`aa28703da`](https://github.com/krlmlr/duckdb/commit/aa28703dacf8cfb40cf0d8126f0d29f10c492d10)
 - [#21203](https://github.com/duckdb/duckdb/pull/21203) Zero trimmed ranges under verifier flags to make Trim() observable
   - `-dag`: [`1fcd3440b`](https://github.com/krlmlr/duckdb/commit/1fcd3440b62f2349c927367dfc34b1cc082b1dff)
   - run #1: copied [`9898ec7f2`](https://github.com/krlmlr/duckdb/commit/9898ec7f2ddf061c21893606c7ec132972990494)
   - run #2: copied [`463734a44`](https://github.com/krlmlr/duckdb/commit/463734a440e9a5a03abf7d9e28eba62a6d905833)
+  - run #3: copied [`9f3d3c809`](https://github.com/krlmlr/duckdb/commit/9f3d3c809a57bf28f41a9af96e1422516b0fb356)
 - [#21156](https://github.com/duckdb/duckdb/pull/21156) [Profiling] Rename `custom_profiling_settings` to `configure_profiling`
   - `-dag`: [`9ffb76ba8`](https://github.com/krlmlr/duckdb/commit/9ffb76ba849753f4a705a7a01c119465af866af9)
   - run #1: copied [`7f76056d9`](https://github.com/krlmlr/duckdb/commit/7f76056d9d951e818a850d5a77af97cddd835b0e)
   - run #2: copied [`f30d3274e`](https://github.com/krlmlr/duckdb/commit/f30d3274ef42fb7f216869858e41c49a2ae69f80)
+  - run #3: copied [`54f0552a9`](https://github.com/krlmlr/duckdb/commit/54f0552a974f0f6c15fe0338fe7507c61234646c)
 - [#21256](https://github.com/duckdb/duckdb/pull/21256) Fix powerpc spin-wait instruction for Apple case
   - `-dag`: [`aad664d03`](https://github.com/krlmlr/duckdb/commit/aad664d032205dc9ec52423231489e4459efcd16)
   - run #1: copied [`07b02344e`](https://github.com/krlmlr/duckdb/commit/07b02344ec8b2dea6b2bf147422525f9b469d3c6)
   - run #2: copied [`cfdca9cd7`](https://github.com/krlmlr/duckdb/commit/cfdca9cd70bbaf4615dfe3ec2aa7523cb341715c)
+  - run #3: copied [`58dd9271a`](https://github.com/krlmlr/duckdb/commit/58dd9271a5bd1336a15ae10a981ad87604bf3e13)
 - [#21264](https://github.com/duckdb/duckdb/pull/21264) Remove skip_compiled assertion from unittest binary
   - `-dag`: [`b8ff94826`](https://github.com/krlmlr/duckdb/commit/b8ff94826912fd091ccc8ec47f6c4ae49219a840)
   - run #1: copied [`b06cda4b0`](https://github.com/krlmlr/duckdb/commit/b06cda4b052e95fa0748dd05ea7c9d252c8fac31)
   - run #2: copied [`b78a6ac9f`](https://github.com/krlmlr/duckdb/commit/b78a6ac9f18293148aeca31f932fcec6ca04e352)
+  - run #3: copied [`5f32db067`](https://github.com/krlmlr/duckdb/commit/5f32db0676936283a580dcd45451ba83a830541a)
 - [#21225](https://github.com/duckdb/duckdb/pull/21225) [Julia] Add BLOB support
   - `-dag`: [`e328a604e`](https://github.com/krlmlr/duckdb/commit/e328a604eea605204773624bd441f1fe7e503b6c)
   - run #1: copied [`d86da3c52`](https://github.com/krlmlr/duckdb/commit/d86da3c52073938ed82aa53d6302b92dd222361a)
   - run #2: copied [`d92ddf95f`](https://github.com/krlmlr/duckdb/commit/d92ddf95fdcd10aed85ff0b2f116620ef987a9bb)
+  - run #3: copied [`375e6b9df`](https://github.com/krlmlr/duckdb/commit/375e6b9dfc6a8c88f225de436b1bf27eac7f5af0)
 - [#21226](https://github.com/duckdb/duckdb/pull/21226) [Julia] Add ARRAY type reading
   - `-dag`: [`ea9a133bb`](https://github.com/krlmlr/duckdb/commit/ea9a133bba969a9fa0954a0bf6db905b54d927ab)
   - run #1: copied [`48313b3a2`](https://github.com/krlmlr/duckdb/commit/48313b3a2e34f4062ca2e821541730efe66e4049)
   - run #2: copied [`c8b852533`](https://github.com/krlmlr/duckdb/commit/c8b852533ece8fdd5192dd3d20757aa8185dc14f)
+  - run #3: copied [`3c6b8d114`](https://github.com/krlmlr/duckdb/commit/3c6b8d114ec3e8e2c2259ad17280baf8857a649c)
 
 - **[checkpoint] Run #7 back-merge** [#21291](https://github.com/duckdb/duckdb/pull/21291) "Merge v1.5-variegata into main"
   - `-dag`: [`6f5553941`](https://github.com/krlmlr/duckdb/commit/6f55539411e18461a7937f8f76a7db47d63afc1f)
   - run #1: copied (merge) [`43348cb86`](https://github.com/krlmlr/duckdb/commit/43348cb860b5119b61e7cc9580d395215822a89f)
   - run #2: copied (merge) [`565f5ce80`](https://github.com/krlmlr/duckdb/commit/565f5ce802002f748e5809c5cc794a0604184371)
+  - run #3: copied (merge) [`56fc79fe1`](https://github.com/krlmlr/duckdb/commit/56fc79fe12b750ec70a55267c96f09654a91838a)
 
 ### Run #8 segment
 - [#21240](https://github.com/duckdb/duckdb/pull/21240) Unify linux builds part two
   - `-dag`: [`b8a2b1029`](https://github.com/krlmlr/duckdb/commit/b8a2b1029cbd51b46daf73d626242ac10d3045cb)
   - run #1: copied [`c3c5b46cc`](https://github.com/krlmlr/duckdb/commit/c3c5b46cc8bf7edbe342ab58c275db283d24e052)
   - run #2: copied [`18f367f25`](https://github.com/krlmlr/duckdb/commit/18f367f25ef93552e9eb3298bc76f200ba487b29)
+  - run #3: copied [`9de622bc8`](https://github.com/krlmlr/duckdb/commit/9de622bc89dd173821493734edddfaa6a2dec0e3)
 - [#7722](https://github.com/duckdb/duckdb/pull/7722) Internal https://redirect.github.com/duckdb/duckdb/pull/7722: SEMI IEJoin Predicates
   - `-dag`: [`fdfeb6499`](https://github.com/krlmlr/duckdb/commit/fdfeb6499cc556122fa390a5128f08da72322b05)
   - run #1: copied [`bfa95e15e`](https://github.com/krlmlr/duckdb/commit/bfa95e15efead4495eb509806be3e7b501cbd910)
   - run #2: copied [`ffcc28cf4`](https://github.com/krlmlr/duckdb/commit/ffcc28cf48c96fb104780b9fb1ad712516ccb767)
+  - run #3: copied [`8b39485be`](https://github.com/krlmlr/duckdb/commit/8b39485bec1c85d3f555e686562a1eab9e7a68d0)
 - [#21313](https://github.com/duckdb/duckdb/pull/21313) Turn projection index from an idx_t into a dedicated class (`ProjectionIndex`)
   - `-dag`: [`196aa5df3`](https://github.com/krlmlr/duckdb/commit/196aa5df388de31ba35552a9d783ae474aec228b)
   - run #1: copied [`e6523b026`](https://github.com/krlmlr/duckdb/commit/e6523b0266a3b79d59be97b5f5dc152fb348c5f3)
   - run #2: copied [`bc6c2acc6`](https://github.com/krlmlr/duckdb/commit/bc6c2acc6befbc6d4abeb73c9a697c7806d3cfc4)
+  - run #3: copied [`59702da85`](https://github.com/krlmlr/duckdb/commit/59702da850b60c902aaf5b28eb9fcab7fea3bae7)
 
 - **[checkpoint] Run #8 back-merge** [#21317](https://github.com/duckdb/duckdb/pull/21317) "Merge variegata in main + revert MAIN_BRANCH_VERSIONING (so now it's back to regular)"
   - `-dag`: [`f8ac1ef44`](https://github.com/krlmlr/duckdb/commit/f8ac1ef4457c634b045481700a4b24a294bb246c)
   - run #1: copied (merge) [`3247baa2d`](https://github.com/krlmlr/duckdb/commit/3247baa2da4839de7e1e061994bfab1b1c3dcb53)
   - run #2: copied (merge) [`b71624be1`](https://github.com/krlmlr/duckdb/commit/b71624be10c606bd6b518909ce9864ef97b4fa14)
+  - run #3: copied (merge) [`de5039695`](https://github.com/krlmlr/duckdb/commit/de5039695ee484b435443afae91bdd57c2d990c6)
 
 ### Run #9 segment
 - [#21327](https://github.com/duckdb/duckdb/pull/21327) bwc: ignore indented comments in exclusion list parser
   - `-dag`: [`5907e38b4`](https://github.com/krlmlr/duckdb/commit/5907e38b447032f08c73562fdbaccc6aa5e29a3d)
   - run #1: copied [`d9a7aab45`](https://github.com/krlmlr/duckdb/commit/d9a7aab45fcc54463ccb2dfba05a83a0f36c58b3)
   - run #2: copied [`535bd58ba`](https://github.com/krlmlr/duckdb/commit/535bd58baa4d2bc2adfedd76cb2549dea8c92cab)
+  - run #3: copied [`856e977d4`](https://github.com/krlmlr/duckdb/commit/856e977d4b998d4abcd756295d613458cbb3d905)
 - [#21307](https://github.com/duckdb/duckdb/pull/21307) Reduce number of linux builds
   - `-dag`: [`462b35c78`](https://github.com/krlmlr/duckdb/commit/462b35c787a4441dc38e940e124932b3208b49e6)
   - run #1: copied [`4bd5aa97d`](https://github.com/krlmlr/duckdb/commit/4bd5aa97d67f4577533ecc4dac2ddb5391e52f5c)
   - run #2: copied [`a783a958c`](https://github.com/krlmlr/duckdb/commit/a783a958c7ab18643aa27ff9a0753361eebb9d39)
+  - run #3: copied [`e4aaabb09`](https://github.com/krlmlr/duckdb/commit/e4aaabb090c3e9bac5741093ca94d9b9f9512939)
 - [#21063](https://github.com/duckdb/duckdb/pull/21063) Enable profiling in jemalloc
   - `-dag`: [`8a404d039`](https://github.com/krlmlr/duckdb/commit/8a404d039c19a1a1d3441117727eb7bf6d39b617)
   - run #1: copied [`5a3594933`](https://github.com/krlmlr/duckdb/commit/5a359493356f461a4ea47c28f359f5f0dce8681f)
   - run #2: copied [`c366e66d6`](https://github.com/krlmlr/duckdb/commit/c366e66d6126ee0571cd4e306a1a1a686dff4f3f)
+  - run #3: copied [`40cbaa8b3`](https://github.com/krlmlr/duckdb/commit/40cbaa8b392360e9ee0a0f811f2d0213500da813)
 - [#21076](https://github.com/duckdb/duckdb/pull/21076) Add approx count and kurtosis aggregate functions with struct-based aggregate state export
   - `-dag`: [`267f0d239`](https://github.com/krlmlr/duckdb/commit/267f0d2395f6d436f49eda86c3de53b074b7546e)
   - run #1: copied [`95bd21607`](https://github.com/krlmlr/duckdb/commit/95bd216070e08e9f4ef7f7a23883ffc888e12678)
   - run #2: copied [`a0338df10`](https://github.com/krlmlr/duckdb/commit/a0338df10b72aa8f798dfe1c3ee83778931d6d9e)
+  - run #3: copied [`286575c82`](https://github.com/krlmlr/duckdb/commit/286575c82030f6db5231e9c1f30efb31541af87e)
 - [#21341](https://github.com/duckdb/duckdb/pull/21341) Split regression tests into 4 roughly even jobs
   - `-dag`: [`949707a85`](https://github.com/krlmlr/duckdb/commit/949707a8529eb9640970cbcaf1799d00b4f85b85)
   - run #1: copied [`dda0b2a71`](https://github.com/krlmlr/duckdb/commit/dda0b2a71ef1a15178b74538d564bf39c0dd4375)
   - run #2: copied [`19bbf1f15`](https://github.com/krlmlr/duckdb/commit/19bbf1f1509fb939357ca4e404ade08f3c6d5a57)
+  - run #3: copied [`638bf7e52`](https://github.com/krlmlr/duckdb/commit/638bf7e5247bd63cdf14377e82e59eada67cdbeb)
 - [#21368](https://github.com/duckdb/duckdb/pull/21368) Fine grained retry for CI commands
   - `-dag`: [`40f4c0a55`](https://github.com/krlmlr/duckdb/commit/40f4c0a55657aaad17892f2a44b2b796bcc8c794)
   - run #1: copied [`1d2afe5b6`](https://github.com/krlmlr/duckdb/commit/1d2afe5b61048c393728b4c1eab0f9f210ffbb8c)
   - run #2: copied [`1ca84720f`](https://github.com/krlmlr/duckdb/commit/1ca84720fdf16c1e05489212b0ce9c9f8bd08ced)
+  - run #3: copied [`a326a20ff`](https://github.com/krlmlr/duckdb/commit/a326a20ff935eabb1bcf1f11379567b08c322bd8)
 - [#21377](https://github.com/duckdb/duckdb/pull/21377) automate clangd/compile_commands.json gen via builds
   - `-dag`: [`602e0d917`](https://github.com/krlmlr/duckdb/commit/602e0d917a8e08331c15c158b50e2a8c420eacb8)
   - run #1: copied [`dea54f93d`](https://github.com/krlmlr/duckdb/commit/dea54f93db40cbb85231733023a0f7ccf5fd1db9)
   - run #2: copied [`3f65ca664`](https://github.com/krlmlr/duckdb/commit/3f65ca6648a8c021da34b1fde7e77e66fadbb841)
+  - run #3: copied [`c23765aed`](https://github.com/krlmlr/duckdb/commit/c23765aed1485008f1bb19f1e5d35dca590b0384)
 - [#21310](https://github.com/duckdb/duckdb/pull/21310) Bumping C++ Standard to 17
   - `-dag`: [`5e18b804c`](https://github.com/krlmlr/duckdb/commit/5e18b804c44b90c1ac9f3e89546906a1c262d5b1)
   - run #1: copied [`149c1efea`](https://github.com/krlmlr/duckdb/commit/149c1efead73f52d39c2d0ace8c2f27dbb679f5e)
   - run #2: copied [`9256d7c83`](https://github.com/krlmlr/duckdb/commit/9256d7c83f9796c3d6ec6cba671ee925eeb979d7)
+  - run #3: copied [`811b66aff`](https://github.com/krlmlr/duckdb/commit/811b66aff7e31b26356cda3e3204d650a9713cbf)
 - [#21265](https://github.com/duckdb/duckdb/pull/21265) Add parsing support for `CREATE TRIGGER` statements
   - `-dag`: [`33ad5a601`](https://github.com/krlmlr/duckdb/commit/33ad5a601537d1163b0254a4ca6024b609c15ca4)
   - run #1: copied [`f33b02448`](https://github.com/krlmlr/duckdb/commit/f33b024481d3fc4ec066dc15539b4db38d39c736)
   - run #2: copied [`5596aae12`](https://github.com/krlmlr/duckdb/commit/5596aae1288d512f962aba06f5b53204de0a2f8d)
+  - run #3: copied [`9aaf739f5`](https://github.com/krlmlr/duckdb/commit/9aaf739f5c0df05e4dd9a0a1381a6fdd76d7d68c)
 - [#21268](https://github.com/duckdb/duckdb/pull/21268) Cache PEG matcher and add parser to profiler timings
   - `-dag`: [`ac08be306`](https://github.com/krlmlr/duckdb/commit/ac08be3068388db2da57054629c8e9117cf890df)
   - run #1: copied [`1082adc14`](https://github.com/krlmlr/duckdb/commit/1082adc14324868380b0cf0eb12641b9c0fa9e8f)
   - run #2: copied [`919a68783`](https://github.com/krlmlr/duckdb/commit/919a6878309e2a6bc34c0d1eba2da05424685bdb)
+  - run #3: copied [`3e7a34a6b`](https://github.com/krlmlr/duckdb/commit/3e7a34a6bc9ae702f930d66eb33c9ebb59e14ad6)
 - [#21279](https://github.com/duckdb/duckdb/pull/21279) Extend Join Pushdown with Prefix Range Filter
   - `-dag`: [`6796ddc46`](https://github.com/krlmlr/duckdb/commit/6796ddc4690ca9cfce13b1a93b3e7b936851e086)
   - run #1: copied [`36d1ea1be`](https://github.com/krlmlr/duckdb/commit/36d1ea1beed350bac28c60817d6b8ff6936d018f)
   - run #2: copied [`b3ed25519`](https://github.com/krlmlr/duckdb/commit/b3ed255199831991378bafcac2114274ea69a904)
+  - run #3: copied [`1568b74dd`](https://github.com/krlmlr/duckdb/commit/1568b74dd45bbd0a5b1ed14cc3d38538d9d1d443)
 - [#20976](https://github.com/duckdb/duckdb/pull/20976) Parquet: make isAdjustedToUTC configurable for timestamps without timezone
   - `-dag`: [`cf20c1c4c`](https://github.com/krlmlr/duckdb/commit/cf20c1c4c776bc7d6c1818e55656fc8dacac3a3b)
   - run #1: copied [`3074dbe43`](https://github.com/krlmlr/duckdb/commit/3074dbe430587efc753d721399e80e387a590182)
   - run #2: copied [`2b4fd5d9e`](https://github.com/krlmlr/duckdb/commit/2b4fd5d9e2e97e766d3004bf2aa4b57250c4c99c)
+  - run #3: copied [`0dd01db90`](https://github.com/krlmlr/duckdb/commit/0dd01db905163f9c3896177cb836768530e4bb23)
 - [#7612](https://github.com/duckdb/duckdb/pull/7612) Internal https://redirect.github.com/duckdb/duckdb/pull/7612: ANTI IEJoin Predicates
   - `-dag`: [`a70599d5c`](https://github.com/krlmlr/duckdb/commit/a70599d5c81ff4215cc750efb248e168b97fcd2a)
   - run #1: copied [`b6080bfa2`](https://github.com/krlmlr/duckdb/commit/b6080bfa24fe659d82bb232774d63af042681876)
   - run #2: copied [`1cb1605fe`](https://github.com/krlmlr/duckdb/commit/1cb1605fef964f361b8e94db6af30b4768be06b7)
+  - run #3: copied [`d238090b0`](https://github.com/krlmlr/duckdb/commit/d238090b0acc5703f6497289c6af2e39cd02f182)
 - [#21423](https://github.com/duckdb/duckdb/pull/21423) Fix strip_p/lower call order in generate_grammar.py keyword sorting
   - `-dag`: [`8a276d8d8`](https://github.com/krlmlr/duckdb/commit/8a276d8d8ff50af0d0c0c46ccf3f9343e4a68fa2)
   - run #1: copied [`4f724e135`](https://github.com/krlmlr/duckdb/commit/4f724e135139ccf7dc1aba99dd49c495ac9acbad)
   - run #2: copied [`af0cab630`](https://github.com/krlmlr/duckdb/commit/af0cab6302cb74913f4227d44ca8ce3a664b13fa)
+  - run #3: copied [`9f9663073`](https://github.com/krlmlr/duckdb/commit/9f9663073ea8180b37d5addea637f6dffe39d8d1)
 - [#21309](https://github.com/duckdb/duckdb/pull/21309) Allow input plan stealing through TableFunctionBindInput
   - `-dag`: [`232612520`](https://github.com/krlmlr/duckdb/commit/232612520f3d81e9469819a2f9c2f5f6076eba07)
   - run #1: copied [`8440de14b`](https://github.com/krlmlr/duckdb/commit/8440de14bd5cd5a6dda4f8491b0d74d271cbe7ad)
   - run #2: copied [`af4b29999`](https://github.com/krlmlr/duckdb/commit/af4b29999064b39061b2f418697a852cf995f455)
+  - run #3: copied [`bc3ed4a84`](https://github.com/krlmlr/duckdb/commit/bc3ed4a8439f86ae8524c63b45d8e324e7c7911b)
 - [#21454](https://github.com/duckdb/duckdb/pull/21454) Parquet: support for writing timestamps as INT96
   - `-dag`: [`1e95afd12`](https://github.com/krlmlr/duckdb/commit/1e95afd123ea3e7b8c0b1078cc3db6517c7edc17)
   - run #1: copied [`4bc88bcc2`](https://github.com/krlmlr/duckdb/commit/4bc88bcc2cab95b44ac16c55168c6e5997905720)
   - run #2: copied [`6089fc655`](https://github.com/krlmlr/duckdb/commit/6089fc655776f102a4392f819dbe2939ffce6931)
+  - run #3: copied [`1a8c0d131`](https://github.com/krlmlr/duckdb/commit/1a8c0d131a1c54410ef8507ac35eb8d123c8c8f8)
 - [#21463](https://github.com/duckdb/duckdb/pull/21463) Internal issue 7738 follow-up
   - `-dag`: [`082f4dc50`](https://github.com/krlmlr/duckdb/commit/082f4dc50584efa5f62d2a75b9cba0001789e7b2)
   - run #1: copied [`652e18e6b`](https://github.com/krlmlr/duckdb/commit/652e18e6b0f68e005c0a197a5596de3d087b7ea6)
   - run #2: copied [`6e810d151`](https://github.com/krlmlr/duckdb/commit/6e810d15186246425dca5681077fd3b81fd2ce9d)
+  - run #3: copied [`f6c75bbe1`](https://github.com/krlmlr/duckdb/commit/f6c75bbe1a4f42a01bf07d9b05229f595c202c7c)
 - [#21456](https://github.com/duckdb/duckdb/pull/21456) Distribute work partition-wise when inserting into `JoinHashTable`
   - `-dag`: [`50f72b04c`](https://github.com/krlmlr/duckdb/commit/50f72b04c7bf9bb2ce2a90aba5202f85e7c48a2b)
   - run #1: copied [`e88377316`](https://github.com/krlmlr/duckdb/commit/e88377316cbbdb0bc36ba4167bf6889bf7a93ae6)
   - run #2: copied [`b6438f935`](https://github.com/krlmlr/duckdb/commit/b6438f93501de49fb2529ddf75d21269abb2cd7d)
+  - run #3: copied [`40c439304`](https://github.com/krlmlr/duckdb/commit/40c43930411e69b919ba07c2f431b1bb82881201)
 - [#21396](https://github.com/duckdb/duckdb/pull/21396) Create SECURITY.md
   - `-dag`: [`1d84617a3`](https://github.com/krlmlr/duckdb/commit/1d84617a3c9f74228e65c8960c712c2cda19dc21)
   - run #1: copied [`b7826c59d`](https://github.com/krlmlr/duckdb/commit/b7826c59d385848bb32944547d5d5d0ebd861699)
   - run #2: copied [`991455f6d`](https://github.com/krlmlr/duckdb/commit/991455f6dfc949dfc09e2c2b2a37af04ce461c4c)
+  - run #3: copied [`ecab16a6b`](https://github.com/krlmlr/duckdb/commit/ecab16a6b543ddaecc39fabe6a234531ac97c30a)
 
 - **[checkpoint] Run #9 back-merge** [#21449](https://github.com/duckdb/duckdb/pull/21449) "Merge v1.5-variegata into main"
   - `-dag`: [`aa28bee21`](https://github.com/krlmlr/duckdb/commit/aa28bee213fa6a04bc3104884199427447820ac9)
   - run #1: copied (merge) [`b23fa3161`](https://github.com/krlmlr/duckdb/commit/b23fa3161efc748e32e6c60417627b2181e24936)
   - run #2: copied (merge) [`f42f6ffe6`](https://github.com/krlmlr/duckdb/commit/f42f6ffe64eb2071d904bd1d4ca79c123b42111b)
+  - run #3: copied (merge) [`33e69456f`](https://github.com/krlmlr/duckdb/commit/33e69456fdad55902db1bc24f1de739bd5bc8c36)
 
 ### Run #10 segment
 - [#8474](https://github.com/duckdb/duckdb/pull/8474) Internal https://redirect.github.com/duckdb/duckdb/pull/8474: ICU Version 77-1 
   - `-dag`: [`5159294b6`](https://github.com/krlmlr/duckdb/commit/5159294b6536abca7d8241ba56ebc9cae3d41355)
   - run #1: copied [`16b4370b8`](https://github.com/krlmlr/duckdb/commit/16b4370b888dc516e98b7a0f9b837017b7932a68)
   - run #2: copied [`81accc0b0`](https://github.com/krlmlr/duckdb/commit/81accc0b006877b5b1df1524a76f6828106c529d)
+  - run #3: copied [`db4080ce8`](https://github.com/krlmlr/duckdb/commit/db4080ce83a6fe38b3b0d4d3142d09bd3829c924)
 - [#21350](https://github.com/duckdb/duckdb/pull/21350) introducing TryPushdownRelaxedFilter
   - `-dag`: [`382030359`](https://github.com/krlmlr/duckdb/commit/3820303597a18358de252c7d2751002d25b2728f)
   - run #1: copied [`ac1811a4a`](https://github.com/krlmlr/duckdb/commit/ac1811a4ab9708644a60448f58fac3283c79e7d8)
   - run #2: copied [`3d9ea3e6c`](https://github.com/krlmlr/duckdb/commit/3d9ea3e6c4d5d7590024a3823c0494df14e25b0a)
+  - run #3: copied [`71643fb5b`](https://github.com/krlmlr/duckdb/commit/71643fb5bf9190a7b3ddaf5489c758cd2848a305)
 - [#21481](https://github.com/duckdb/duckdb/pull/21481) Rework table filters to always use a `ProjectionIndex`
   - `-dag`: [`81b62b9d2`](https://github.com/krlmlr/duckdb/commit/81b62b9d24b3da785310521ef0bfce49e5d0e698)
   - run #1: copied [`b9118076d`](https://github.com/krlmlr/duckdb/commit/b9118076d048b70203fb809a2f96b6552f055336)
   - run #2: copied [`c744da6bb`](https://github.com/krlmlr/duckdb/commit/c744da6bbe189e4b2d2aac30aa7ec1c933e1ce96)
+  - run #3: copied [`522cbed91`](https://github.com/krlmlr/duckdb/commit/522cbed918011cdbfc47b0beb2d67433c7a9bacd)
 - [#21497](https://github.com/duckdb/duckdb/pull/21497) Fix hidden merge conflict in table filter code
   - `-dag`: [`fad5fe028`](https://github.com/krlmlr/duckdb/commit/fad5fe0281fe62076bc3664ec4c3f3e563bc0080)
   - run #1: copied [`6e56f9df3`](https://github.com/krlmlr/duckdb/commit/6e56f9df3dba0a47a8692cee13fc572c4c28d94b)
   - run #2: copied [`23fca4315`](https://github.com/krlmlr/duckdb/commit/23fca4315825b9b04c3e45667ae9ab218efcbbbf)
+  - run #3: copied [`25fef3917`](https://github.com/krlmlr/duckdb/commit/25fef39179fe3257597e054d50d1f5395e6d6501)
 - [#21498](https://github.com/duckdb/duckdb/pull/21498) Enable filters on pushdown extract
   - `-dag`: [`611fc9958`](https://github.com/krlmlr/duckdb/commit/611fc995839018f1857290de0cd86e328bd37ee2)
   - run #1: copied [`99cdac6ef`](https://github.com/krlmlr/duckdb/commit/99cdac6ef4dacd91c6403525ca17fdad994a72e7)
   - run #2: copied [`4cb80ed3a`](https://github.com/krlmlr/duckdb/commit/4cb80ed3a14d947df1540b8cae959be43384d5d5)
+  - run #3: copied [`7f70e5120`](https://github.com/krlmlr/duckdb/commit/7f70e51208297471c20e69f7139d32d0442a1746)
 - [#21502](https://github.com/duckdb/duckdb/pull/21502) Improve profiler / progress bar interactions
   - `-dag`: [`464d33ed4`](https://github.com/krlmlr/duckdb/commit/464d33ed48b36c44473d7d051d28489af40eab15)
   - run #1: copied [`1312bb89f`](https://github.com/krlmlr/duckdb/commit/1312bb89f60dd2e7eab944752fb7541ea36c3019)
   - run #2: copied [`2b342c268`](https://github.com/krlmlr/duckdb/commit/2b342c2682c07a20b95c351566e85d8e8f81fc6a)
+  - run #3: copied [`82cd29a73`](https://github.com/krlmlr/duckdb/commit/82cd29a73551929817bcf4a35016b09ac29a4410)
 - [#21513](https://github.com/duckdb/duckdb/pull/21513) For CREATE VIEW IF NOT EXISTS - skip binding the view if the view already exists
   - `-dag`: [`ce16bff8b`](https://github.com/krlmlr/duckdb/commit/ce16bff8b9163b5eda0a081e9da6774a5b054092)
   - run #1: copied [`99d34baa8`](https://github.com/krlmlr/duckdb/commit/99d34baa833c243fb31c5e747c6e0318992e2a14)
   - run #2: copied [`3a69fc362`](https://github.com/krlmlr/duckdb/commit/3a69fc3626ed193869be42fac7f527c91e0a9673)
+  - run #3: copied [`325485ae1`](https://github.com/krlmlr/duckdb/commit/325485ae1e52cbb3fa1f56e139cf8c315af9dee2)
 - [#21509](https://github.com/duckdb/duckdb/pull/21509) Use __COUNTER__ for setting index to avoid merge conflicts between PRs that both add settings
   - `-dag`: [`9383b37e9`](https://github.com/krlmlr/duckdb/commit/9383b37e9bcaf4a536c4f3d9481f373dc18c7bef)
   - run #1: copied [`71b320a7d`](https://github.com/krlmlr/duckdb/commit/71b320a7d19170607bcc5df63366e34b20e2b368)
   - run #2: copied [`bd5ad3227`](https://github.com/krlmlr/duckdb/commit/bd5ad32271eb210545e62f1d4d3e82fea1930423)
+  - run #3: copied [`736d3b646`](https://github.com/krlmlr/duckdb/commit/736d3b6462fd24f9f1f970874769464cac21ad64)
 - [#21483](https://github.com/duckdb/duckdb/pull/21483) bump duckdb-sqlsmith
   - `-dag`: [`e0e8b6485`](https://github.com/krlmlr/duckdb/commit/e0e8b64859c3d47392b1df69fd9b33303d33e886)
   - run #1: copied [`d9876471e`](https://github.com/krlmlr/duckdb/commit/d9876471e49c3580982fbb6976b7e6a0decc6511)
   - run #2: copied [`30dd6a813`](https://github.com/krlmlr/duckdb/commit/30dd6a8136f24f555bbbb2a895f37c6a44d0de80)
+  - run #3: copied [`afd1d17c1`](https://github.com/krlmlr/duckdb/commit/afd1d17c1eaa2b5b96a4d7d04ba215b0f9a5a21e)
 - [#21510](https://github.com/duckdb/duckdb/pull/21510) Rework DefaultMacro to just use the macro definition, instead of decomposing it into separate parts
   - `-dag`: [`0a38d916b`](https://github.com/krlmlr/duckdb/commit/0a38d916b6b47775eb59a431e1f3d082090aefd5)
   - run #1: copied [`2992505c0`](https://github.com/krlmlr/duckdb/commit/2992505c0ece04d88e97cf36a54b43126a5ded7a)
   - run #2: copied [`e51cece5e`](https://github.com/krlmlr/duckdb/commit/e51cece5e22ec28616fa37253400ee23d6b7ec96)
+  - run #3: copied [`b203c8f44`](https://github.com/krlmlr/duckdb/commit/b203c8f447a9faae95f870c7a2eba7fdb0fc6be1)
 - [#21434](https://github.com/duckdb/duckdb/pull/21434) Add DROP TRIGGER parsing support (PEG parser)
   - `-dag`: [`70afb779c`](https://github.com/krlmlr/duckdb/commit/70afb779ce4929afa938d2e27c052fed60316224)
   - run #1: copied [`dcb2efd81`](https://github.com/krlmlr/duckdb/commit/dcb2efd8149c92ed26a8ebba5a34368468e30bfe)
   - run #2: copied [`6313d2865`](https://github.com/krlmlr/duckdb/commit/6313d28657cf59909d1e990f2f8a96411950ba73)
+  - run #3: copied [`1329d7da0`](https://github.com/krlmlr/duckdb/commit/1329d7da05122c364906368cab11d5bed4f08fb7)
 - [#21480](https://github.com/duckdb/duckdb/pull/21480) Move `PhysicalCopyToFile` logic over to Prepare/Flush Batch API
   - `-dag`: [`8ced2ad7f`](https://github.com/krlmlr/duckdb/commit/8ced2ad7fe8714093b8bbe0369cf42ebeb947940)
   - run #1: copied [`01c1f25f5`](https://github.com/krlmlr/duckdb/commit/01c1f25f5426a6693e794465b2e4a4343fb3b4e2)
   - run #2: copied [`8a6cd3188`](https://github.com/krlmlr/duckdb/commit/8a6cd3188fc5e8ec5ceaa41781d75b2d064e9b3a)
+  - run #3: copied [`2c3636ce1`](https://github.com/krlmlr/duckdb/commit/2c3636ce112ef8ddda7e9cfea152e28c0313e88c)
 - [#21516](https://github.com/duckdb/duckdb/pull/21516) Fix WAL replay with function-based DEFAULT
   - `-dag`: [`b565c5774`](https://github.com/krlmlr/duckdb/commit/b565c57740de5db3a1a905303623f011dffc4efb)
   - run #1: copied [`ad9ebef97`](https://github.com/krlmlr/duckdb/commit/ad9ebef97730680c35e325d1a225a5e0e4540453)
   - run #2: copied [`1313bda6b`](https://github.com/krlmlr/duckdb/commit/1313bda6b9eb861d89858af05f7624c764eccb7d)
+  - run #3: copied [`c8441c8cf`](https://github.com/krlmlr/duckdb/commit/c8441c8cfe9d388033027d2c57bff202cda8aad2)
 - [#21523](https://github.com/duckdb/duckdb/pull/21523) Use the parser to provide better annotations for the tokenizer
   - `-dag`: [`b0fe1af59`](https://github.com/krlmlr/duckdb/commit/b0fe1af5952cbf4efca9678e7f1a8853470fe64a)
   - run #1: copied [`3da56d2f7`](https://github.com/krlmlr/duckdb/commit/3da56d2f75d19d97faf9d3fc418431d0429e1ae7)
   - run #2: copied [`17ccbfff9`](https://github.com/krlmlr/duckdb/commit/17ccbfff960cf18fac73b47024661a2695b0da77)
+  - run #3: copied [`32c4574a8`](https://github.com/krlmlr/duckdb/commit/32c4574a8102cec778ab5df8d35a043ec2c794fb)
 - [#21522](https://github.com/duckdb/duckdb/pull/21522) Make JSON copy to file no longer bind twice
   - `-dag`: [`cbe30523d`](https://github.com/krlmlr/duckdb/commit/cbe30523d6f87dacdc49b5687b4223c893b884c9)
   - run #1: copied [`994ee0cc0`](https://github.com/krlmlr/duckdb/commit/994ee0cc0755cd78df81a6790a03d96c444b99c6)
   - run #2: copied [`39b008ea3`](https://github.com/krlmlr/duckdb/commit/39b008ea3f57d178a175be022df56846e1b0dd29)
+  - run #3: copied [`4eeba7dce`](https://github.com/krlmlr/duckdb/commit/4eeba7dce2e08532731ba92bbb63f62cabe8fb12)
 - [#21526](https://github.com/duckdb/duckdb/pull/21526) Move vector types / vector buffer types to different headers
   - `-dag`: [`b21841589`](https://github.com/krlmlr/duckdb/commit/b21841589b1ff361a3e06baac1e5dc56dd1b137a)
   - run #1: copied [`ff3a80e86`](https://github.com/krlmlr/duckdb/commit/ff3a80e86273ba4434f8224bca83872c40e74ace)
   - run #2: copied [`474216d91`](https://github.com/krlmlr/duckdb/commit/474216d91a3b395039a13cd8f6611c3e2bcad291)
+  - run #3: copied [`6cd553464`](https://github.com/krlmlr/duckdb/commit/6cd55346445c4a09237db8487f5406873f0caf3c)
 - [#21534](https://github.com/duckdb/duckdb/pull/21534) Make StructVector have the same layout as DataChunk (vector<Vector>)
   - `-dag`: [`e489420d6`](https://github.com/krlmlr/duckdb/commit/e489420d607984ec516a8c3358deda73c3696c8d)
   - run #1: copied [`ad590f145`](https://github.com/krlmlr/duckdb/commit/ad590f1458bf700d6010433267a0e343290d568a)
   - run #2: copied [`2210fb8b2`](https://github.com/krlmlr/duckdb/commit/2210fb8b2a33c95ce62ca7f3354e84c7afad5d55)
+  - run #3: copied [`eeaf39b54`](https://github.com/krlmlr/duckdb/commit/eeaf39b54c1fae39133bfacae6064ecf44ceaf69)
 - [#21548](https://github.com/duckdb/duckdb/pull/21548) Attempt to fix encryption config initialization on parquet reader
   - `-dag`: [`8cba6bfcd`](https://github.com/krlmlr/duckdb/commit/8cba6bfcd603e0189937f79c9ce7ed180e572cfe)
   - run #1: copied [`0a8448930`](https://github.com/krlmlr/duckdb/commit/0a8448930492b8ad918d31897efcc1e02ae4b7d3)
   - run #2: copied [`c069571e5`](https://github.com/krlmlr/duckdb/commit/c069571e590ea12dfb200d5a7ad8e8b24a7da866)
+  - run #3: copied [`29afca614`](https://github.com/krlmlr/duckdb/commit/29afca614ef13f899e3c3522ffbaee3095f0784f)
 - [#21524](https://github.com/duckdb/duckdb/pull/21524) Refactor UpdateStatement as thin wrapper over UpdateQueryNode
   - `-dag`: [`82ca2b115`](https://github.com/krlmlr/duckdb/commit/82ca2b1154bf4de9eae76392741a013dfb7013d1)
   - run #1: copied [`7d8ed38df`](https://github.com/krlmlr/duckdb/commit/7d8ed38dfd4822a0dc61fb52683e0e7cc131c8c2)
   - run #2: copied [`2d133ed33`](https://github.com/krlmlr/duckdb/commit/2d133ed3360b8fa92b579fc50618076787c79a8b)
+  - run #3: copied [`0b441d01f`](https://github.com/krlmlr/duckdb/commit/0b441d01f61f803784324a7c61dda5d0efc94a33)
 - [#21543](https://github.com/duckdb/duckdb/pull/21543) Fix typos in comments: overriden, initalize
   - `-dag`: [`c61ccc742`](https://github.com/krlmlr/duckdb/commit/c61ccc742b4c0a39144a9cdd0684a57242c2202a)
   - run #1: copied [`3797b5676`](https://github.com/krlmlr/duckdb/commit/3797b5676437b29f206b5a73d7bf3b93c554f04e)
   - run #2: copied [`90ef4e508`](https://github.com/krlmlr/duckdb/commit/90ef4e5087b27ced373f3e033eb9676bfd457150)
+  - run #3: copied [`96847a1c0`](https://github.com/krlmlr/duckdb/commit/96847a1c054b941f003f22458a8ab51b5377b0ed)
 - [#8472](https://github.com/duckdb/duckdb/pull/8472) Internal https://redirect.github.com/duckdb/duckdb/pull/8472: Window Catalog Entries
   - `-dag`: [`265e66f9b`](https://github.com/krlmlr/duckdb/commit/265e66f9b698ca7e173b4291a6426fcf4cf26878)
   - run #1: copied [`ca1fc071d`](https://github.com/krlmlr/duckdb/commit/ca1fc071d8fed689e51260b5fe6a2b271ca58197)
   - run #2: copied [`f8dd3d717`](https://github.com/krlmlr/duckdb/commit/f8dd3d7176179fef2e1e7411d55f08c52281dbac)
+  - run #3: copied [`0a93bb22c`](https://github.com/krlmlr/duckdb/commit/0a93bb22c6fe70254ca7e21983ed12752c7ac5d5)
 - [#21382](https://github.com/duckdb/duckdb/pull/21382) Checkpoint transactions
   - `-dag`: [`96c91ba6c`](https://github.com/krlmlr/duckdb/commit/96c91ba6c58fc3f4ba242450bf2b4ac7a656dae0)
   - run #1: copied [`afb70d4f4`](https://github.com/krlmlr/duckdb/commit/afb70d4f4e6115b724305e56b92a821d80c7d219)
   - run #2: copied [`e466bd4ea`](https://github.com/krlmlr/duckdb/commit/e466bd4eadc682b4826d5979bdee653533703c73)
+  - run #3: copied [`976af5834`](https://github.com/krlmlr/duckdb/commit/976af58340c372c91d3bf948bbc1e9dc26fa16c8)
 - [#21554](https://github.com/duckdb/duckdb/pull/21554) Fix linux base and extension deployment on main
   - `-dag`: [`8b758f033`](https://github.com/krlmlr/duckdb/commit/8b758f03363d121e90507baf4bc55c890b259923)
   - run #1: copied [`747d5653b`](https://github.com/krlmlr/duckdb/commit/747d5653b28307d38640e68842f0c4553f574e48)
   - run #2: copied [`fdc6ad0ff`](https://github.com/krlmlr/duckdb/commit/fdc6ad0ffd90719e5d31d4e1c6a41d0d62320b1c)
+  - run #3: copied [`20a4fca7f`](https://github.com/krlmlr/duckdb/commit/20a4fca7f11cb590c06f5ee41b27000edd7e9dd5)
 - [#21532](https://github.com/duckdb/duckdb/pull/21532) Fix Parquet dictionary index bit widths
   - `-dag`: [`f6f8f169b`](https://github.com/krlmlr/duckdb/commit/f6f8f169b72260909f9c32b83d91c635214b4d49)
   - run #1: copied [`36d067f2c`](https://github.com/krlmlr/duckdb/commit/36d067f2cfc1a7676993e90cb090f20a573b46f1)
   - run #2: copied [`297db5311`](https://github.com/krlmlr/duckdb/commit/297db53115099efb9599a26fab8abe8ba45aad01)
+  - run #3: copied [`69d76259a`](https://github.com/krlmlr/duckdb/commit/69d76259ac6a808d5941fe68ee69b5f9ceec018e)
 
 - **[checkpoint] Run #10 back-merge** [#21555](https://github.com/duckdb/duckdb/pull/21555) "Merge v1.5-variegata into main"
   - `-dag`: [`62768edeb`](https://github.com/krlmlr/duckdb/commit/62768edebb259acdb10c67f7d9c5a395e49e7cf1)
   - run #1: copied (merge) [`99cf9b071`](https://github.com/krlmlr/duckdb/commit/99cf9b0714f800d51cbf5720b8135dd1f8ce3423)
   - run #2: copied (merge) [`66f97cd46`](https://github.com/krlmlr/duckdb/commit/66f97cd46f0c18265c38dafa39944de7d75b9a32)
+  - run #3: copied (merge) [`0a8ef393a`](https://github.com/krlmlr/duckdb/commit/0a8ef393a5a61fa289e348c47bac7eb9e8a4f817)
 
 ### Run #11 segment
 - [#21563](https://github.com/duckdb/duckdb/pull/21563) Re-organize vectors: move various vector methods to different files
   - `-dag`: [`182467db4`](https://github.com/krlmlr/duckdb/commit/182467db47c230355f11a1de327aa3f95ca816eb)
   - run #1: copied [`d83d283eb`](https://github.com/krlmlr/duckdb/commit/d83d283eb5dc80c7dc7e81424d5dc25765d04de9)
   - run #2: copied [`a94e3d0a1`](https://github.com/krlmlr/duckdb/commit/a94e3d0a11fa7f5d85b11e61ff0de2d72598cee9)
+  - run #3: copied [`a54afab15`](https://github.com/krlmlr/duckdb/commit/a54afab15635d115c8de7ea717e089dc67cc438b)
 - [#21573](https://github.com/duckdb/duckdb/pull/21573) Fix cardinality estimation for uncommitted rows
   - `-dag`: [`73812b6e7`](https://github.com/krlmlr/duckdb/commit/73812b6e7e5c085e0a1e6c953369d4fa252a3038)
   - run #1: copied [`e5ce78837`](https://github.com/krlmlr/duckdb/commit/e5ce788379fcb806676cec37c8311eb12465b370)
   - run #2: copied [`311f6e9bd`](https://github.com/krlmlr/duckdb/commit/311f6e9bda749387f90f63053fd47b8df7f33943)
+  - run #3: copied [`119a44a92`](https://github.com/krlmlr/duckdb/commit/119a44a92eb0396fe58d8adf39bada16816aa386)
 - [#21576](https://github.com/duckdb/duckdb/pull/21576) Fix wasm build: use __EMSCRIPTEN__ instead of deprecated EMSCRIPTEN
   - `-dag`: [`470541472`](https://github.com/krlmlr/duckdb/commit/470541472b7394a603faa82e4e97cff40e5d07e5)
   - run #1: copied [`2a715cb29`](https://github.com/krlmlr/duckdb/commit/2a715cb29403fa9232243aa174e563ca0450b76f)
   - run #2: copied [`20374a23d`](https://github.com/krlmlr/duckdb/commit/20374a23d4e2960323c4df78e4e9f3eb064be4d1)
+  - run #3: copied [`4478ebbb9`](https://github.com/krlmlr/duckdb/commit/4478ebbb9c26c015f80b1907fbf09efdadf3f1b5)
 - [#21556](https://github.com/duckdb/duckdb/pull/21556) Refactor DeleteStatement as thin wrapper over DeleteQueryNode
   - `-dag`: [`ab69e36db`](https://github.com/krlmlr/duckdb/commit/ab69e36db1771f2289a17056e2c5dca914ecf968)
   - run #1: copied [`0a1b06840`](https://github.com/krlmlr/duckdb/commit/0a1b0684061d925a80177e5cff041ecf0d0d99bc)
   - run #2: copied [`d999f62e6`](https://github.com/krlmlr/duckdb/commit/d999f62e6d9c22e6e4b69fd6b12aa968f1288349)
+  - run #3: copied [`e65b969f1`](https://github.com/krlmlr/duckdb/commit/e65b969f104a4659c793a5e52cacc1bde7f21c7a)
 - [#21575](https://github.com/duckdb/duckdb/pull/21575) Pass runners to extension jobs and reuse linux build
   - `-dag`: [`2f30326ac`](https://github.com/krlmlr/duckdb/commit/2f30326ac69daed5aa329f20bd2d76d8d71967d6)
   - run #1: copied [`8032a0eae`](https://github.com/krlmlr/duckdb/commit/8032a0eae61d003e1a037e8c2bf75684bcb56db6)
   - run #2: copied [`39b502b73`](https://github.com/krlmlr/duckdb/commit/39b502b739e8787d3fece5160a4b79a2ed20e003)
+  - run #3: copied [`568eaeb88`](https://github.com/krlmlr/duckdb/commit/568eaeb883733f204c3f3319833f700ede39485e)
 - [#21376](https://github.com/duckdb/duckdb/pull/21376) Fix GCC compile flags on reconfigure
   - `-dag`: [`4fb19f2d0`](https://github.com/krlmlr/duckdb/commit/4fb19f2d046716c20b37acee94c703887cffd3c6)
   - run #1: copied [`84a42d994`](https://github.com/krlmlr/duckdb/commit/84a42d9946079f5da36d94d97d9f3b5a7af12c9c)
   - run #2: copied [`3f1d443b7`](https://github.com/krlmlr/duckdb/commit/3f1d443b758a912524f9fc6aff272968d656b486)
+  - run #3: copied [`621c16d36`](https://github.com/krlmlr/duckdb/commit/621c16d363ea4327cb5e1fcbcf60ef3f5642b720)
 - [#21587](https://github.com/duckdb/duckdb/pull/21587) Exclude slow tests from debug verification
   - `-dag`: [`c81af1a99`](https://github.com/krlmlr/duckdb/commit/c81af1a998cb55c63e761e87e6771569a923b336)
   - run #1: copied [`cc6a06271`](https://github.com/krlmlr/duckdb/commit/cc6a062716471c7d7d32fec122a098dbb8c2a6c3)
   - run #2: copied [`521584265`](https://github.com/krlmlr/duckdb/commit/521584265c504c4df83fe5a60b569428ee4bf1f2)
+  - run #3: copied [`dd4af92ed`](https://github.com/krlmlr/duckdb/commit/dd4af92edea839023b6708a4b3829c28a6827c95)
 - [#21597](https://github.com/duckdb/duckdb/pull/21597) Move data from Vector into VectorBuffer
   - `-dag`: [`46bed2c64`](https://github.com/krlmlr/duckdb/commit/46bed2c645f42d9536bfdb5861ff33218dd49cc0)
   - run #1: copied [`1d86d5845`](https://github.com/krlmlr/duckdb/commit/1d86d5845556c1efc8a82b5d6473b85138588938)
   - run #2: copied [`aebcfec6a`](https://github.com/krlmlr/duckdb/commit/aebcfec6a33cb2d75ddbe5e79a88402e686b6834)
+  - run #3: copied [`b3bc98ecf`](https://github.com/krlmlr/duckdb/commit/b3bc98ecf84a4a38c68bc552433f5fa924ffd297)
 - [#21606](https://github.com/duckdb/duckdb/pull/21606) Fix off-by-one error in PropagateStatistics for date_part
   - `-dag`: [`c77b9a123`](https://github.com/krlmlr/duckdb/commit/c77b9a1232079104fa9d5a6f95d6f3e77a069ff8)
   - run #1: copied [`e067e53dc`](https://github.com/krlmlr/duckdb/commit/e067e53dc983eb4e8885a931fa06b80fbe9e6718)
   - run #2: copied [`0c0676346`](https://github.com/krlmlr/duckdb/commit/0c0676346edbb5175af9bce483641146c6387b57)
+  - run #3: copied [`796931657`](https://github.com/krlmlr/duckdb/commit/7969316572ad69b9c728662195154d8e847f6ff8)
 - [#21531](https://github.com/duckdb/duckdb/pull/21531) Add json_normalize() and json_deep_merge() scalar functions
   - `-dag`: [`dbb918cf3`](https://github.com/krlmlr/duckdb/commit/dbb918cf3a87bdd0086c58274c8ff51fdb2ec874)
   - run #1: copied [`7e4fe29b5`](https://github.com/krlmlr/duckdb/commit/7e4fe29b5b6de4817e1756cf3709d7838b49a690)
   - run #2: copied [`27e4844df`](https://github.com/krlmlr/duckdb/commit/27e4844df3072d322688dd3fae66b3605f12dbed)
+  - run #3: copied [`a2b12d956`](https://github.com/krlmlr/duckdb/commit/a2b12d95634202f845c7641e8fff92c891de0fa0)
 - [#21596](https://github.com/duckdb/duckdb/pull/21596) Refactor InsertStatement as thin wrapper over InsertQueryNode
   - `-dag`: [`d2bc97ae3`](https://github.com/krlmlr/duckdb/commit/d2bc97ae3f37255c223d76e8f11467d6a45967b0)
   - run #1: copied [`f2d66ce04`](https://github.com/krlmlr/duckdb/commit/f2d66ce0475cad6997bfadd58d03c146713436a8)
   - run #2: copied [`8d302a6bf`](https://github.com/krlmlr/duckdb/commit/8d302a6bf9476c9a079e2ed5fa0e7a4cd2308121)
+  - run #3: copied [`12ab19beb`](https://github.com/krlmlr/duckdb/commit/12ab19beb5444ac625cdbcb6fcc70a8a0a57e20b)
 - [#21557](https://github.com/duckdb/duckdb/pull/21557) Run windows amd64 CI job on namespace runner
   - `-dag`: [`c72b48e2f`](https://github.com/krlmlr/duckdb/commit/c72b48e2f6bd98d9b5d216da0ae7a23af243bad4)
   - run #1: copied [`7268c616a`](https://github.com/krlmlr/duckdb/commit/7268c616a2352354b2f4633f6911a035f79ca432)
   - run #2: copied [`479a083bd`](https://github.com/krlmlr/duckdb/commit/479a083bd62a48544b45f1b70e4365fe8beed1a4)
+  - run #3: copied [`259538bb6`](https://github.com/krlmlr/duckdb/commit/259538bb6db9ab9a227edcf2fc627a3b25d851c6)
 - [#21612](https://github.com/duckdb/duckdb/pull/21612) Vector: make `Flatten` work for `const` vectors, and remove implicit sort-of-copy constructor
   - `-dag`: [`3011c4fbd`](https://github.com/krlmlr/duckdb/commit/3011c4fbd88a8be8c078efd6a0f5fd5fba1409d8)
   - run #1: copied [`3db9329c7`](https://github.com/krlmlr/duckdb/commit/3db9329c70027a3f247ba6a5a1236f82185df6f7)
   - run #2: copied [`cbe3bf87e`](https://github.com/krlmlr/duckdb/commit/cbe3bf87ea9f52523bf78e9faf94c7aff864aa18)
+  - run #3: copied [`b6f10f273`](https://github.com/krlmlr/duckdb/commit/b6f10f273423822bd8d5d9635ce8e29eec084be0)
 - [#21614](https://github.com/duckdb/duckdb/pull/21614) Merge Linux cli CI jobs into main
   - `-dag`: [`23b08e260`](https://github.com/krlmlr/duckdb/commit/23b08e2605df82deee8fc535ecdce1fe0dd0f714)
   - run #1: copied [`a8798ac00`](https://github.com/krlmlr/duckdb/commit/a8798ac007ceb1df8dab2b37cd733278bd5e1deb)
   - run #2: copied [`836fe88ed`](https://github.com/krlmlr/duckdb/commit/836fe88ed1ba10d792ba99025b677420dc799b57)
+  - run #3: copied [`674d67bd2`](https://github.com/krlmlr/duckdb/commit/674d67bd2fd62ee670d8e71429e5af7998dfb68c)
 - [#21613](https://github.com/duckdb/duckdb/pull/21613) Fix some nightly run errors
   - `-dag`: [`6da6872ee`](https://github.com/krlmlr/duckdb/commit/6da6872ee1779d0dff68cf01d4e9b64fac01b512)
   - run #1: copied [`ee53c7a61`](https://github.com/krlmlr/duckdb/commit/ee53c7a61fd94a7f894fd40aa7ac1938c4969834)
   - run #2: copied [`fc202778b`](https://github.com/krlmlr/duckdb/commit/fc202778b1a9b2b8d5178f51b744526db4046e39)
+  - run #3: copied [`b40b45f23`](https://github.com/krlmlr/duckdb/commit/b40b45f23289ac18f8d49d6b11661c3229f5ec6b)
 - [#21607](https://github.com/duckdb/duckdb/pull/21607) Fix FK reference resolution for external catalogs
   - `-dag`: [`6e1e2ce6b`](https://github.com/krlmlr/duckdb/commit/6e1e2ce6b3af9463097e24148fc995b2e525dfe4)
   - run #1: copied [`baf691f58`](https://github.com/krlmlr/duckdb/commit/baf691f58f8fd3ca3e822f1f373aec45fbc5d159)
   - run #2: copied [`21991d841`](https://github.com/krlmlr/duckdb/commit/21991d841d7b13aac2e1224539e10ae3bb28b029)
+  - run #3: copied [`9f32fcef0`](https://github.com/krlmlr/duckdb/commit/9f32fcef0f2b83678fa32ebacea971c2cd87d54f)
 - [#21570](https://github.com/duckdb/duckdb/pull/21570) checkpoint_on_detach 3-valued setting
   - `-dag`: [`b66956a2a`](https://github.com/krlmlr/duckdb/commit/b66956a2a86c43e62a0718a386bfaf9d3d698bbc)
   - run #1: copied [`aee01727c`](https://github.com/krlmlr/duckdb/commit/aee01727c7185298d6dad7b13198de010fefe571)
   - run #2: copied [`dc02b61d1`](https://github.com/krlmlr/duckdb/commit/dc02b61d130c034f169918e12625ae2d284c8084)
+  - run #3: copied [`3ab6aea97`](https://github.com/krlmlr/duckdb/commit/3ab6aea970b695881485edfce1deb4cb0f435e33)
 - [#21621](https://github.com/duckdb/duckdb/pull/21621) [autocomplete] Use AutoCompleteCatalogProvider abstraction
   - `-dag`: [`1a5dcd16c`](https://github.com/krlmlr/duckdb/commit/1a5dcd16c00b512c9310c92ee3358300449aa604)
   - run #1: copied [`d523ffe3e`](https://github.com/krlmlr/duckdb/commit/d523ffe3e281534c474843b7897bd3aa8f13e50b)
   - run #2: copied [`cc3874fef`](https://github.com/krlmlr/duckdb/commit/cc3874fefee58e3687fff2ede62bdfba29075244)
+  - run #3: copied [`8039da8b6`](https://github.com/krlmlr/duckdb/commit/8039da8b64b54b4203dc6ac2d86da6e72ae6c37d)
 - [#21395](https://github.com/duckdb/duckdb/pull/21395) Implement block-aligned read and cache for external file cache
   - `-dag`: [`70ca396a2`](https://github.com/krlmlr/duckdb/commit/70ca396a22a66def9a0d6d213ef75f659fddd8fe)
   - run #1: copied [`3d88aaaef`](https://github.com/krlmlr/duckdb/commit/3d88aaaef49098e72ee9553a80a489f5a28925c4)
   - run #2: copied [`5364e0a9d`](https://github.com/krlmlr/duckdb/commit/5364e0a9d831d19ed74f85f93bef6098420d6dc4)
+  - run #3: copied [`5b10fd6e1`](https://github.com/krlmlr/duckdb/commit/5b10fd6e1f74c2948c8f12e7ebe7cdfe595e7733)
 - [#21619](https://github.com/duckdb/duckdb/pull/21619) Re-enable Win32 and MinGW jobs in CI
   - `-dag`: [`8a4618209`](https://github.com/krlmlr/duckdb/commit/8a46182091590c054ed4c440d77f5d7cca4c4fd5)
   - run #1: copied [`d81fc870c`](https://github.com/krlmlr/duckdb/commit/d81fc870c98b943afc26f586d936addf8055ded2)
   - run #2: copied [`fa9b49007`](https://github.com/krlmlr/duckdb/commit/fa9b4900700b43e68a959b2850684876952f623b)
+  - run #3: copied [`aa7863203`](https://github.com/krlmlr/duckdb/commit/aa786320333a6e92ba142e027f1fade2b7bfa734)
 - [#21624](https://github.com/duckdb/duckdb/pull/21624) BoxRenderer: Adding ColumnDataCollectionRenderInterface abstraction
   - `-dag`: [`8bbcaefef`](https://github.com/krlmlr/duckdb/commit/8bbcaefef4a32e31fcd0202e040065237f6ba0b9)
   - run #1: copied [`2b50278a8`](https://github.com/krlmlr/duckdb/commit/2b50278a82f64aa6b045054564f0c9e604a9f33d)
   - run #2: copied [`bf2aa02b1`](https://github.com/krlmlr/duckdb/commit/bf2aa02b1901a48baf091494c13666d7fa173455)
+  - run #3: copied [`55c36cae5`](https://github.com/krlmlr/duckdb/commit/55c36cae51185e527d22e9db72f37d73bd4ab6c0)
 - [#21631](https://github.com/duckdb/duckdb/pull/21631) Vector API: Make `ToUnifiedFormat` const, and make the data pointer within the `UnifiedVectorFormat` a `const_data_ptr`
   - `-dag`: [`e156b2ce6`](https://github.com/krlmlr/duckdb/commit/e156b2ce6105e33191972f71524116f412101454)
   - run #1: copied [`cbbf29cce`](https://github.com/krlmlr/duckdb/commit/cbbf29cce8c4fa89b532c26c33e4496e41bf9996)
   - run #2: copied [`312846a54`](https://github.com/krlmlr/duckdb/commit/312846a548eef80c00da4dfcb05d124f937e6881)
+  - run #3: copied [`1aa583665`](https://github.com/krlmlr/duckdb/commit/1aa583665dd9a2cb93faf854266516e2047a198e)
 - [#21643](https://github.com/duckdb/duckdb/pull/21643) Lint workflows and fix existing lint errors/warnings
   - `-dag`: [`ca583d365`](https://github.com/krlmlr/duckdb/commit/ca583d365b3ac93aafbed640b06c4c8677e4a9a6)
   - run #1: copied [`e45738a12`](https://github.com/krlmlr/duckdb/commit/e45738a122f5923442869de83210d3d5aabf256f)
   - run #2: copied [`82586c37e`](https://github.com/krlmlr/duckdb/commit/82586c37ebea26eaba512b4d23ceb824d8fdede6)
+  - run #3: copied [`3d641239a`](https://github.com/krlmlr/duckdb/commit/3d641239aebafffe37a6105d18163a3f7cc80d84)
 - [#21644](https://github.com/duckdb/duckdb/pull/21644) Fix crash in `Vector::Resize` for STRUCT types
   - `-dag`: [`561e39ce3`](https://github.com/krlmlr/duckdb/commit/561e39ce347648f93a12ebc2dbc5a556525fce78)
   - run #1: copied [`c90a6d1f7`](https://github.com/krlmlr/duckdb/commit/c90a6d1f71903e148e06cb3a85f6bb74e1a890cb)
   - run #2: copied [`ec8765ed5`](https://github.com/krlmlr/duckdb/commit/ec8765ed5a1c0b66046f5b1432031245cdfc147c)
+  - run #3: copied [`b18483034`](https://github.com/krlmlr/duckdb/commit/b18483034fda76fe41ee466d8da2be6378c4ac60)
 - [#21646](https://github.com/duckdb/duckdb/pull/21646) Invalid input exception for corrupted encrypted parquet files
   - `-dag`: [`1d3829735`](https://github.com/krlmlr/duckdb/commit/1d382973564f47557f20cdc431145327705b80e9)
   - run #1: copied [`5822fabdf`](https://github.com/krlmlr/duckdb/commit/5822fabdfaa0d99ca54a0a89b93892fa2410b39f)
   - run #2: copied [`680babb42`](https://github.com/krlmlr/duckdb/commit/680babb4290375fc0c8877cab509b4a95b34432c)
+  - run #3: copied [`62756e5c5`](https://github.com/krlmlr/duckdb/commit/62756e5c5b68011d1d8a5cecc04119f433753b50)
 - [#21648](https://github.com/duckdb/duckdb/pull/21648) Use test runner in all windows CI jobs
   - `-dag`: [`8696264e7`](https://github.com/krlmlr/duckdb/commit/8696264e7dc87f585cc9173994266e5da8ffc063)
   - run #1: copied [`f716063d4`](https://github.com/krlmlr/duckdb/commit/f716063d4775d2b5ec54586d11e1f31c3148b26a)
   - run #2: copied [`8f312c800`](https://github.com/krlmlr/duckdb/commit/8f312c800c82a84599717ae665439b674c95ba95)
+  - run #3: copied [`659ec16ae`](https://github.com/krlmlr/duckdb/commit/659ec16aebe7b4a0582e535b802bb95e6a9001d5)
 - [#21620](https://github.com/duckdb/duckdb/pull/21620) Cleanup the build
   - `-dag`: [`03b4b82b8`](https://github.com/krlmlr/duckdb/commit/03b4b82b8dda1c3e3db99821d265d71777a4db8b)
   - run #1: copied [`06afd25e5`](https://github.com/krlmlr/duckdb/commit/06afd25e52f2e6ac89a1744f63ae93c954f25c71)
   - run #2: copied [`7be66e109`](https://github.com/krlmlr/duckdb/commit/7be66e10955f3547742191da1ee76089b5b16a06)
+  - run #3: copied [`e10a45723`](https://github.com/krlmlr/duckdb/commit/e10a45723d821a0749f5dffdd08ee8bf26992c4f)
 - [#21647](https://github.com/duckdb/duckdb/pull/21647) Fix all tidy errors
   - `-dag`: [`537026910`](https://github.com/krlmlr/duckdb/commit/5370269109a30c69e9e46e76a34a3b9e23de54b1)
   - run #1: copied [`3d08d614e`](https://github.com/krlmlr/duckdb/commit/3d08d614e28fe90455cd1ffa3147e1a7b4312620)
   - run #2: copied [`6c26788e5`](https://github.com/krlmlr/duckdb/commit/6c26788e548cd9b950d0d9379958c9cbdebadfc8)
+  - run #3: copied [`0fd515d18`](https://github.com/krlmlr/duckdb/commit/0fd515d180b74179ea22d6327876fb4970528adc)
 - [#21659](https://github.com/duckdb/duckdb/pull/21659) Add ubigint_t class which does checked arithmetic, and use it in list_resize
   - `-dag`: [`52a9edd8f`](https://github.com/krlmlr/duckdb/commit/52a9edd8f743c1e3434f8df1d029144bbcef031a)
   - run #1: copied [`d48cca441`](https://github.com/krlmlr/duckdb/commit/d48cca44194c6e497fe3b1b138c175b951787bf7)
   - run #2: copied [`905d80e00`](https://github.com/krlmlr/duckdb/commit/905d80e00a72bce1d92e207278c0860f01c3212a)
+  - run #3: copied [`44b32d398`](https://github.com/krlmlr/duckdb/commit/44b32d3985919f92db2b20dcd1d5551f7e1a32f0)
 - [#21664](https://github.com/duckdb/duckdb/pull/21664) Unify `LocalFileSystem::GetVersionTag` to use `FileMetadata`, and change Windows ListFiles so that we can compute version tags without additional system calls
   - `-dag`: [`57834fe72`](https://github.com/krlmlr/duckdb/commit/57834fe721640b36d945809e9cf7e5fa0750c412)
   - run #1: copied [`612774489`](https://github.com/krlmlr/duckdb/commit/612774489fc85fb92073d5d173398a0952538fee)
   - run #2: copied [`bfea8dea9`](https://github.com/krlmlr/duckdb/commit/bfea8dea94c068016c50d30befcb434d27aeb176)
+  - run #3: copied [`5ac7e2ba2`](https://github.com/krlmlr/duckdb/commit/5ac7e2ba2cd04e482c721737a862570c4a048d5a)
 - [#21665](https://github.com/duckdb/duckdb/pull/21665) .git pre-commit hook for `make format-fix`
   - `-dag`: [`b8720ca1d`](https://github.com/krlmlr/duckdb/commit/b8720ca1d86020cab7349579184db0128a9d8af3)
   - run #1: copied [`e4b9ab2c8`](https://github.com/krlmlr/duckdb/commit/e4b9ab2c8b8d0dca6f4a8e0c8e12742bcc561b00)
   - run #2: copied [`c2496968c`](https://github.com/krlmlr/duckdb/commit/c2496968c9256effada4c67ac657033b34479f3c)
+  - run #3: copied [`c3c893ac3`](https://github.com/krlmlr/duckdb/commit/c3c893ac3dcb67f2a3895613dd7c7e71a470bc0d)
 - [#21666](https://github.com/duckdb/duckdb/pull/21666) Add iterator helpers over vectors, instead of requiring manually calling `ToUnifiedFormat`
   - `-dag`: [`9c46b31f6`](https://github.com/krlmlr/duckdb/commit/9c46b31f66c37c7523be7ef1c9ff36e616a9f798)
   - run #1: copied [`a5df2b80a`](https://github.com/krlmlr/duckdb/commit/a5df2b80a01f0a306ceb026d9438394fef81455b)
   - run #2: copied [`c03735c68`](https://github.com/krlmlr/duckdb/commit/c03735c6829549bb7edba233b894814ba67ca3ad)
+  - run #3: copied [`25c59fa1b`](https://github.com/krlmlr/duckdb/commit/25c59fa1b4d575417a7ce98629c013b69bbdcb20)
 - [#21670](https://github.com/duckdb/duckdb/pull/21670) Fix a few class construction UB
   - `-dag`: [`3bdf8282e`](https://github.com/krlmlr/duckdb/commit/3bdf8282eb56354e6b961422932468cdb315d696)
   - run #1: copied [`0df5f62e9`](https://github.com/krlmlr/duckdb/commit/0df5f62e93d8c225383bf7fbdfcf54c831a1a422)
   - run #2: copied [`4a88d6d3c`](https://github.com/krlmlr/duckdb/commit/4a88d6d3cedec99e83627171d39f4826553cfcb1)
+  - run #3: copied [`d90ab5ecd`](https://github.com/krlmlr/duckdb/commit/d90ab5ecd0c31da2f6b0e8a1459bb74616e51978)
 - [#21616](https://github.com/duckdb/duckdb/pull/21616) Fix race condition: successful COMMIT incorrectly reported as interrupted
   - `-dag`: [`c4a6624ee`](https://github.com/krlmlr/duckdb/commit/c4a6624eebefe034d5fa80e0fa72e50b56abeb74)
   - run #1: copied [`e6d978605`](https://github.com/krlmlr/duckdb/commit/e6d9786058aa41cb8454a5eebba2cf65a898677e)
   - run #2: copied [`9d6383a1c`](https://github.com/krlmlr/duckdb/commit/9d6383a1cda364f90e6916c0e7e10140d1eae307)
+  - run #3: copied [`877c7b912`](https://github.com/krlmlr/duckdb/commit/877c7b91257f40a98ce6f2f75aa29b040cf22b8e)
 - [#21667](https://github.com/duckdb/duckdb/pull/21667) Optimize `TemplatedMergeJoinComplexBlocks` in `PhysicalPieceWiseMergeJoin`
   - `-dag`: [`8b89141db`](https://github.com/krlmlr/duckdb/commit/8b89141dba745469c2a5801c31e046120f754fa4)
   - run #1: copied [`2e1878901`](https://github.com/krlmlr/duckdb/commit/2e1878901118cf7f0e4d497ada5bb5c30dcb7175)
   - run #2: copied [`1692e1de4`](https://github.com/krlmlr/duckdb/commit/1692e1de4165a764c3ff23569bb186f970ae7eda)
+  - run #3: copied [`1ffb6a66d`](https://github.com/krlmlr/duckdb/commit/1ffb6a66d84b8d5e15aff7c539467176361bfe8b)
 - [#18259](https://github.com/duckdb/duckdb/pull/18259) [Fix] to https://redirect.github.com/duckdb/duckdb/pull/18259 WAL replay failure
   - `-dag`: [`6b69f2970`](https://github.com/krlmlr/duckdb/commit/6b69f2970a54126576e05e65ed0329358514611f)
   - run #1: copied [`77822a7af`](https://github.com/krlmlr/duckdb/commit/77822a7af99106d6f1e8cf9619fbd9ff10bad0d7)
   - run #2: copied [`af4bc72de`](https://github.com/krlmlr/duckdb/commit/af4bc72de5861e829040357a656825e46497330d)
+  - run #3: copied [`b8e5a571f`](https://github.com/krlmlr/duckdb/commit/b8e5a571ffcff650d99825e73634a17059c8a5ec)
 - [#21674](https://github.com/duckdb/duckdb/pull/21674) Handle constant vector optimization at the expression executor level instead of inside every function
   - `-dag`: [`5171d1993`](https://github.com/krlmlr/duckdb/commit/5171d1993b56c42a17d49c129cb47fe98193872d)
   - run #1: copied [`27e056fd8`](https://github.com/krlmlr/duckdb/commit/27e056fd8f728f7c2ce989b8f72e9804636e2c65)
   - run #2: copied [`4e8eeb965`](https://github.com/krlmlr/duckdb/commit/4e8eeb96546a7d7d3e343e7b86ebfd94576ad38c)
+  - run #3: copied [`7510ec204`](https://github.com/krlmlr/duckdb/commit/7510ec2040a2456e772bd385af739de74b7c01b7)
 - [#21679](https://github.com/duckdb/duckdb/pull/21679) Rename `ValidityMask::AllValid` to `ValidityMask::CannotHaveNull`
   - `-dag`: [`dfd886073`](https://github.com/krlmlr/duckdb/commit/dfd886073054d4fd11e8bb31ad163662757ef2cc)
   - run #1: copied [`011e5aedf`](https://github.com/krlmlr/duckdb/commit/011e5aedfd429e8dfa7863e2288619be03d5587f)
   - run #2: copied [`2fcd1415c`](https://github.com/krlmlr/duckdb/commit/2fcd1415c6fe8dde1f970a525e30c2c9b6b46548)
+  - run #3: copied [`aeb644361`](https://github.com/krlmlr/duckdb/commit/aeb644361b41e0b4d6d95a3c3e7f0a039f3aae12)
 - [#21701](https://github.com/duckdb/duckdb/pull/21701) Fix shell expansion issue in draft PR workflow
   - `-dag`: [`9e75e439d`](https://github.com/krlmlr/duckdb/commit/9e75e439d292b1369e5178aa516f61e7eeb153e0)
   - run #1: copied [`c2d56b28b`](https://github.com/krlmlr/duckdb/commit/c2d56b28b6c1f70c3d9eb1373de2de09728cdf5a)
   - run #2: copied [`4d9ecf44b`](https://github.com/krlmlr/duckdb/commit/4d9ecf44bfc9083f3cdf9f47f9be05a1345a6836)
+  - run #3: copied [`f8e415d61`](https://github.com/krlmlr/duckdb/commit/f8e415d61c601bef8712dea33d31db17d76c829c)
 - [#21702](https://github.com/duckdb/duckdb/pull/21702) Fix workflow lint issue
   - `-dag`: [`901b1fa2a`](https://github.com/krlmlr/duckdb/commit/901b1fa2a480b40a8463d7bfaa57a6e358386ace)
   - run #1: copied [`bcdb7c332`](https://github.com/krlmlr/duckdb/commit/bcdb7c33245b780f2b7c20e0762ba510a1034bbb)
   - run #2: copied [`dd5c42464`](https://github.com/krlmlr/duckdb/commit/dd5c4246492aef6a9ef8e58ccf51ef838fe97ca1)
+  - run #3: copied [`2bf4e820c`](https://github.com/krlmlr/duckdb/commit/2bf4e820ce28bbe5161bfc94be34ac2e2dc19b06)
 - [#21689](https://github.com/duckdb/duckdb/pull/21689) Extend TopN dynamic filter pushdown to FLOAT and DOUBLE
   - `-dag`: [`a16dc0393`](https://github.com/krlmlr/duckdb/commit/a16dc03934bc986e8ba7eb4154444209794011ac)
   - run #1: copied [`4ae6c747f`](https://github.com/krlmlr/duckdb/commit/4ae6c747f2cfa8835dd458f53451cf74688215d2)
   - run #2: copied [`9b532f03e`](https://github.com/krlmlr/duckdb/commit/9b532f03ee341505f1e47c084a522bd462437f3d)
+  - run #3: copied [`f31e8e540`](https://github.com/krlmlr/duckdb/commit/f31e8e5406de0caaa3d9cab7e8c6c5cadf56f47d)
 - [#21684](https://github.com/duckdb/duckdb/pull/21684) Remove duplicate code
   - `-dag`: [`7fc5ddbad`](https://github.com/krlmlr/duckdb/commit/7fc5ddbad23f2a747b19fc27519c9f63ac39f3c8)
   - run #1: copied [`5b47222d6`](https://github.com/krlmlr/duckdb/commit/5b47222d6c61e7731ef89944a3ca604176dee749)
   - run #2: copied [`00345be96`](https://github.com/krlmlr/duckdb/commit/00345be9616387dd00d3a4da14b7b3a134edfaec)
+  - run #3: copied [`d5a49e3e1`](https://github.com/krlmlr/duckdb/commit/d5a49e3e164ecdef8b913061d62b3df1b01d5c26)
 - [#21681](https://github.com/duckdb/duckdb/pull/21681) Prevent timestamp operation out-of-range for external file cache
   - `-dag`: [`5d559c5a4`](https://github.com/krlmlr/duckdb/commit/5d559c5a497dba96693bd88a007f9708faec84f3)
   - run #1: copied [`228394d75`](https://github.com/krlmlr/duckdb/commit/228394d752986083565708d71f6e029b9ea2edb3)
   - run #2: copied [`a7918a4aa`](https://github.com/krlmlr/duckdb/commit/a7918a4aa664a6b71577774dc2f1aa1c8a832f4a)
+  - run #3: copied [`8b0bfae8d`](https://github.com/krlmlr/duckdb/commit/8b0bfae8db666c877551d0e846d7881e9bbf8867)
 - [#21328](https://github.com/duckdb/duckdb/pull/21328) Run compatibilty storage tests in parallel
   - `-dag`: [`a6c75dab8`](https://github.com/krlmlr/duckdb/commit/a6c75dab8629b8df2323db823769e6635a73f0b9)
   - run #1: copied [`53e5d94ac`](https://github.com/krlmlr/duckdb/commit/53e5d94ac15d3a94352033a1978870e86043a81c)
   - run #2: copied [`3fbb0e7a5`](https://github.com/krlmlr/duckdb/commit/3fbb0e7a56def831e1b3472bfc923cf6bf03121f)
+  - run #3: copied [`e4614b222`](https://github.com/krlmlr/duckdb/commit/e4614b2227266845d0747a8a6380a04025498182)
 - [#21705](https://github.com/duckdb/duckdb/pull/21705) Fix remaining clang-tidy issues on main
   - `-dag`: [`99c7d9979`](https://github.com/krlmlr/duckdb/commit/99c7d99794e4b96cd8f7a1ce37ab717b2e631596)
   - run #1: copied [`99e162fc0`](https://github.com/krlmlr/duckdb/commit/99e162fc0b0415a72c97b19c7f16ed9f08fef68f)
   - run #2: copied [`886fcc26c`](https://github.com/krlmlr/duckdb/commit/886fcc26c7042389393678918e16d4795d3df7c1)
+  - run #3: copied [`077b74f04`](https://github.com/krlmlr/duckdb/commit/077b74f041bff934b2034ca2efefdf222860ffd9)
 - [#21713](https://github.com/duckdb/duckdb/pull/21713) Use correct ccache keys for linux release and CLI jobs
   - `-dag`: [`84e9d0e8c`](https://github.com/krlmlr/duckdb/commit/84e9d0e8c642bccc23a4ba3839433f35c9d24dc8)
   - run #1: copied [`b2d56b1cc`](https://github.com/krlmlr/duckdb/commit/b2d56b1ccb03909c5e71c6df42d78e64102b495b)
   - run #2: copied [`f5a829a46`](https://github.com/krlmlr/duckdb/commit/f5a829a46ef5ae497dc86a73fe43b6b8c8a209bc)
+  - run #3: copied [`655a9a1de`](https://github.com/krlmlr/duckdb/commit/655a9a1deb99748004c17a752063fe8dd8bc9c00)
 
 - **[checkpoint] Run #11 back-merge** [#21720](https://github.com/duckdb/duckdb/pull/21720) "Merge `v1.5-variegata` into main"
   - `-dag`: [`141e65f33`](https://github.com/krlmlr/duckdb/commit/141e65f33935475b656251b476a060fe35b09337)
   - run #1: copied (merge) [`e56d8e116`](https://github.com/krlmlr/duckdb/commit/e56d8e1164c4b111b7415f40d6ff10b89ada0a47)
   - run #2: copied (merge) [`b38175bf7`](https://github.com/krlmlr/duckdb/commit/b38175bf7c076b00bb6f0fb3b4da2c2a14517ac7)
+  - run #3: copied (merge) [`47f57ad79`](https://github.com/krlmlr/duckdb/commit/47f57ad79dbfa0ffc5f4bb0c1a8c38b4eeb8058d)
 
 ### Run #12 segment
 - [#7738](https://github.com/duckdb/duckdb/pull/7738) Internal https://redirect.github.com/duckdb/duckdb/pull/7738: Semi HashJoin Fix
   - `-dag`: [`88c039a9e`](https://github.com/krlmlr/duckdb/commit/88c039a9ea7a3807a43c9f7c26989171a6c71d8a)
   - run #1: copied [`37c567b98`](https://github.com/krlmlr/duckdb/commit/37c567b989f01ef183df119cc5bf43476b920b40)
   - run #2: copied [`9221884b5`](https://github.com/krlmlr/duckdb/commit/9221884b55d197e600a74413acd7476c0b7fd574)
+  - run #3: copied [`55a557d43`](https://github.com/krlmlr/duckdb/commit/55a557d43bb343623bc04f0700edc91bf10ff2d0)
 - [#21723](https://github.com/duckdb/duckdb/pull/21723) Merge code quality CI jobs into main workflow
   - `-dag`: [`ef37e0683`](https://github.com/krlmlr/duckdb/commit/ef37e0683d02865ac5acbb857f0e7062b010a70c)
   - run #1: copied [`988a54c47`](https://github.com/krlmlr/duckdb/commit/988a54c47510c7cefbab04418c3bb19ca7cfc1bd)
   - run #2: copied [`eb79becc0`](https://github.com/krlmlr/duckdb/commit/eb79becc084dde432c4b7b40b94490a810e9c496)
+  - run #3: copied [`459d5593a`](https://github.com/krlmlr/duckdb/commit/459d5593adc7f789dceaeb5f45f1be0e480ddf8d)
 - [#21725](https://github.com/duckdb/duckdb/pull/21725) Add support for formatting SQL statements to the CLI
   - `-dag`: [`bbaadd201`](https://github.com/krlmlr/duckdb/commit/bbaadd201fd3a3f874d4d65af0c0d7f7912e496a)
   - run #1: copied [`fd4cd836a`](https://github.com/krlmlr/duckdb/commit/fd4cd836af8a62a4569ecb7cf2000f660ca245ab)
   - run #2: copied [`cb5e8a085`](https://github.com/krlmlr/duckdb/commit/cb5e8a0855d98166312bda5ace507e2d4e9e0c55)
+  - run #3: copied [`09bafaaa0`](https://github.com/krlmlr/duckdb/commit/09bafaaa0ec569d290b731fa59c26a35038fc5a9)
 - [#21728](https://github.com/duckdb/duckdb/pull/21728) Consistently use `{TEST_VAR}` for all test variables (loop indexes, `__TEST_DIR__`, environment variables) - and print a deprecated warning on the old syntax
   - `-dag`: [`e5a61e48e`](https://github.com/krlmlr/duckdb/commit/e5a61e48e6b5f1c5a7d8ff855bcfb632f4fce046)
   - run #1: copied [`591c23692`](https://github.com/krlmlr/duckdb/commit/591c23692b79a2368416bff6542553a2ae79c699)
   - run #2: copied [`a94e9967e`](https://github.com/krlmlr/duckdb/commit/a94e9967e435e1e340ffde251118c412ed237f53)
+  - run #3: copied [`299fb4cb0`](https://github.com/krlmlr/duckdb/commit/299fb4cb0b51b46df8b77c0e93c4b887cf942fae)
 - [#21704](https://github.com/duckdb/duckdb/pull/21704) Re-enable row-level filtering for `SelectivityOptionalFilter`
   - `-dag`: [`98e043213`](https://github.com/krlmlr/duckdb/commit/98e043213b9b895ab52275eb26a030f0f7c33086)
   - run #1: copied [`94e5494c4`](https://github.com/krlmlr/duckdb/commit/94e5494c445ba51d98e724542de486a1d0fe10f7)
   - run #2: copied [`098866d02`](https://github.com/krlmlr/duckdb/commit/098866d02bc4f54e00de89bbc7222ab46132ceab)
+  - run #3: copied [`8660c5056`](https://github.com/krlmlr/duckdb/commit/8660c5056e85f3723c77ded5b529c3a3c66efbb7)
 - [#21706](https://github.com/duckdb/duckdb/pull/21706) Always (approximately) sort when creating an ART index
   - `-dag`: [`392a0154e`](https://github.com/krlmlr/duckdb/commit/392a0154e26269edb0737c2858843bfcfce28c43)
   - run #1: copied [`a88221828`](https://github.com/krlmlr/duckdb/commit/a88221828d4860fd097e299f19697cb8e26b42c3)
   - run #2: copied [`489a913fe`](https://github.com/krlmlr/duckdb/commit/489a913fe3e7e59c9fccaf7f0c56460742f61054)
+  - run #3: copied [`5f3185865`](https://github.com/krlmlr/duckdb/commit/5f31858658c81bfd05cfc6865889bbf7057e9976)
 - [#21668](https://github.com/duckdb/duckdb/pull/21668) Add json_merge_patch_diff() -- compute RFC 7396 merge patch from two documents
   - `-dag`: [`a6d10a6ba`](https://github.com/krlmlr/duckdb/commit/a6d10a6bab41f4121397674e7bf0ac89f5fac0d4)
   - run #1: copied [`d66c4e8ee`](https://github.com/krlmlr/duckdb/commit/d66c4e8eeb50fd7a24baa179285ca49146383683)
   - run #2: copied [`bfaec1aa8`](https://github.com/krlmlr/duckdb/commit/bfaec1aa82d06c510ee4bc0661612440c4069a16)
+  - run #3: copied [`a3884ed9b`](https://github.com/krlmlr/duckdb/commit/a3884ed9be0a3373f8c85b23f2d35b0e109615b2)
 - [#20752](https://github.com/duckdb/duckdb/pull/20752) chore: add extension_name to `duckdb_functions` and `duckdb_types`
   - `-dag`: [`574136db7`](https://github.com/krlmlr/duckdb/commit/574136db76bc7435cdb3c722c15a442899956bb4)
   - run #1: copied [`3ab8110a3`](https://github.com/krlmlr/duckdb/commit/3ab8110a319bc4c24126bea3e18adca7621b33b4)
   - run #2: copied [`7b48dd678`](https://github.com/krlmlr/duckdb/commit/7b48dd6785dcfa403508d71c21ac066f0739bb3d)
+  - run #3: copied [`4dc9aad41`](https://github.com/krlmlr/duckdb/commit/4dc9aad413c76a897270708683f92401e9c16ee6)
 - [#21737](https://github.com/duckdb/duckdb/pull/21737) Add call to SetEstimatedCardinality in more physical operators
   - `-dag`: [`6f5af44af`](https://github.com/krlmlr/duckdb/commit/6f5af44af00720d5dd133b513664b75f64288091)
   - run #1: copied [`8f54852ad`](https://github.com/krlmlr/duckdb/commit/8f54852ad9a41101a4c3ffb39616464d14778226)
   - run #2: copied [`08106cd62`](https://github.com/krlmlr/duckdb/commit/08106cd6243b68100934d45e16452514b7339f28)
+  - run #3: copied [`e5d1090f2`](https://github.com/krlmlr/duckdb/commit/e5d1090f26209bb6a628c4a66aba501532a3a45e)
 - [#21736](https://github.com/duckdb/duckdb/pull/21736) Improve some CI jobs
   - `-dag`: [`e84d7035d`](https://github.com/krlmlr/duckdb/commit/e84d7035d6e599a820fe82edec9bd1da600de164)
   - run #1: copied [`3f336d70f`](https://github.com/krlmlr/duckdb/commit/3f336d70f0798674de4fd632b5d98a2d5984e0fb)
   - run #2: copied [`4ed51d59b`](https://github.com/krlmlr/duckdb/commit/4ed51d59b7150f5ed2f51e1db2ea2b714e55c317)
+  - run #3: copied [`8eaad7d9d`](https://github.com/krlmlr/duckdb/commit/8eaad7d9dc397183d6c01c2e7a4ae94b6a1ba463)
 - [#21506](https://github.com/duckdb/duckdb/pull/21506) FIX https://redirect.github.com/duckdb/duckdb/pull/21506 UNNEST ARRAY type functionality
   - `-dag`: [`04ab42a6c`](https://github.com/krlmlr/duckdb/commit/04ab42a6ceab353bcfb7a33252b5c51d5a9f897f)
   - run #1: copied [`aea5f01b3`](https://github.com/krlmlr/duckdb/commit/aea5f01b36de4a96c3bd57f2b28413378c0e4cbf)
   - run #2: copied [`6b1cf2cfa`](https://github.com/krlmlr/duckdb/commit/6b1cf2cfa5c20ba9164eee6225606936eec991ef)
+  - run #3: copied [`7659c8519`](https://github.com/krlmlr/duckdb/commit/7659c8519a4578a207beb597124981de9e0c07a3)
 - [#21741](https://github.com/duckdb/duckdb/pull/21741) Merge external extension batches back into 1
   - `-dag`: [`bb8615eb6`](https://github.com/krlmlr/duckdb/commit/bb8615eb6f92d9711aeefd70c8e7595ecbf895e9)
   - run #1: copied [`b0a571af2`](https://github.com/krlmlr/duckdb/commit/b0a571af2b893d8b8b44f63b0186a14c6451a8cd)
   - run #2: copied [`792d4e0f4`](https://github.com/krlmlr/duckdb/commit/792d4e0f4b068862f42907c120ad5c49fe88ef05)
+  - run #3: copied [`4f535bdf1`](https://github.com/krlmlr/duckdb/commit/4f535bdf1d4f3483184b1f7487c60befaf9050f9)
 - [#21759](https://github.com/duckdb/duckdb/pull/21759) Allow ALTER TABLE ... RENAME TO on views
   - `-dag`: [`1a97e37b1`](https://github.com/krlmlr/duckdb/commit/1a97e37b1770e1054dd23712276d27ced9f3f081)
   - run #1: copied [`cfc33df51`](https://github.com/krlmlr/duckdb/commit/cfc33df515ef046e46b1cb205856ab6db0ac8adb)
   - run #2: copied [`ec82c9209`](https://github.com/krlmlr/duckdb/commit/ec82c92094890d59bb85d3d51145661ffb762b8c)
+  - run #3: copied [`ab1eb1459`](https://github.com/krlmlr/duckdb/commit/ab1eb1459ea25dcfc9e1c7af8b2b0d29a1b94cef)
 - [#21765](https://github.com/duckdb/duckdb/pull/21765) Stabilize main workflow
   - `-dag`: [`42ed856a1`](https://github.com/krlmlr/duckdb/commit/42ed856a194043fb65f907b194f9f7ca1908d7eb)
   - run #1: copied [`bdf751350`](https://github.com/krlmlr/duckdb/commit/bdf751350a58946460b956975419b06e1772326b)
   - run #2: copied [`69011dd54`](https://github.com/krlmlr/duckdb/commit/69011dd5435ba0e27a1e3bdef74fae69826dd53c)
+  - run #3: copied [`6d9b7f00b`](https://github.com/krlmlr/duckdb/commit/6d9b7f00b43841274578f0c710754d681c3dc8d8)
 - [#21767](https://github.com/duckdb/duckdb/pull/21767) [Nightly Fix] Move result and use new string syntax in inet and httpfs
   - `-dag`: [`b3ad9a2d3`](https://github.com/krlmlr/duckdb/commit/b3ad9a2d3f3e43330e82048e752dbfcaa67c19f8)
   - run #1: copied [`6ad46885f`](https://github.com/krlmlr/duckdb/commit/6ad46885fa36a7bf15dc60c45ac3eb3644669bfc)
   - run #2: copied [`7c66efb63`](https://github.com/krlmlr/duckdb/commit/7c66efb63943f461246cc273f4af6d0957dde281)
+  - run #3: copied [`4113635e7`](https://github.com/krlmlr/duckdb/commit/4113635e761f93fccfd9ce0003d8b78c7292bb80)
 
 - **[checkpoint] Run #12 back-merge** [#21768](https://github.com/duckdb/duckdb/pull/21768) "Merge `v1.5-variegata` into main"
   - `-dag`: [`5bf60a1bd`](https://github.com/krlmlr/duckdb/commit/5bf60a1bd03e2cc33c5167f143c3df6865d36af5)
   - run #1: copied (merge) [`dc0683aec`](https://github.com/krlmlr/duckdb/commit/dc0683aec5de097bb6532be0e605801581ca89f6)
   - run #2: copied (merge) [`285b1208c`](https://github.com/krlmlr/duckdb/commit/285b1208c4be9bd30f88f8fa097d04cb2d5fd4ad)
+  - run #3: copied (merge) [`542cc4dff`](https://github.com/krlmlr/duckdb/commit/542cc4dff0fe2d23f5b16fe92679a068aa27d1b6)
 
 ### Run #13 segment
 - [#21438](https://github.com/duckdb/duckdb/pull/21438) Add catalog storage and introspection for CREATE TRIGGER
   - `-dag`: [`03a80ef48`](https://github.com/krlmlr/duckdb/commit/03a80ef48bcabf8988c0948a53354914dd33e76d)
   - run #1: copied [`9815123cf`](https://github.com/krlmlr/duckdb/commit/9815123cf564586c6b10836cae42f4d11a7a5933)
   - run #2: copied [`02d353f25`](https://github.com/krlmlr/duckdb/commit/02d353f25ea52e583eea49307ac363c663d34654)
+  - run #3: copied [`f60cdf69a`](https://github.com/krlmlr/duckdb/commit/f60cdf69a39be9e7852bd7e2c683dc82acdfab6b)
 - [#21673](https://github.com/duckdb/duckdb/pull/21673) Return inf/nan instead of throwing for stddev/variance overflow
   - `-dag`: [`b7b275d98`](https://github.com/krlmlr/duckdb/commit/b7b275d980ddb664b23a20fb7ff2be6fe639b0b9)
   - run #1: copied [`28732dbf8`](https://github.com/krlmlr/duckdb/commit/28732dbf8ac0f1e578b63af29233998d0f015473)
   - run #2: copied [`f056ec743`](https://github.com/krlmlr/duckdb/commit/f056ec743780c52d2515944e34c265d794ede92c)
+  - run #3: copied [`9397be9fa`](https://github.com/krlmlr/duckdb/commit/9397be9fa88c27652ffb207550167b33167717fa)
 - [#21780](https://github.com/duckdb/duckdb/pull/21780) Fix CSV string value scanner access out-of-bound
   - `-dag`: [`6ae0ce359`](https://github.com/krlmlr/duckdb/commit/6ae0ce359ac381841b23545e8b45aed2a4492129)
   - run #1: copied [`854d517d5`](https://github.com/krlmlr/duckdb/commit/854d517d5c66db6f587b23bd9b34ff1bc5f374ed)
   - run #2: copied [`2a238ed2a`](https://github.com/krlmlr/duckdb/commit/2a238ed2a384a5a2fc616f319c89d4864cd42251)
+  - run #3: copied [`7caab940a`](https://github.com/krlmlr/duckdb/commit/7caab940a8925579fd7250448fad2fe5b8ac0467)
 - [#21693](https://github.com/duckdb/duckdb/pull/21693) Add expression as DatabasePath argument to ATTACH
   - `-dag`: [`00fabea44`](https://github.com/krlmlr/duckdb/commit/00fabea44c04b4d39d3d8657d46f667a9e7a32e8)
   - run #1: copied [`e0c44fef5`](https://github.com/krlmlr/duckdb/commit/e0c44fef5e1225e4f2f2afedaab99ed8e753c3d9)
   - run #2: copied [`847bd6c80`](https://github.com/krlmlr/duckdb/commit/847bd6c80ee939f6dcdb36b7b81e08aea99ae710)
+  - run #3: copied [`17a011e06`](https://github.com/krlmlr/duckdb/commit/17a011e069fb06ded2eb5c340523ccec60de7a67)
 - [#21785](https://github.com/duckdb/duckdb/pull/21785) Remove all_profiling_output()
   - `-dag`: [`9a4292b59`](https://github.com/krlmlr/duckdb/commit/9a4292b597109ca70cb70bcf77fc5b7803caeeb9)
   - run #1: copied [`6640157e4`](https://github.com/krlmlr/duckdb/commit/6640157e487d39ef634aa2987c18ef87bd907307)
   - run #2: copied [`df2ae19b1`](https://github.com/krlmlr/duckdb/commit/df2ae19b107968123f89c549a3a2b559f50a87bf)
+  - run #3: copied [`aba63b882`](https://github.com/krlmlr/duckdb/commit/aba63b882f5bc9e4ecb0a2115f50d55e522998fd)
 - [#21770](https://github.com/duckdb/duckdb/pull/21770) Use ccache for windows/wasm, and merge some CI jobs
   - `-dag`: [`5f81aa47a`](https://github.com/krlmlr/duckdb/commit/5f81aa47a9005af2b76c1b279e8a9b368ae9b1da)
   - run #1: copied [`7cbc289ab`](https://github.com/krlmlr/duckdb/commit/7cbc289ab5c83aebad0cdb8f53455cbde5abe49e)
   - run #2: copied [`c8a1c393d`](https://github.com/krlmlr/duckdb/commit/c8a1c393df903be993d5ec0075ac6045080bd3f8)
+  - run #3: copied [`33950e45d`](https://github.com/krlmlr/duckdb/commit/33950e45d87ad4f804ef5694ad6b40b35ebb5f53)
 - [#21196](https://github.com/duckdb/duckdb/pull/21196) [Profiling] Add schema to metric_type.json
   - `-dag`: [`5ef642dfd`](https://github.com/krlmlr/duckdb/commit/5ef642dfdad65d8485d684385734903ec3832aaf)
   - run #1: copied [`abd0e4abd`](https://github.com/krlmlr/duckdb/commit/abd0e4abd749cc875ad8618472913be78543f8f7)
   - run #2: copied [`a1d66b049`](https://github.com/krlmlr/duckdb/commit/a1d66b049bbf69d7bdde388f6b9933027d0ff13e)
+  - run #3: copied [`328b6eee4`](https://github.com/krlmlr/duckdb/commit/328b6eee402055e9d835cc2ecef57c0c6887b220)
 - [#21791](https://github.com/duckdb/duckdb/pull/21791) Add casts to pushed down join filters
   - `-dag`: [`313622fc9`](https://github.com/krlmlr/duckdb/commit/313622fc96696e544174d2887246030aee09b969)
   - run #1: copied [`597cb9471`](https://github.com/krlmlr/duckdb/commit/597cb94719218971059550bc0e14beaaf45aedc9)
   - run #2: copied [`5392a74f2`](https://github.com/krlmlr/duckdb/commit/5392a74f2d42277f91b2070e7d6ca2e5fdbc394e)
+  - run #3: copied [`3e2e51b11`](https://github.com/krlmlr/duckdb/commit/3e2e51b11d8278baf453282a92800cd4d9a6dbf1)
 - [#21789](https://github.com/duckdb/duckdb/pull/21789) Use changed tests from prepare in smoke tests
   - `-dag`: [`83b6f9069`](https://github.com/krlmlr/duckdb/commit/83b6f90691537d5432aa4ff75bb6f983d5f4d290)
   - run #1: copied [`0925f5bd8`](https://github.com/krlmlr/duckdb/commit/0925f5bd8cc3771092a6fc5ddaebaf19fe591f8f)
   - run #2: copied [`04705f49f`](https://github.com/krlmlr/duckdb/commit/04705f49f3ef2742aad2cfe3f7ddac1917b36437)
+  - run #3: copied [`8b604cb50`](https://github.com/krlmlr/duckdb/commit/8b604cb500b0c7a9659498104fd1a9c1abaa3d7e)
 - [#21782](https://github.com/duckdb/duckdb/pull/21782) [CI] More new test string CI fixes
   - `-dag`: [`dacffa013`](https://github.com/krlmlr/duckdb/commit/dacffa01308e45355a5cdce12620d6a13e3bcfca)
   - run #1: copied [`b577bdbce`](https://github.com/krlmlr/duckdb/commit/b577bdbcede4849e42b2e5550633c638750a0329)
   - run #2: copied [`e26cab988`](https://github.com/krlmlr/duckdb/commit/e26cab988143a5c097d908ccfae0680b34cc9687)
+  - run #3: copied [`4d1c9738e`](https://github.com/krlmlr/duckdb/commit/4d1c9738e2973d087f0b8b2ba4d74c9731d9ff76)
 - [#21748](https://github.com/duckdb/duckdb/pull/21748) Add json_strip_nulls() to recursively remove null-valued keys
   - `-dag`: [`c032ed7a9`](https://github.com/krlmlr/duckdb/commit/c032ed7a902f0dc16ea4b570de1419b76e9172f9)
   - run #1: copied [`13fd07df1`](https://github.com/krlmlr/duckdb/commit/13fd07df1505262a6a821a7dc37a8455531ebfd9)
   - run #2: copied [`1d73b2a21`](https://github.com/krlmlr/duckdb/commit/1d73b2a21dc0beb98f72f63828bbad168d85f8ee)
+  - run #3: copied [`ea45bfd9c`](https://github.com/krlmlr/duckdb/commit/ea45bfd9cf657bbd2b3e9df735839e6602cc6def)
 - [#21786](https://github.com/duckdb/duckdb/pull/21786) Rework vector buffers to remove the `auxiliary` buffer and move everything into a single `VectorBuffer`
   - `-dag`: [`bc54ba0e3`](https://github.com/krlmlr/duckdb/commit/bc54ba0e32f78c5bbc12037abf59bbe904e5ed6f)
   - run #1: copied [`4d7309550`](https://github.com/krlmlr/duckdb/commit/4d73095509a655b5372565aa17b317003ae88c90)
   - run #2: copied [`ba56f6f49`](https://github.com/krlmlr/duckdb/commit/ba56f6f4901d903b7c2245dd0652fad99aa66109)
+  - run #3: copied [`95d71a77a`](https://github.com/krlmlr/duckdb/commit/95d71a77aea3870d35fafe97fc6f46cc3eb41b80)
 - [#21790](https://github.com/duckdb/duckdb/pull/21790) Oss-Fuzz: add harness for csv/json targets
   - `-dag`: [`9bb8efbdc`](https://github.com/krlmlr/duckdb/commit/9bb8efbdcd89d0bcfb36fd68cc2de752faa7751d)
   - run #1: copied [`120250c19`](https://github.com/krlmlr/duckdb/commit/120250c1913de46f9fc072e8b63c99e1d338d2fc)
   - run #2: copied [`afc51d6ca`](https://github.com/krlmlr/duckdb/commit/afc51d6cafb9dc1abecc0535cf24fac413f0052c)
+  - run #3: copied [`9acc6a958`](https://github.com/krlmlr/duckdb/commit/9acc6a95844dbba57cab66ea18e8f4a17ecc09f3)
 - [#21798](https://github.com/duckdb/duckdb/pull/21798) Add helper method for ConstantVector::SetNull
   - `-dag`: [`739c877f1`](https://github.com/krlmlr/duckdb/commit/739c877f1c7d90e47cfce312342fc9967a10c7ec)
   - run #1: copied [`703c4437d`](https://github.com/krlmlr/duckdb/commit/703c4437d575c9de4607eefedfc7fc72ab8a7a74)
   - run #2: copied [`9d834b23c`](https://github.com/krlmlr/duckdb/commit/9d834b23c849a8f9cc4b3093d60d0fb0fc4a4b11)
+  - run #3: copied [`31a187167`](https://github.com/krlmlr/duckdb/commit/31a1871674ba1a131defaa9d9255f11fdb51ff2b)
 - [#21778](https://github.com/duckdb/duckdb/pull/21778) Fix CSV assertion failure for CSV type deduction incompatibility
   - `-dag`: [`b17da0b75`](https://github.com/krlmlr/duckdb/commit/b17da0b756b40385d5381519fbdaf414edcd1b8e)
   - run #1: copied [`b47972aa3`](https://github.com/krlmlr/duckdb/commit/b47972aa30d48d18a7db7d2d20234862a3cabf23)
   - run #2: copied [`eee3e8e89`](https://github.com/krlmlr/duckdb/commit/eee3e8e89da64ec2e307329fff36e713858517dc)
+  - run #3: copied [`6ec0887be`](https://github.com/krlmlr/duckdb/commit/6ec0887be7252db2dac45c91334336fe233ed6c9)
 - [#21806](https://github.com/duckdb/duckdb/pull/21806) [minor] Fix compilation warning
   - `-dag`: [`50d890629`](https://github.com/krlmlr/duckdb/commit/50d890629b09b012c176b8e6224bc7ce80ec4806)
   - run #1: copied [`2092aa5b6`](https://github.com/krlmlr/duckdb/commit/2092aa5b643b7b7ecffba539a362ad74ca898172)
   - run #2: copied [`530c7401d`](https://github.com/krlmlr/duckdb/commit/530c7401d8c62b6121f9de3c29d13315fefd55ef)
+  - run #3: copied [`05cebf67c`](https://github.com/krlmlr/duckdb/commit/05cebf67ce9900a52b36b102dc0649b97a82f08d)
 - [#21808](https://github.com/duckdb/duckdb/pull/21808) Add `FlatVector::Writer<T>(result, count)` method to standardize writing to a flat vector
   - `-dag`: [`533af446b`](https://github.com/krlmlr/duckdb/commit/533af446bab4884705ce3d7301a8ac0820928d0c)
   - run #1: copied [`40d2cab83`](https://github.com/krlmlr/duckdb/commit/40d2cab835af989702e33c48d2a78dfd42845e96)
   - run #2: copied [`bd2614497`](https://github.com/krlmlr/duckdb/commit/bd2614497ecf4ab210004a9aedf05edaabe622ac)
+  - run #3: copied [`3a95907b4`](https://github.com/krlmlr/duckdb/commit/3a95907b49b5bcd068a941ec09c9bade9ab91c7c)
 - [#8500](https://github.com/duckdb/duckdb/pull/8500) Internal https://redirect.github.com/duckdb/duckdb/pull/8500: Window Function Binding 
   - `-dag`: [`bd755636c`](https://github.com/krlmlr/duckdb/commit/bd755636c1921991047ad3282463b6fe330a3340)
   - run #1: copied [`29b1cab9c`](https://github.com/krlmlr/duckdb/commit/29b1cab9cb539523b0d6993134e0cac1a6fe7860)
   - run #2: copied [`c5d61d7f7`](https://github.com/krlmlr/duckdb/commit/c5d61d7f76c0831ad32d3c4b85b2b22ecfbf0e02)
+  - run #3: copied [`9ff0af812`](https://github.com/krlmlr/duckdb/commit/9ff0af812035d54f7657dc94021b1fcd553f7e98)
 - [#21799](https://github.com/duckdb/duckdb/pull/21799) Compute CI jobs and save_cache dynamically
   - `-dag`: [`c3eb5a8fc`](https://github.com/krlmlr/duckdb/commit/c3eb5a8fc0857d500719e1770eddc4ee0d3218d0)
   - run #1: copied [`45599abce`](https://github.com/krlmlr/duckdb/commit/45599abcee502f7197b601dcededabe9e554b013)
   - run #2: copied [`301dca41d`](https://github.com/krlmlr/duckdb/commit/301dca41d8b46d6c2808d91e653376b118017963)
+  - run #3: copied [`6cbd9902a`](https://github.com/krlmlr/duckdb/commit/6cbd9902a243e6711114d7c9b83ec7226da7782e)
 - [#21816](https://github.com/duckdb/duckdb/pull/21816) When using `FlatVector::Writer<string_t>` - automatically copy strings to the result vector (instead of needing them to be copied manually)
   - `-dag`: [`583f9ff10`](https://github.com/krlmlr/duckdb/commit/583f9ff1072e819aeb54fdd437f2f7d019ac9947)
   - run #1: copied [`e7d8f6322`](https://github.com/krlmlr/duckdb/commit/e7d8f632286942dcf84c9624954d14acab3c5f26)
   - run #2: copied [`d5d0f3620`](https://github.com/krlmlr/duckdb/commit/d5d0f36205820d64bff9a9ac699aa627a44d8834)
+  - run #3: copied [`44afb524c`](https://github.com/krlmlr/duckdb/commit/44afb524c4c6a180dd8fc4604e86080efa8abe6b)
 - [#21886](https://github.com/duckdb/duckdb/pull/21886) Fix SYSTEM_PEAK_BUFFER_MEMORY profiler metric accumulating instead of tracking peak
   - `-dag`: [`6b5340d09`](https://github.com/krlmlr/duckdb/commit/6b5340d09d770680aaa39351af2ba5d186f40c91)
   - run #1: copied [`88e14d5d4`](https://github.com/krlmlr/duckdb/commit/88e14d5d4943b519fe2b238b9eab1939b23a21db)
   - run #2: copied [`cce446055`](https://github.com/krlmlr/duckdb/commit/cce446055339703f25c090925f2d8b2ede13b974)
+  - run #3: copied [`32602b7b9`](https://github.com/krlmlr/duckdb/commit/32602b7b9a0fdff071d8fd60bd5d2e3c37a73bd7)
 - [#21883](https://github.com/duckdb/duckdb/pull/21883) Fix autocomplete fuzzy suggestion limit comparing string length instead of result count
   - `-dag`: [`fc46a3444`](https://github.com/krlmlr/duckdb/commit/fc46a344484653ec52015884bc5c647efb166c88)
   - run #1: copied [`4849bd7f7`](https://github.com/krlmlr/duckdb/commit/4849bd7f72093636485f99e6737d1d233714520d)
   - run #2: copied [`911ed17a9`](https://github.com/krlmlr/duckdb/commit/911ed17a9e19d8211077579d0e62e781b47447a7)
+  - run #3: copied [`b7a752039`](https://github.com/krlmlr/duckdb/commit/b7a752039e632314304e97d20a20b3eeb17287a4)
 - [#21882](https://github.com/duckdb/duckdb/pull/21882) Fix datediff overflow for week and microsecond parts with extreme dates
   - `-dag`: [`d1a6107c8`](https://github.com/krlmlr/duckdb/commit/d1a6107c87ad052880d132a901895f5c6a6206a3)
   - run #1: copied [`965197d5f`](https://github.com/krlmlr/duckdb/commit/965197d5f6a300f4a79689955e3a79bd6294c401)
   - run #2: copied [`a06bf346d`](https://github.com/krlmlr/duckdb/commit/a06bf346d53288aaad1f4edf53d533975157e52e)
+  - run #3: copied [`1b32afb69`](https://github.com/krlmlr/duckdb/commit/1b32afb691d68c9f940a8afca4ecc764cde04cb6)
 - [#21878](https://github.com/duckdb/duckdb/pull/21878) Fix atanh(-1) returning +inf instead of -inf
   - `-dag`: [`d1c2b1691`](https://github.com/krlmlr/duckdb/commit/d1c2b169102a9aa918353c66d6c92e1a62dc9284)
   - run #1: copied [`5ed7a2df3`](https://github.com/krlmlr/duckdb/commit/5ed7a2df37c9abe3998cebad0a5c1121e8bdc58d)
   - run #2: copied [`905b01b94`](https://github.com/krlmlr/duckdb/commit/905b01b94e20db6dadac867f3dc6295bb2dfdf02)
+  - run #3: copied [`aa27d63a2`](https://github.com/krlmlr/duckdb/commit/aa27d63a295772b972bb70d0048c646bc87b952b)
 - [#21858](https://github.com/duckdb/duckdb/pull/21858) Preserve table sample in InitializeAddConstraint
   - `-dag`: [`445d252f9`](https://github.com/krlmlr/duckdb/commit/445d252f97c6462f4e04639619cdc20d50f4fc0b)
   - run #1: copied [`819bce88e`](https://github.com/krlmlr/duckdb/commit/819bce88e256fde2d00492032bb23c6aacffeb1a)
   - run #2: copied [`8aaca7552`](https://github.com/krlmlr/duckdb/commit/8aaca755276a09bf2d929b7e647f49d9c07f52c5)
+  - run #3: copied [`874fdc119`](https://github.com/krlmlr/duckdb/commit/874fdc119034619fe34a6ef4c910055852be7ddb)
 - [#21856](https://github.com/duckdb/duckdb/pull/21856) Remove shadowed event member and unused names from ArrowBatchTask
   - `-dag`: [`5bd55d3a8`](https://github.com/krlmlr/duckdb/commit/5bd55d3a87053f31f8aff55ce00dba6516dc904a)
   - run #1: copied [`48a37ad78`](https://github.com/krlmlr/duckdb/commit/48a37ad784c76bc55f956f64e78e4dbb782e8175)
   - run #2: copied [`228dd879f`](https://github.com/krlmlr/duckdb/commit/228dd879f404e3493a051efb94ddd6f3a5ef416f)
+  - run #3: copied [`205281302`](https://github.com/krlmlr/duckdb/commit/2052813022f97570c9f1afa5540e2a775da0621e)
 - [#21879](https://github.com/duckdb/duckdb/pull/21879) Fix out-of-bounds read in list_where when boolean mask is longer than input list
   - `-dag`: [`438e2853a`](https://github.com/krlmlr/duckdb/commit/438e2853aea07a84642f95f15940f59f57b3a55c)
   - run #1: copied [`b5898afe4`](https://github.com/krlmlr/duckdb/commit/b5898afe430d11292b2068bd92c5b2ed2340796e)
   - run #2: copied [`1eee726ad`](https://github.com/krlmlr/duckdb/commit/1eee726add7e4e856102de3d02a6a035562664a0)
+  - run #3: copied [`6cc2de240`](https://github.com/krlmlr/duckdb/commit/6cc2de2403b855dd2bcf61acbc1813e446a1a14a)
 - [#21887](https://github.com/duckdb/duckdb/pull/21887) Fix null pointer dereference in profiler ToString for HTML/graphviz/mermaid formats
   - `-dag`: [`323346ddc`](https://github.com/krlmlr/duckdb/commit/323346ddc13b39b65451a8639ea77d700a818826)
   - run #1: copied [`4ec7026a7`](https://github.com/krlmlr/duckdb/commit/4ec7026a7b619d2c7036fb1f0af7c5242d7736f3)
   - run #2: copied [`3806d3f1d`](https://github.com/krlmlr/duckdb/commit/3806d3f1dfca0f14236cef9c87bd69271d62775c)
+  - run #3: copied [`85127cfad`](https://github.com/krlmlr/duckdb/commit/85127cfad0a7ae94412e7d6796435f72327836a3)
 - [#21855](https://github.com/duckdb/duckdb/pull/21855) Remove unused `ArrowArrayStreamWrapper::number_of_rows` member
   - `-dag`: [`da0d3a1a5`](https://github.com/krlmlr/duckdb/commit/da0d3a1a53822ded48ae24c003fe012a53383db2)
   - run #1: copied [`1d696f64a`](https://github.com/krlmlr/duckdb/commit/1d696f64a90a313d4aca46d8e51b0cf68da4df7e)
   - run #2: copied [`fdd33b54e`](https://github.com/krlmlr/duckdb/commit/fdd33b54e751d6ac0f8d9ade2f6c7ddae9f34b6c)
+  - run #3: copied [`3aa4853af`](https://github.com/krlmlr/duckdb/commit/3aa4853af9d07bf8c2a1163e704c9e223b4f0a7e)
 - [#21865](https://github.com/duckdb/duckdb/pull/21865) Fix qualified alias method calls in HAVING/WHERE/QUALIFY
   - `-dag`: [`f9f4876e3`](https://github.com/krlmlr/duckdb/commit/f9f4876e3f2a3a443800ce56d144639bf8961669)
   - run #1: copied [`bc1bd6c00`](https://github.com/krlmlr/duckdb/commit/bc1bd6c00aa16095d709e8f55195c9e09b2047fa)
   - run #2: copied [`2a8b3f3d4`](https://github.com/krlmlr/duckdb/commit/2a8b3f3d4d18bbe3a8ea88aae1f008fdc84544dd)
+  - run #3: copied [`b0e4c99c9`](https://github.com/krlmlr/duckdb/commit/b0e4c99c9d3d26310ada56d8a4019250204b1301)
 - [#21859](https://github.com/duckdb/duckdb/pull/21859) Fix filter propagation: distinguish ALWAYS_FALSE from FALSE_OR_NULL
   - `-dag`: [`78144a64b`](https://github.com/krlmlr/duckdb/commit/78144a64b6d4352a8592d68ef27b3ca0100c8480)
   - run #1: copied [`16c8ff02f`](https://github.com/krlmlr/duckdb/commit/16c8ff02febb39d5db90acf32518d56017d8f707)
   - run #2: copied [`f630a23e2`](https://github.com/krlmlr/duckdb/commit/f630a23e22e0a1b37858f73cabb7dc3bff7e7847)
+  - run #3: copied [`275b4b37e`](https://github.com/krlmlr/duckdb/commit/275b4b37ea975d29ea76e7df597d3fc62645974f)
 - [#21877](https://github.com/duckdb/duckdb/pull/21877) Fix DROP SECRET IF EXISTS throwing IOException when using FROM storage
   - `-dag`: [`0c01f2c03`](https://github.com/krlmlr/duckdb/commit/0c01f2c03ed36301e52ab4fc3a32a3c56062b01a)
   - run #1: copied [`354b1951c`](https://github.com/krlmlr/duckdb/commit/354b1951c232a4f0b679271fac09a947f0cf8f15)
   - run #2: copied [`5d0309206`](https://github.com/krlmlr/duckdb/commit/5d0309206ef6918e90127ecaea49a0e98165ba63)
+  - run #3: copied [`02837d246`](https://github.com/krlmlr/duckdb/commit/02837d2465761a4cf209e5ba0bbf2f5593113ecd)
 - [#21839](https://github.com/duckdb/duckdb/pull/21839) Fix more compilation warnings
   - `-dag`: [`04b4395ea`](https://github.com/krlmlr/duckdb/commit/04b4395ea1d00b2a4b53d07cd122a8ea82ca1f77)
   - run #1: copied [`1be114c9b`](https://github.com/krlmlr/duckdb/commit/1be114c9b1e4afb4ffd38317374d01e2d4b1b444)
   - run #2: copied [`2e050658f`](https://github.com/krlmlr/duckdb/commit/2e050658f3d63d1e85b48e5ef274309018c754be)
+  - run #3: copied [`fda5f0107`](https://github.com/krlmlr/duckdb/commit/fda5f01071227f7f59cec1a498abaa95bcb43e1a)
 - [#21894](https://github.com/duckdb/duckdb/pull/21894) Fix parquet metadata type casting
   - `-dag`: [`f4bca5ab5`](https://github.com/krlmlr/duckdb/commit/f4bca5ab5d14cb290a4a6a9cdbac3da81a473d23)
   - run #1: copied [`555b82aa7`](https://github.com/krlmlr/duckdb/commit/555b82aa7df1c134b450b1d630b2f16ef527ed82)
   - run #2: copied [`2349a25c6`](https://github.com/krlmlr/duckdb/commit/2349a25c64929eed790de8674c51836fa8f75c8d)
+  - run #3: copied [`1f6580019`](https://github.com/krlmlr/duckdb/commit/1f658001911e03e56c8e3082775dc27caef20639)
 - [#21838](https://github.com/duckdb/duckdb/pull/21838) Update documentation links from docs/stable to docs/current
   - `-dag`: [`5f7357c07`](https://github.com/krlmlr/duckdb/commit/5f7357c07ac3f393fc0182630a30f2d9cc9ebaaa)
   - run #1: copied [`2d49d274b`](https://github.com/krlmlr/duckdb/commit/2d49d274b4cda0066ba6557e5901a6135bb89f90)
   - run #2: copied [`53afa3e76`](https://github.com/krlmlr/duckdb/commit/53afa3e7604b56798ab9fc72bfea52b0a071bab7)
+  - run #3: copied [`c77c7a552`](https://github.com/krlmlr/duckdb/commit/c77c7a55203c4163bb3fba8badfa84ab970a3c79)
 - [#21794](https://github.com/duckdb/duckdb/pull/21794) Expose column tags via duckdb_columns()
   - `-dag`: [`f8ba6c195`](https://github.com/krlmlr/duckdb/commit/f8ba6c195da13a77a9d618223ac81380dcabb0f7)
   - run #1: copied [`2bbc7a9af`](https://github.com/krlmlr/duckdb/commit/2bbc7a9afd6ed495f7233f6fc231966a1df11660)
   - run #2: copied [`8dc26ce95`](https://github.com/krlmlr/duckdb/commit/8dc26ce95ab2bdda90ab33afc49961e920340d65)
+  - run #3: copied [`5a6a4ad80`](https://github.com/krlmlr/duckdb/commit/5a6a4ad802a5e99503c53171a9a4ce4a771f347b)
 - [#21634](https://github.com/duckdb/duckdb/pull/21634) Add support for DML statements (INSERT/UPDATE/DELETE) as CTE bodies
   - `-dag`: [`a4ea0026c`](https://github.com/krlmlr/duckdb/commit/a4ea0026c2e449fc160a20b949e0ab620507a367)
   - run #1: copied [`e62068f7a`](https://github.com/krlmlr/duckdb/commit/e62068f7ac1e1c2e8e4b7a5616b1441ccdcfe270)
   - run #2: copied [`47c53dc7d`](https://github.com/krlmlr/duckdb/commit/47c53dc7dec2fd84bd6069a3e0bb910603b61439)
+  - run #3: copied [`911b8964f`](https://github.com/krlmlr/duckdb/commit/911b8964fea44ed328f6d14f67ef1addc918c433)
 - [#21830](https://github.com/duckdb/duckdb/pull/21830) Fix the issue of lost LOGs after truncate duckdb_logs
   - `-dag`: [`2d4c5a89d`](https://github.com/krlmlr/duckdb/commit/2d4c5a89d37cce613c68712eeb25e3f9c24d4604)
   - run #1: copied [`987fff911`](https://github.com/krlmlr/duckdb/commit/987fff9114577575b1e8704cd21bb902b0f3314e)
   - run #2: copied [`716cd23f0`](https://github.com/krlmlr/duckdb/commit/716cd23f0cf8c73ee7478a2cb3356949e2533040)
+  - run #3: copied [`3329fe4c9`](https://github.com/krlmlr/duckdb/commit/3329fe4c943829bca686840cc9ce3eba2fd96c97)
 - [#21857](https://github.com/duckdb/duckdb/pull/21857) Fix three inverted-condition bugs in CLI shell
   - `-dag`: [`4672bda9b`](https://github.com/krlmlr/duckdb/commit/4672bda9b3a7cf6ceb8f2fcd0a80e32276ef5f1e)
   - run #1: copied [`9dbc55c04`](https://github.com/krlmlr/duckdb/commit/9dbc55c04dee98c45ff813f205ac5017bbe9fc60)
   - run #2: copied [`de5ffb01a`](https://github.com/krlmlr/duckdb/commit/de5ffb01ad56a0f516bdec22e11e4483147575ba)
+  - run #3: copied [`985f435f4`](https://github.com/krlmlr/duckdb/commit/985f435f4703c0e7dca49e7a6945318b97b3ba51)
 - [#21892](https://github.com/duckdb/duckdb/pull/21892) Fix copy-paste typo: sequence dependency error message says "index"
   - `-dag`: [`9158766da`](https://github.com/krlmlr/duckdb/commit/9158766daf25a1acb78bcd5e62d09cb0e27c516f)
   - run #1: copied [`7ff1cdde3`](https://github.com/krlmlr/duckdb/commit/7ff1cdde366408e5ededd9c57bcac18a58bc2a9f)
   - run #2: copied [`bb694b8a9`](https://github.com/krlmlr/duckdb/commit/bb694b8a9d6eb126d786c3020c3609334b4f5735)
+  - run #3: copied [`f1c2e8093`](https://github.com/krlmlr/duckdb/commit/f1c2e80936f2f3765e6fe3575b7d5ab482a98e22)
 - [#21756](https://github.com/duckdb/duckdb/pull/21756) Prefix Range Filter VARCHAR support
   - `-dag`: [`bc6ed1a19`](https://github.com/krlmlr/duckdb/commit/bc6ed1a19eb937e5ac4c9dff61a731f34196001c)
   - run #1: copied [`04076d62e`](https://github.com/krlmlr/duckdb/commit/04076d62e22542c725bee123500db3d49453f3bd)
   - run #2: copied [`f9663b788`](https://github.com/krlmlr/duckdb/commit/f9663b788145c06beace363909ad9c791454f1f0)
+  - run #3: copied [`37d32169c`](https://github.com/krlmlr/duckdb/commit/37d32169c0cb514802ea2d6ecabd3c82aa5b3b1c)
 - [#21812](https://github.com/duckdb/duckdb/pull/21812) Use prepare, linux-release, linux-debug and linux-base jobs.
   - `-dag`: [`094a5a8c0`](https://github.com/krlmlr/duckdb/commit/094a5a8c02f68b88a7fea0d9b83ebba21f6dd8d9)
   - run #1: copied [`7828eb748`](https://github.com/krlmlr/duckdb/commit/7828eb74822f4e73ca66f572e7091d25cc6e6ec9)
   - run #2: copied [`baa4a37f9`](https://github.com/krlmlr/duckdb/commit/baa4a37f933142e165cd8a69784fe309964fa840)
+  - run #3: copied [`5cb54ef45`](https://github.com/krlmlr/duckdb/commit/5cb54ef45beb8bf546b8867f49ed0b32d1f3d4f3)
 - [#21911](https://github.com/duckdb/duckdb/pull/21911) Fix column data allocator
   - `-dag`: [`b9bff8e52`](https://github.com/krlmlr/duckdb/commit/b9bff8e526d1937a7c4aa780542c5b2f5e38f317)
   - run #1: copied [`14b79005e`](https://github.com/krlmlr/duckdb/commit/14b79005eb773674d0ac01442a085572f2b131eb)
   - run #2: copied [`87ba2bff5`](https://github.com/krlmlr/duckdb/commit/87ba2bff5f2f13d2bcdfcd3d8e6530c6e9224711)
+  - run #3: copied [`e08947291`](https://github.com/krlmlr/duckdb/commit/e0894729175f0b9e335bef309cf54c332879d90d)
 - [#21917](https://github.com/duckdb/duckdb/pull/21917) Fix double evicted data decrement
   - `-dag`: [`9250b9175`](https://github.com/krlmlr/duckdb/commit/9250b91751c7f31c25adc72401e96b5ca2aff04f)
   - run #1: copied [`1a435e3e9`](https://github.com/krlmlr/duckdb/commit/1a435e3e9b241562f9c8fc6d24ec27e545fb90bc)
   - run #2: copied [`087607756`](https://github.com/krlmlr/duckdb/commit/087607756d4be3bd8e7aa326daf26461dc4cdbec)
+  - run #3: copied [`e7b56388f`](https://github.com/krlmlr/duckdb/commit/e7b56388fb1d52a373fd3ef7ab611e70b467b0b7)
 - [#21918](https://github.com/duckdb/duckdb/pull/21918) Fix move assignment for buffer pool reservation
   - `-dag`: [`8e0ac140c`](https://github.com/krlmlr/duckdb/commit/8e0ac140c837305d6a4e33719e787146a9c6d9d7)
   - run #1: copied [`2e01f5c26`](https://github.com/krlmlr/duckdb/commit/2e01f5c26c6e684488dd501a39b79510cdcbe41e)
   - run #2: copied [`ebb841638`](https://github.com/krlmlr/duckdb/commit/ebb841638fb8e6c27ed7a81d1d24d6a0fa2a45ca)
+  - run #3: copied [`b997a8ed6`](https://github.com/krlmlr/duckdb/commit/b997a8ed6b39fd89a6440c99e7410d8aaec290f9)
 - [#21875](https://github.com/duckdb/duckdb/pull/21875) Fix InstallFromHttpUrl unconditionally decompressing response as gzip
   - `-dag`: [`8fb650642`](https://github.com/krlmlr/duckdb/commit/8fb650642a8f2c4b2e49191d637dd6e267a711b1)
   - run #1: copied [`0b130480b`](https://github.com/krlmlr/duckdb/commit/0b130480b2eaaa3f6a0c0436ee970edff8d89f18)
   - run #2: copied [`08a53ef2d`](https://github.com/krlmlr/duckdb/commit/08a53ef2d480a79c428956a09b0947aae73acbfe)
+  - run #3: copied [`67ac8c3dd`](https://github.com/krlmlr/duckdb/commit/67ac8c3dd2d201f0e842ac863151c817d4bc30bd)
 - [#21921](https://github.com/duckdb/duckdb/pull/21921) Avoid using `StringVector::AddString` as much as possible - use the `StringHeap` directly instead
   - `-dag`: [`71f382086`](https://github.com/krlmlr/duckdb/commit/71f3820863280eb355f0393b9d50c11c2951d857)
   - run #1: copied [`335f9ca0c`](https://github.com/krlmlr/duckdb/commit/335f9ca0cb94056d399da6241fccd1252b871da1)
   - run #2: copied [`80b4cb9b1`](https://github.com/krlmlr/duckdb/commit/80b4cb9b1f7166d577dafdc7a3b56a7ab03d3ab0)
+  - run #3: copied [`c5963ed9a`](https://github.com/krlmlr/duckdb/commit/c5963ed9a86c2fbf4feb70bcbb32c476e5941569)
 - [#21901](https://github.com/duckdb/duckdb/pull/21901) Fix TRY_CAST from BIT to small integer types throwing instead of returning NULL
   - `-dag`: [`81033251a`](https://github.com/krlmlr/duckdb/commit/81033251a2b7210300c19edd5ac783547a720779)
   - run #1: copied [`08620b5a8`](https://github.com/krlmlr/duckdb/commit/08620b5a8b13dcc5a6d7cf700c6742c1aa7bebc9)
   - run #2: copied [`41f531715`](https://github.com/krlmlr/duckdb/commit/41f5317154d104036382e390d5bf5c4f5df35257)
+  - run #3: copied [`669123971`](https://github.com/krlmlr/duckdb/commit/669123971b7944fadcba2890dd0ca244297988b6)
 - [#21928](https://github.com/duckdb/duckdb/pull/21928) CI fix
   - `-dag`: [`add8f6401`](https://github.com/krlmlr/duckdb/commit/add8f6401626e38bd31c38d191dd8cc08ac14e89)
   - run #1: copied [`9b96da227`](https://github.com/krlmlr/duckdb/commit/9b96da227063426e24bcf29ebb4b1e1d8ddea493)
   - run #2: copied [`0bb4ee3c8`](https://github.com/krlmlr/duckdb/commit/0bb4ee3c8d573294759779be73ad8e79907bb6ee)
+  - run #3: copied [`3dcf36eef`](https://github.com/krlmlr/duckdb/commit/3dcf36eef3ea2b2c24bcf57705d9e430f3894f9b)
 - [#21930](https://github.com/duckdb/duckdb/pull/21930) MacOS: codesign debug / reldebug binaries on MacOS to allow debugging
   - `-dag`: [`4837fee8f`](https://github.com/krlmlr/duckdb/commit/4837fee8f1856fc8645c607617e408ec45a19e0c)
   - run #1: copied [`51e3244b8`](https://github.com/krlmlr/duckdb/commit/51e3244b85c8b5b9802a50733de49e90b247e51f)
   - run #2: copied [`a46ee98e7`](https://github.com/krlmlr/duckdb/commit/a46ee98e779a9e36d1c1489a568f96b238a3323f)
+  - run #3: copied [`5755bb18e`](https://github.com/krlmlr/duckdb/commit/5755bb18ea1f0909afa3acf87231d64811ddc2c3)
 - [#21926](https://github.com/duckdb/duckdb/pull/21926) Run slow tests in CI if `run_slow_tests` is true
   - `-dag`: [`f3a148280`](https://github.com/krlmlr/duckdb/commit/f3a148280215d80ad4d3bdc71efba7478c7e5048)
   - run #1: copied [`a9a3fbd22`](https://github.com/krlmlr/duckdb/commit/a9a3fbd22f9bfac8fb68f24901f8a27b938059b2)
   - run #2: copied [`c591a3ace`](https://github.com/krlmlr/duckdb/commit/c591a3ace8048eb5a935a00083cad07e72755ac5)
+  - run #3: copied [`b9e088f9a`](https://github.com/krlmlr/duckdb/commit/b9e088f9a172775d299b91c4ce0a90a89e76fcb8)
 - [#21935](https://github.com/duckdb/duckdb/pull/21935) Vector: Move `ValidityMask` into `VectorBuffer`
   - `-dag`: [`f06866ca5`](https://github.com/krlmlr/duckdb/commit/f06866ca5e40e05319ac3decf65f229159c9dde0)
   - run #1: copied [`d08635d9c`](https://github.com/krlmlr/duckdb/commit/d08635d9c3d13a6ca98c9ea26d02fc42fe329d8d)
   - run #2: copied [`1225f2515`](https://github.com/krlmlr/duckdb/commit/1225f25150477f4cfbd8a9e600dd672148185c97)
+  - run #3: copied [`07a58f1d0`](https://github.com/krlmlr/duckdb/commit/07a58f1d076165bdc1a04b556d08a13fa181a549)
 - [#21948](https://github.com/duckdb/duckdb/pull/21948) Use simpler checkout logic
   - `-dag`: [`cd0fddf0a`](https://github.com/krlmlr/duckdb/commit/cd0fddf0a0980a8a5a8326329960d71c9414050b)
   - run #1: copied [`ae021d2c3`](https://github.com/krlmlr/duckdb/commit/ae021d2c37c1d03ec462960372ee722dcc523cf4)
   - run #2: copied [`733d18d6b`](https://github.com/krlmlr/duckdb/commit/733d18d6b684638e0d031b8a7065c4992e91cfb0)
+  - run #3: copied [`731bd1b99`](https://github.com/krlmlr/duckdb/commit/731bd1b99062c12baea7915feb11e1b1ad3217f4)
 - [#21951](https://github.com/duckdb/duckdb/pull/21951) Improve vcpkg caching
   - `-dag`: [`ce4b1cf2d`](https://github.com/krlmlr/duckdb/commit/ce4b1cf2d67ea2acc065b1bb1eefe6ca8e7c207a)
   - run #1: copied [`35b566706`](https://github.com/krlmlr/duckdb/commit/35b566706e26257222a188addcbd093234a052a3)
   - run #2: copied [`792abe89a`](https://github.com/krlmlr/duckdb/commit/792abe89a6c80b4bb886bec47c72b6e27e9b5724)
+  - run #3: copied [`2e52ba66f`](https://github.com/krlmlr/duckdb/commit/2e52ba66f5670580a8b39e93e8b6389dc0226e8f)
 - [#21956](https://github.com/duckdb/duckdb/pull/21956) Fix wrong cast in expression_heuristics.cpp
   - `-dag`: [`9b69f961f`](https://github.com/krlmlr/duckdb/commit/9b69f961fbcd8ff46a6d7d65289b3bcec6449f8c)
   - run #1: copied [`0f086344e`](https://github.com/krlmlr/duckdb/commit/0f086344e13ff135d2bbfe537b4a104a55fee1e4)
   - run #2: copied [`4bbf31bf6`](https://github.com/krlmlr/duckdb/commit/4bbf31bf650d505b1591d65b479375b9b0fcf507)
+  - run #3: copied [`c53c73aa3`](https://github.com/krlmlr/duckdb/commit/c53c73aa37ce36a2232381eff6fd4b4f3a03ce32)
 - [#21914](https://github.com/duckdb/duckdb/pull/21914) Add select hook to ScalarFunction
   - `-dag`: [`b4aca7f6a`](https://github.com/krlmlr/duckdb/commit/b4aca7f6a4c92fe738eb970cddcedcdd73bc19af)
   - run #1: copied [`e180fafdd`](https://github.com/krlmlr/duckdb/commit/e180fafddb22e4dedf12ab8969c063f59e7fccba)
   - run #2: copied [`3007a6d00`](https://github.com/krlmlr/duckdb/commit/3007a6d0007a0d470eaaf8b47c6875ae7339de45)
+  - run #3: copied [`70ab305a2`](https://github.com/krlmlr/duckdb/commit/70ab305a227078f6c95f4aa22e986c865aa12ce6)
 - [#21920](https://github.com/duckdb/duckdb/pull/21920) Multiple minor fixes
   - `-dag`: [`1b74600bf`](https://github.com/krlmlr/duckdb/commit/1b74600bf2a1683b04be0e7b25c027c256b36351)
   - run #1: copied [`6be071b35`](https://github.com/krlmlr/duckdb/commit/6be071b35b0beb6af527698a586d4fddefee5c41)
   - run #2: copied [`f03f2c50d`](https://github.com/krlmlr/duckdb/commit/f03f2c50dd97f55d306975aaf48961c4627b6c7f)
+  - run #3: copied [`db5df7d54`](https://github.com/krlmlr/duckdb/commit/db5df7d54e167dba216f340c4d0c5ed088070587)
 - [#8696](https://github.com/duckdb/duckdb/pull/8696) Internal https://redirect.github.com/duckdb/duckdb/pull/8696: Window Function Binding 
   - `-dag`: [`680b2eb14`](https://github.com/krlmlr/duckdb/commit/680b2eb14e9803d4e8a0033a5dd78386bc445959)
   - run #1: copied [`ec47f61d2`](https://github.com/krlmlr/duckdb/commit/ec47f61d2ac35b01988fc11d9ba585e973fd6ea0)
   - run #2: copied [`5ec218ade`](https://github.com/krlmlr/duckdb/commit/5ec218adef8bfa3a27f9165c471ed8c8615d7ccb)
+  - run #3: copied [`85bdc4237`](https://github.com/krlmlr/duckdb/commit/85bdc423776ec2db7d4e55a3b1dce245f584825b)
 - [#21852](https://github.com/duckdb/duckdb/pull/21852) Fix bugs in ArrowQueryResult
   - `-dag`: [`1ebfff479`](https://github.com/krlmlr/duckdb/commit/1ebfff479976cd416e45221d4780560217c0450d)
   - run #1: copied [`20f92ffe2`](https://github.com/krlmlr/duckdb/commit/20f92ffe2fa62093b168eaef71847bbfe08eff39)
   - run #2: copied [`5844ae927`](https://github.com/krlmlr/duckdb/commit/5844ae927c2816fe1f37d8c91f351349f91c0581)
+  - run #3: copied [`b51b08d11`](https://github.com/krlmlr/duckdb/commit/b51b08d11a5afbefc6d37e5a63ff1a619e98f2ba)
 - [#21964](https://github.com/duckdb/duckdb/pull/21964) Make it so that STRUCT vectors themselves cannot be DICTIONARY vectors anymore
   - `-dag`: [`4c2189a91`](https://github.com/krlmlr/duckdb/commit/4c2189a913bbc18d42f986cb9d1dfd5afa67f9e6)
   - run #1: copied [`564f8eb4a`](https://github.com/krlmlr/duckdb/commit/564f8eb4a6cd91aae3e878f2910ee842fa3c3490)
   - run #2: copied [`d4427e6f8`](https://github.com/krlmlr/duckdb/commit/d4427e6f82fb099d5b4088a18a8a87ed56b53540)
+  - run #3: copied [`f84f2b1f2`](https://github.com/krlmlr/duckdb/commit/f84f2b1f2bea2956b233945935636d26dcd03bee)
 - [#21957](https://github.com/duckdb/duckdb/pull/21957) Issue template: Add new extensions
   - `-dag`: [`1982a0eb1`](https://github.com/krlmlr/duckdb/commit/1982a0eb10a58295c47bdec99c728c4bead98132)
   - run #1: copied [`328c01196`](https://github.com/krlmlr/duckdb/commit/328c01196f1e21c6549f13bca5ae93a4d1c47bef)
   - run #2: copied [`b6fef3195`](https://github.com/krlmlr/duckdb/commit/b6fef31953100f2dd6002da6f1b7aa466ca01d4a)
+  - run #3: copied [`7a1fb56f0`](https://github.com/krlmlr/duckdb/commit/7a1fb56f0d1fb1e321a14348d71b4848df1691b6)
 - [#8821](https://github.com/duckdb/duckdb/pull/8821) Internal https://redirect.github.com/duckdb/duckdb/pull/8821: GenerateFunction WINDOW_FUNCTION_ENTRY
   - `-dag`: [`cb12cf082`](https://github.com/krlmlr/duckdb/commit/cb12cf082692dd9cdc8e2367fee1c426234bb9bf)
   - run #1: copied [`4553fae71`](https://github.com/krlmlr/duckdb/commit/4553fae7101dc0fb16e5785837f1aa1a99b80bf0)
   - run #2: copied [`e3869d36d`](https://github.com/krlmlr/duckdb/commit/e3869d36d0c87ea753d2f5f1d409efa18361f6e3)
+  - run #3: copied [`2ea37c6fa`](https://github.com/krlmlr/duckdb/commit/2ea37c6fa7c556ae7be3cb2167f694601bf021d6)
 - [#21908](https://github.com/duckdb/duckdb/pull/21908) Issue https://redirect.github.com/duckdb/duckdb/pull/21908: Window Macro Expansion 
   - `-dag`: [`e54550da3`](https://github.com/krlmlr/duckdb/commit/e54550da33fceb05b785389f8dcd7449466a42de)
   - run #1: copied [`98a536a5a`](https://github.com/krlmlr/duckdb/commit/98a536a5ae14aeee10fc7bd8290fe239288e6336)
   - run #2: copied [`1dcbbd04d`](https://github.com/krlmlr/duckdb/commit/1dcbbd04da860f042d08487bb7ac1d39ed1a7398)
+  - run #3: copied [`01ffcfc7e`](https://github.com/krlmlr/duckdb/commit/01ffcfc7ed0a846d8ca0bc91e8a3965d3ee8a6b5)
 - [#21980](https://github.com/duckdb/duckdb/pull/21980) Use correct size in struct to variant to unified format
   - `-dag`: [`2fdd9a16e`](https://github.com/krlmlr/duckdb/commit/2fdd9a16eb40f7a11e1384ac2cd438f0ab0b4f20)
   - run #1: copied [`bbfbd425f`](https://github.com/krlmlr/duckdb/commit/bbfbd425fac6d1df0a8b596122cbd19f5f4ca73e)
   - run #2: copied [`14b634051`](https://github.com/krlmlr/duckdb/commit/14b634051490bf9a212934bba689bab469c0f296)
+  - run #3: copied [`470eb6588`](https://github.com/krlmlr/duckdb/commit/470eb658839d71e9f298a213963c060b777026cc)
 - [#21971](https://github.com/duckdb/duckdb/pull/21971) Push `row_number() OVER ()` into table scans to allow for better performance / parallelism
   - `-dag`: [`62aedfdd1`](https://github.com/krlmlr/duckdb/commit/62aedfdd188a0f533fd25a82f4d00541f11b8d30)
   - run #1: copied [`47ed8d253`](https://github.com/krlmlr/duckdb/commit/47ed8d253d698e8f18362e871cc03144ed5cde85)
   - run #2: copied [`92660d6ae`](https://github.com/krlmlr/duckdb/commit/92660d6ae8eb0545542735c4363ea1a96cdf09a6)
+  - run #3: copied [`df938ce10`](https://github.com/krlmlr/duckdb/commit/df938ce10685b75a7e740b41d4a04763d3be48e8)
 - [#21978](https://github.com/duckdb/duckdb/pull/21978) Make `FlatVector::GetData` return a `const` ptr, and add `FlatVector::GetDataMutable`
   - `-dag`: [`5f2bb0283`](https://github.com/krlmlr/duckdb/commit/5f2bb02834c59ab920441efa6a5a6b0136b6f0a0)
   - run #1: copied [`9b9726f29`](https://github.com/krlmlr/duckdb/commit/9b9726f2971e13384431460033b0a8d7162ffe46)
   - run #2: copied [`d7ce9b0ae`](https://github.com/krlmlr/duckdb/commit/d7ce9b0ae493852c478ba27c15a65d51190c112c)
+  - run #3: copied [`3c9f4df9c`](https://github.com/krlmlr/duckdb/commit/3c9f4df9cba51590ba2ad08c9fc6338590c920e5)
 - [#21991](https://github.com/duckdb/duckdb/pull/21991) Add support for `VectorOperations::Comparator` - and rework comparisons and `DISTINCT FROM` code to use this
   - `-dag`: [`50dd272dc`](https://github.com/krlmlr/duckdb/commit/50dd272dc546f46dbe1e7c2a2633547ff05093fe)
   - run #1: copied [`67c1d6353`](https://github.com/krlmlr/duckdb/commit/67c1d6353ec9eab70c60b5e9854e2f019914d6c2)
   - run #2: copied [`a8be97ac4`](https://github.com/krlmlr/duckdb/commit/a8be97ac4a6a9d31f2250f8949b1331dc30c9e8f)
+  - run #3: copied [`c94a6fbad`](https://github.com/krlmlr/duckdb/commit/c94a6fbadc7212780ae9c6d5456cd558724b5ece)
 - [#21995](https://github.com/duckdb/duckdb/pull/21995) Remove constructor that allows for creation of uninitialized vectors, and add an enum instead of using a bool for initialization
   - `-dag`: [`cd4f81a28`](https://github.com/krlmlr/duckdb/commit/cd4f81a28097db271367378dc37e2428d56dcdae)
   - run #1: copied [`d3f949576`](https://github.com/krlmlr/duckdb/commit/d3f94957656d4dc2447fa0c52c1edeeafab3df26)
   - run #2: copied [`cf26e826a`](https://github.com/krlmlr/duckdb/commit/cf26e826abffba9c5f0758f5d4fc4196f6a0a338)
+  - run #3: copied [`46b10dc9b`](https://github.com/krlmlr/duckdb/commit/46b10dc9bcd79876232d460a49207145a289a118)
 - [#21996](https://github.com/duckdb/duckdb/pull/21996) Move `VectorType` from the `Vector` into the `VectorBuffer`
   - `-dag`: [`a8a5a1083`](https://github.com/krlmlr/duckdb/commit/a8a5a10834fb4e84f74ec672c46e16eccfcc6a12)
   - run #1: copied [`492c222c2`](https://github.com/krlmlr/duckdb/commit/492c222c2ba152a10f9ead94621a045a6f5dd8fd)
   - run #2: copied [`d2ca36e1a`](https://github.com/krlmlr/duckdb/commit/d2ca36e1a35771800215eafd066f08e74a19d49b)
+  - run #3: copied [`929ee1a49`](https://github.com/krlmlr/duckdb/commit/929ee1a49d1867d6cc035990baf25dd9f5f368b0)
 - [#22006](https://github.com/duckdb/duckdb/pull/22006) Fix hex string literal not being converted to blob
   - `-dag`: [`381787e7f`](https://github.com/krlmlr/duckdb/commit/381787e7fc661fce0d778fd5fa4e638428541b8e)
   - run #1: copied [`ac13907cc`](https://github.com/krlmlr/duckdb/commit/ac13907cc12168731db7d65caf1b96b358781a34)
   - run #2: copied [`e2190e11a`](https://github.com/krlmlr/duckdb/commit/e2190e11a60bb8ab19cdb545190fd9f787dd8e4b)
+  - run #3: copied [`213dd4587`](https://github.com/krlmlr/duckdb/commit/213dd4587d779b322d44b6d43968887287953481)
 - [#8696](https://github.com/duckdb/duckdb/pull/8696) Internal https://redirect.github.com/duckdb/duckdb/pull/8696: Window Function Sharing
   - `-dag`: [`b86de8948`](https://github.com/krlmlr/duckdb/commit/b86de8948436dcc2715f6f0163b1a9b6420f2c76)
   - run #1: copied [`ec47f61d2`](https://github.com/krlmlr/duckdb/commit/ec47f61d2ac35b01988fc11d9ba585e973fd6ea0)
   - run #2: copied [`5ec218ade`](https://github.com/krlmlr/duckdb/commit/5ec218adef8bfa3a27f9165c471ed8c8615d7ccb)
+  - run #3: copied [`85bdc4237`](https://github.com/krlmlr/duckdb/commit/85bdc423776ec2db7d4e55a3b1dce245f584825b)
 - [#8862](https://github.com/duckdb/duckdb/pull/8862) Internal https://redirect.github.com/duckdb/duckdb/pull/8862: Window Function NULLS
   - `-dag`: [`793f5fc17`](https://github.com/krlmlr/duckdb/commit/793f5fc17ed28f957b339a4312e06174965f124e)
   - run #1: copied [`ddfea0a18`](https://github.com/krlmlr/duckdb/commit/ddfea0a1895b6233c0f0101acc3f8fbaac9b8fd0)
   - run #2: copied [`7f727a9eb`](https://github.com/krlmlr/duckdb/commit/7f727a9ebf333946c564b1dd4acdbe5f0d95f3c0)
+  - run #3: copied [`966729091`](https://github.com/krlmlr/duckdb/commit/966729091f7c695986fbc2e0a16a40c3dff8da39)
 - [#8863](https://github.com/duckdb/duckdb/pull/8863) Internal https://redirect.github.com/duckdb/duckdb/pull/8863: LIST ORDER Optimization
   - `-dag`: [`f86c9ebca`](https://github.com/krlmlr/duckdb/commit/f86c9ebca655d8d4cae980e5ea238d7d3b4b90e2)
   - run #1: copied [`afde212c8`](https://github.com/krlmlr/duckdb/commit/afde212c8e80f362b9bd73d092bc0473147fbf4a)
   - run #2: copied [`255a722a2`](https://github.com/krlmlr/duckdb/commit/255a722a282a3ce18bbdcde1e1ff65631973dc99)
+  - run #3: copied [`fd165e7e4`](https://github.com/krlmlr/duckdb/commit/fd165e7e4cac1e7c949ef53e63f6be60ac0c9a68)
 - [#21890](https://github.com/duckdb/duckdb/pull/21890) fix issue https://redirect.github.com/duckdb/duckdb/pull/21890 for internal binding error
   - `-dag`: [`76dd5984d`](https://github.com/krlmlr/duckdb/commit/76dd5984de3c9c71de60623f138ea9b875490656)
   - run #1: copied [`ed0bc400a`](https://github.com/krlmlr/duckdb/commit/ed0bc400ae462072417181d5d5fee201e3f62ce8)
   - run #2: copied [`73591cd7e`](https://github.com/krlmlr/duckdb/commit/73591cd7e7ad585e9dafef16eaecaf7c508cf72d)
+  - run #3: copied [`915fe1e75`](https://github.com/krlmlr/duckdb/commit/915fe1e75ce11f221bfe4d191ff0cb22b29e6b82)
 - [#21977](https://github.com/duckdb/duckdb/pull/21977) Apply include-what-you-use on extensions/parquet
   - `-dag`: [`4527d7ea9`](https://github.com/krlmlr/duckdb/commit/4527d7ea9afd78933905fb78a566404351743a20)
   - run #1: copied [`fb40831b6`](https://github.com/krlmlr/duckdb/commit/fb40831b65a49849e3379a9b88e3cb2cb3ad4cfa)
   - run #2: copied [`30fb6ceaa`](https://github.com/krlmlr/duckdb/commit/30fb6ceaaf7b9c1208e167d7a1d5d095732ed51d)
+  - run #3: copied [`697c14c0f`](https://github.com/krlmlr/duckdb/commit/697c14c0f46398a189d47147c4e569c0cff70ebd)
 - [#22009](https://github.com/duckdb/duckdb/pull/22009) Add single-pass probe for LEFT JOIN with unique right-side keys
   - `-dag`: [`7f1abf42e`](https://github.com/krlmlr/duckdb/commit/7f1abf42efb5f3c874775516609d9dbaeecb8e91)
   - run #1: copied [`e88b95d18`](https://github.com/krlmlr/duckdb/commit/e88b95d181d87a598d2759df1feb7954ca4089bf)
   - run #2: copied [`dc8c2bc83`](https://github.com/krlmlr/duckdb/commit/dc8c2bc83d7c068365d60705ef85b9b6dbb42512)
+  - run #3: copied [`557ff4d77`](https://github.com/krlmlr/duckdb/commit/557ff4d7718e7a8031952b96bb4cebbec2c76324)
 - [#22028](https://github.com/duckdb/duckdb/pull/22028) Add few slow tests
   - `-dag`: [`cf09e6b9b`](https://github.com/krlmlr/duckdb/commit/cf09e6b9b4c868ab2d6a8b0a311a3081a16dc538)
   - run #1: copied [`fa5bee3af`](https://github.com/krlmlr/duckdb/commit/fa5bee3aff996b5817abfbafed2d1c873c4deeec)
   - run #2: copied [`745952309`](https://github.com/krlmlr/duckdb/commit/7459523096973a7ba060ad9a394b049910b03582)
+  - run #3: copied [`bb180cb2f`](https://github.com/krlmlr/duckdb/commit/bb180cb2f670fb31bc852439ddda7cd525b8204f)
 - [#22010](https://github.com/duckdb/duckdb/pull/22010) fix: Add missing properties in CreateViewInfo::Copy
   - `-dag`: [`43dffae27`](https://github.com/krlmlr/duckdb/commit/43dffae27e7777c11b256cd0fef292c8b736634f)
   - run #1: copied [`e67a08a11`](https://github.com/krlmlr/duckdb/commit/e67a08a11b51e98e1ecacf24a97d7d1def6fb17e)
   - run #2: copied [`e117adbd2`](https://github.com/krlmlr/duckdb/commit/e117adbd2c438353d6073a74956c695d5b01e18c)
+  - run #3: copied [`5fff36ed3`](https://github.com/krlmlr/duckdb/commit/5fff36ed3daf15d4f48c664c580e24e9ff6fd6c4)
 - [#22008](https://github.com/duckdb/duckdb/pull/22008) Add HasMinMax for StringStats
   - `-dag`: [`a88acdccb`](https://github.com/krlmlr/duckdb/commit/a88acdccbd117b7f01c9669c02177d46f3ba53a9)
   - run #1: copied [`33fabf720`](https://github.com/krlmlr/duckdb/commit/33fabf720afbec6915fe205d8b4e58739ac72246)
   - run #2: copied [`67395bb12`](https://github.com/krlmlr/duckdb/commit/67395bb126e60e16b5b96591bf0e70b9e0f53834)
+  - run #3: copied [`3fbaf7fe5`](https://github.com/krlmlr/duckdb/commit/3fbaf7fe545809fb4f873a1259d51a8d41adc00c)
 - [#21890](https://github.com/duckdb/duckdb/pull/21890) Revert "fix issue https://redirect.github.com/duckdb/duckdb/pull/21890 for internal binding error"
   - `-dag`: [`4b2ebdd3d`](https://github.com/krlmlr/duckdb/commit/4b2ebdd3d4a809fde2a4ae6ae0197600c60adb97)
   - run #1: copied [`ed0bc400a`](https://github.com/krlmlr/duckdb/commit/ed0bc400ae462072417181d5d5fee201e3f62ce8)
   - run #2: copied [`73591cd7e`](https://github.com/krlmlr/duckdb/commit/73591cd7e7ad585e9dafef16eaecaf7c508cf72d)
+  - run #3: copied [`915fe1e75`](https://github.com/krlmlr/duckdb/commit/915fe1e75ce11f221bfe4d191ff0cb22b29e6b82)
 - [#22030](https://github.com/duckdb/duckdb/pull/22030) Move vector function implementations into `VectorBuffer`
   - `-dag`: [`212554b2c`](https://github.com/krlmlr/duckdb/commit/212554b2c86d84e6396895854646ab9bbbfe7f1a)
   - run #1: copied [`4b99307a6`](https://github.com/krlmlr/duckdb/commit/4b99307a6df819e6ac9ed0820d44f85158191cbb)
   - run #2: copied [`f21f6c53c`](https://github.com/krlmlr/duckdb/commit/f21f6c53c3142b37b0a6fc4e5ff6f53790221268)
+  - run #3: copied [`2a2e923f1`](https://github.com/krlmlr/duckdb/commit/2a2e923f1082faf46eb6596b0a4970fe11ef31ce)
 - [#22035](https://github.com/duckdb/duckdb/pull/22035) Move vector iterator to getters
   - `-dag`: [`f17ac0bba`](https://github.com/krlmlr/duckdb/commit/f17ac0bba4f31bba6022931e6578f5a3c0fe4032)
   - run #1: copied [`58b157988`](https://github.com/krlmlr/duckdb/commit/58b157988888d90af4abec11393d3e7ece85c234)
   - run #2: copied [`33da40c1a`](https://github.com/krlmlr/duckdb/commit/33da40c1a31a51623597beb48d83d55adf7ebb75)
+  - run #3: copied [`cf45f158b`](https://github.com/krlmlr/duckdb/commit/cf45f158b8df8b5a9ce93d2a8fc879e063c6b8b6)
 - [#22038](https://github.com/duckdb/duckdb/pull/22038) Support skip_tests in Main and called workflows
   - `-dag`: [`eb332f08f`](https://github.com/krlmlr/duckdb/commit/eb332f08f810b8b9582902c347f51a29c483cc24)
   - run #1: copied [`40fb8389e`](https://github.com/krlmlr/duckdb/commit/40fb8389e3004958e39e4ed6fe02969006419942)
   - run #2: copied [`7dcb1042e`](https://github.com/krlmlr/duckdb/commit/7dcb1042ef55258e68db08706dd219ecde161e13)
+  - run #3: copied [`afce81bde`](https://github.com/krlmlr/duckdb/commit/afce81bde8871e1949de149ab21be82767fba371)
 - [#21987](https://github.com/duckdb/duckdb/pull/21987) PEG parser fuzzer issues
   - `-dag`: [`19d7071e7`](https://github.com/krlmlr/duckdb/commit/19d7071e7058fd295a47c4481c774fee2956e093)
   - run #1: copied [`8a0286b5e`](https://github.com/krlmlr/duckdb/commit/8a0286b5e51e417ea928cfe2e08094714942eca9)
   - run #2: copied [`09d18c0fa`](https://github.com/krlmlr/duckdb/commit/09d18c0fa23e4d1f6fce6dee75a8df7835165994)
+  - run #3: copied [`d9aed5d08`](https://github.com/krlmlr/duckdb/commit/d9aed5d08e8e756994329b18192ef7570f5c5360)
 - [#22034](https://github.com/duckdb/duckdb/pull/22034) Wrap Scalar/Aggr/Window function bind callback parameters
   - `-dag`: [`27bcbc2cd`](https://github.com/krlmlr/duckdb/commit/27bcbc2cd278e1c3e9531b1e4a04ce234bf8332d)
   - run #1: copied [`964faa887`](https://github.com/krlmlr/duckdb/commit/964faa887ccfc58148f9085d5269a200ecfc5987)
   - run #2: copied [`0ef795190`](https://github.com/krlmlr/duckdb/commit/0ef795190c4f71eb9d939bd8b0ebd9c93655699e)
+  - run #3: copied [`6ba24bfbf`](https://github.com/krlmlr/duckdb/commit/6ba24bfbf09ce07e933da02bbf2d953578b93a24)
 - [#22026](https://github.com/duckdb/duckdb/pull/22026) Fix and improve adbc
   - `-dag`: [`4ed1438e9`](https://github.com/krlmlr/duckdb/commit/4ed1438e96a1076c67221e6abe394fc260d268ac)
   - run #1: copied [`5d23396cf`](https://github.com/krlmlr/duckdb/commit/5d23396cf080425b4459ba85593f513284a132b8)
   - run #2: copied [`8046b26a9`](https://github.com/krlmlr/duckdb/commit/8046b26a9fc9cfe2cd0fc8224171d24c32d8a0bf)
+  - run #3: copied [`e9bc28af1`](https://github.com/krlmlr/duckdb/commit/e9bc28af1b8b10cdd8111e40453914e2638ed0af)
 - [#22046](https://github.com/duckdb/duckdb/pull/22046) Expose query string to the optimizer
   - `-dag`: [`98ae103cc`](https://github.com/krlmlr/duckdb/commit/98ae103cc3078df07af31a239ad15b8d6de820ff)
   - run #1: copied [`49fe921a0`](https://github.com/krlmlr/duckdb/commit/49fe921a0cdf185054ab10f879c66ea4dde8c89c)
   - run #2: copied [`29bee2985`](https://github.com/krlmlr/duckdb/commit/29bee29854181d3c7b733265dd3a425d369c1062)
+  - run #3: copied [`534465947`](https://github.com/krlmlr/duckdb/commit/534465947a6b6899fdf0fb70c42a19a38a67869a)
 - [#8850](https://github.com/duckdb/duckdb/pull/8850) Internal https://redirect.github.com/duckdb/duckdb/pull/8850: Window Function Local 
   - `-dag`: [`e57d62ac2`](https://github.com/krlmlr/duckdb/commit/e57d62ac27ce63afe145dd019fa01b233da23bf2)
   - run #1: copied [`2cca5b652`](https://github.com/krlmlr/duckdb/commit/2cca5b6520ac740b7109953682b8a6c22cd8d8a5)
   - run #2: copied [`18ebc3ac7`](https://github.com/krlmlr/duckdb/commit/18ebc3ac785825ae355c2bd428e5bb260221c410)
+  - run #3: copied [`df2e80a88`](https://github.com/krlmlr/duckdb/commit/df2e80a88eb9389af0b0123bbcd84628f0cef035)
 - [#21738](https://github.com/duckdb/duckdb/pull/21738) BoxRendererContext: make usage of BoxRenderer independent of ClientContext
   - `-dag`: [`f83f9697e`](https://github.com/krlmlr/duckdb/commit/f83f9697e0f143f1a313b1943fc4f3b1fabb4754)
   - run #1: copied [`a3c554282`](https://github.com/krlmlr/duckdb/commit/a3c5542825b3647029356118ec5cf95807b06638)
   - run #2: copied [`b29184a57`](https://github.com/krlmlr/duckdb/commit/b29184a570660d156796ca50c0e48f0e614493bc)
+  - run #3: copied [`36c6cc748`](https://github.com/krlmlr/duckdb/commit/36c6cc748bdf85118e2a0627704e7158b27e4dca)
 - [#22053](https://github.com/duckdb/duckdb/pull/22053) [CLI] Suggest '.last' only when PAGER is active
   - `-dag`: [`2e168f560`](https://github.com/krlmlr/duckdb/commit/2e168f56034076fbecf4465b72d0379e1dd4e29d)
   - run #1: copied [`7173213eb`](https://github.com/krlmlr/duckdb/commit/7173213eb4744471deb7ceaf354e3f5dd0bf6439)
   - run #2: copied [`16c97f6c1`](https://github.com/krlmlr/duckdb/commit/16c97f6c14581c3fbf3f3393effa649838dfa82b)
+  - run #3: copied [`5a8f9d01f`](https://github.com/krlmlr/duckdb/commit/5a8f9d01f46706d866ae9d6c912131b170ea5965)
 - [#21955](https://github.com/duckdb/duckdb/pull/21955) Fix compile worker message and improve Windows builds
   - `-dag`: [`fdfa8ed6b`](https://github.com/krlmlr/duckdb/commit/fdfa8ed6b9a6bd1dde3dde3a8443b9e2ae8c41ef)
   - run #1: copied [`718aec01f`](https://github.com/krlmlr/duckdb/commit/718aec01ffa224e1c9bfa1439e526e17083ce3b4)
   - run #2: copied [`a7cb3eef3`](https://github.com/krlmlr/duckdb/commit/a7cb3eef31e71571ec7f6d607265042980666cbf)
+  - run #3: copied [`69a3c9f77`](https://github.com/krlmlr/duckdb/commit/69a3c9f77a2eed91cea2c24ca1793cd977e611f5)
 - [#22052](https://github.com/duckdb/duckdb/pull/22052) Clean-up in FlatVector / ConstantVector headers
   - `-dag`: [`20fd367f7`](https://github.com/krlmlr/duckdb/commit/20fd367f7b262e0118b19a3940075f7736fc3c88)
   - run #1: copied [`b70727967`](https://github.com/krlmlr/duckdb/commit/b70727967ea140640a1d3e962b50dd24a7ccbe8c)
   - run #2: copied [`dd8cee09e`](https://github.com/krlmlr/duckdb/commit/dd8cee09e1b15d442c529ee4c6e1321e9d31be33)
+  - run #3: copied [`f64dfcd83`](https://github.com/krlmlr/duckdb/commit/f64dfcd83dc2618c92478d102c15c96b99cff18f)
 - [#22063](https://github.com/duckdb/duckdb/pull/22063) Revamp extension build / patching system for better local development, enabled when `DUCKDB_NEW_EXTENSION_BUILD=1` is defined
   - `-dag`: [`b95bbc51e`](https://github.com/krlmlr/duckdb/commit/b95bbc51ec2c2fc70cfa097dae6bb66f3b789c9d)
   - run #1: copied [`20cd8b9bd`](https://github.com/krlmlr/duckdb/commit/20cd8b9bda483820f19c1cb9f43af0994dfe6039)
   - run #2: copied [`1ca3e7552`](https://github.com/krlmlr/duckdb/commit/1ca3e75529908de060e7ab5910a7eae5648b636a)
+  - run #3: copied [`9d3b05870`](https://github.com/krlmlr/duckdb/commit/9d3b058706e82ae3a85a6049522b63b1c1caee69)
 - [#22055](https://github.com/duckdb/duckdb/pull/22055) Fix some afl++ fuzzer crashes
   - `-dag`: [`831d4ecbd`](https://github.com/krlmlr/duckdb/commit/831d4ecbd6e408b3826e022e40b551726a2d1577)
   - run #1: copied [`39fc2e694`](https://github.com/krlmlr/duckdb/commit/39fc2e694ec370eaf608b9ffb15d81704f8d480b)
   - run #2: copied [`ceea78416`](https://github.com/krlmlr/duckdb/commit/ceea78416ec1fd7bd9d418a6c57f2608188bb0e7)
+  - run #3: copied [`010424d26`](https://github.com/krlmlr/duckdb/commit/010424d266cf2d14badcc5d7a39533591ae5d9a9)
 - [#22066](https://github.com/duckdb/duckdb/pull/22066) CLI: when tab completing, complete until the longest prefix of all matches in case of conflicts
   - `-dag`: [`3c20c2e5b`](https://github.com/krlmlr/duckdb/commit/3c20c2e5b08278f92e161766a80546bee9a45341)
   - run #1: copied [`b85d1cd03`](https://github.com/krlmlr/duckdb/commit/b85d1cd0343e2e52276fa02f02bea82aff9f4e79)
   - run #2: copied [`547fedabe`](https://github.com/krlmlr/duckdb/commit/547fedabea245dbfc5ef136210bac320ece98c8b)
+  - run #3: copied [`66d468557`](https://github.com/krlmlr/duckdb/commit/66d468557ecba176b26844c14eea467af04c8e38)
 - [#22062](https://github.com/duckdb/duckdb/pull/22062) Rewrite GLOB matcher from recursive matching to iterative one
   - `-dag`: [`6eb42c781`](https://github.com/krlmlr/duckdb/commit/6eb42c781de5a398218cd2f2a0f1ce8ec86faa11)
   - run #1: copied [`8aa7cfcc9`](https://github.com/krlmlr/duckdb/commit/8aa7cfcc9a7fc78a7c2c7dbeef479346b5544de4)
   - run #2: copied [`f9002d7ec`](https://github.com/krlmlr/duckdb/commit/f9002d7ec6f3c6ae17ba5cda83780962e50ae81d)
+  - run #3: copied [`af1eeb369`](https://github.com/krlmlr/duckdb/commit/af1eeb369f5dd553ca5ac1ea97fa2262464da642)
 - [#22068](https://github.com/duckdb/duckdb/pull/22068) Rename `VectorValueIterator` to `VectorIterator`, add assert when `GetValue()` is used on a value that is `NULL`, and add `GetValueUnsafe()`
   - `-dag`: [`34200db3a`](https://github.com/krlmlr/duckdb/commit/34200db3a78ec0340ccb41d04c5346b77207316f)
   - run #1: copied [`db86694b5`](https://github.com/krlmlr/duckdb/commit/db86694b5d1cb6b170299a9e447299abcfc863e6)
   - run #2: copied [`29dff6615`](https://github.com/krlmlr/duckdb/commit/29dff6615f2965959e42fb1c45629ed1ac2aa6a4)
+  - run #3: copied [`218120a7b`](https://github.com/krlmlr/duckdb/commit/218120a7b1fdb98354fa04f8f9107a1f439f4657)
 - [#22074](https://github.com/duckdb/duckdb/pull/22074) Use TrySubtract in external file cache timestamp computation
   - `-dag`: [`9b271d0a5`](https://github.com/krlmlr/duckdb/commit/9b271d0a52efb0b6defefd56cf9ec849ddb34ffa)
   - run #1: copied [`0481befc6`](https://github.com/krlmlr/duckdb/commit/0481befc6d4f3f21d7f1a11212418ecfb0955ba7)
   - run #2: copied [`1d8fa8e9d`](https://github.com/krlmlr/duckdb/commit/1d8fa8e9d71f9dde43c3d9d43b87068d89276099)
+  - run #3: copied [`a8c0b5c93`](https://github.com/krlmlr/duckdb/commit/a8c0b5c93e2c0b412e24a60c3fa73c9250e299b9)
 - [#22071](https://github.com/duckdb/duckdb/pull/22071) Add `capacity` field to FlatVector VectorBuffers
   - `-dag`: [`aa7d48394`](https://github.com/krlmlr/duckdb/commit/aa7d48394b9e8c0156e539b0e62743c65295e5f4)
   - run #1: copied [`dbcfecbef`](https://github.com/krlmlr/duckdb/commit/dbcfecbeff93b2d897bf2b701be9661e2133d063)
   - run #2: copied [`5390a824c`](https://github.com/krlmlr/duckdb/commit/5390a824ced22cdc6c1c0d828d5e85a78127dad4)
+  - run #3: copied [`3db919c50`](https://github.com/krlmlr/duckdb/commit/3db919c50510423d406f4b75adf01b94ac2fa742)
 - [#8851](https://github.com/duckdb/duckdb/pull/8851) Internal https://redirect.github.com/duckdb/duckdb/pull/8851: Window Sink Finalize
   - `-dag`: [`9932d6b6b`](https://github.com/krlmlr/duckdb/commit/9932d6b6bdea715015d7f910a4a69e4b2b08faba)
   - run #1: copied [`db74455b2`](https://github.com/krlmlr/duckdb/commit/db74455b2530e3bf3174662f4f0b8930b864544e)
   - run #2: copied [`6271002ec`](https://github.com/krlmlr/duckdb/commit/6271002eca616dd8631bd34afe5392341e477d9e)
+  - run #3: copied [`bf6b9d600`](https://github.com/krlmlr/duckdb/commit/bf6b9d6008ae4e211b750b91697ae1c3c67c98c8)
 - [#22039](https://github.com/duckdb/duckdb/pull/22039) fix: only set chains_longer_than_one when extending chains
   - `-dag`: [`9b273a001`](https://github.com/krlmlr/duckdb/commit/9b273a0015f5799f0d1e253bbd9009dd933f9bee)
   - run #1: copied [`b51b5e917`](https://github.com/krlmlr/duckdb/commit/b51b5e917842e9469c5e565569a52abbbea69639)
   - run #2: copied [`472de70fe`](https://github.com/krlmlr/duckdb/commit/472de70fe9297a20dd81ffc48a3cd368520bcd28)
+  - run #3: copied [`3613d4774`](https://github.com/krlmlr/duckdb/commit/3613d47748e17c635f5246ecdc61ff3db26b23a1)
 - [#22045](https://github.com/duckdb/duckdb/pull/22045) fix: Don't override return_type for CTAS
   - `-dag`: [`7b7d98206`](https://github.com/krlmlr/duckdb/commit/7b7d98206c63d6473ed8019092ddeb48962a3888)
   - run #1: copied [`38a3d09af`](https://github.com/krlmlr/duckdb/commit/38a3d09af7268a70b396c9f0f15292ba04b0693f)
   - run #2: copied [`6315e3e47`](https://github.com/krlmlr/duckdb/commit/6315e3e4794fe76f4c6c1db5894d506431ee3ec4)
+  - run #3: copied [`116c8b90e`](https://github.com/krlmlr/duckdb/commit/116c8b90e36cebd1ae2c2c35ae1d6db143a16e26)
 - [#22091](https://github.com/duckdb/duckdb/pull/22091) Use `FlatVector::Writer` in more places, rename to `VectorWriter` and place in separate include file
   - `-dag`: [`66162f0bc`](https://github.com/krlmlr/duckdb/commit/66162f0bc8b2f2caf88dfbdb71fbc6b71cb71dda)
   - run #1: copied [`84d15c669`](https://github.com/krlmlr/duckdb/commit/84d15c66958d870bb53927cd4f08a4a01c5016ca)
   - run #2: copied [`70b6a191d`](https://github.com/krlmlr/duckdb/commit/70b6a191d872176eb193c5aad68b7230fcd33b5b)
+  - run #3: copied [`894c06754`](https://github.com/krlmlr/duckdb/commit/894c06754b10b742510f3df7b094cdf82182c435)
 - [#22090](https://github.com/duckdb/duckdb/pull/22090) Write merged vcpkg.json to build dir (build/reldebug/vcpkg.json), always write vcpkg.json, and clean-up Makefile by unifying the various builds
   - `-dag`: [`696bdfffb`](https://github.com/krlmlr/duckdb/commit/696bdfffb7420bd07c0d08a959f933a10b5a98fc)
   - run #1: copied [`0bd4264f2`](https://github.com/krlmlr/duckdb/commit/0bd4264f2b0209fb648e1bf2c564f108f3776b87)
   - run #2: copied [`c2926b657`](https://github.com/krlmlr/duckdb/commit/c2926b657ef2904ec4af512e975aa64b410dc591)
+  - run #3: copied [`12f68d103`](https://github.com/krlmlr/duckdb/commit/12f68d10350b5b071987c017d805fef8063d1c51)
 - [#22084](https://github.com/duckdb/duckdb/pull/22084) Fix bignum constant casting
   - `-dag`: [`6ad52c08c`](https://github.com/krlmlr/duckdb/commit/6ad52c08cfc20b29ef2694b9355e6de063c5db2a)
   - run #1: copied [`9c613981c`](https://github.com/krlmlr/duckdb/commit/9c613981c11fe8652f8a2e85a3b38950cb4cda72)
   - run #2: copied [`1a02f45c1`](https://github.com/krlmlr/duckdb/commit/1a02f45c17635c9b6144b52b93050a788065ebda)
+  - run #3: copied [`3a9490ab0`](https://github.com/krlmlr/duckdb/commit/3a9490ab0a9703a4f9ae2e623ab690e04fb748d4)
 
 - **[checkpoint] Run #13 back-merge** [#22087](https://github.com/duckdb/duckdb/pull/22087) "Merge `v1.5-variegata` into main"
   - `-dag`: [`8a0014afa`](https://github.com/krlmlr/duckdb/commit/8a0014afab9f46d04b01730d3ec9517de4176ae5)
   - run #1: copied (merge) [`4580f87e2`](https://github.com/krlmlr/duckdb/commit/4580f87e28598397510458b7cd55430e02f09583)
   - run #2: copied (merge) [`29a0a7d7c`](https://github.com/krlmlr/duckdb/commit/29a0a7d7c3f195f1f4737aabe8d1c1ba8701790b)
+  - run #3: copied (merge) [`1b8aced24`](https://github.com/krlmlr/duckdb/commit/1b8aced242d0bb9e59e7321a97b0946ca4e348fb)
 
 ### Run #14 segment
 - [#8912](https://github.com/duckdb/duckdb/pull/8912) Internal https://redirect.github.com/duckdb/duckdb/pull/8912: FILL Range Cursor
   - `-dag`: [`e00de236a`](https://github.com/krlmlr/duckdb/commit/e00de236ae6b96abcf0bce1dddae490a3b68dacb)
   - run #1: copied [`971af2d73`](https://github.com/krlmlr/duckdb/commit/971af2d73c9468080c0d02842620e2a936bed55d)
   - run #2: copied [`dd7ab2b6b`](https://github.com/krlmlr/duckdb/commit/dd7ab2b6b1ef89daabedf3c8278414872e59334d)
+  - run #3: copied [`215f5ed69`](https://github.com/krlmlr/duckdb/commit/215f5ed69cdb569912daaba84abaf28334941ab2)
 - [#22111](https://github.com/duckdb/duckdb/pull/22111) PEG parser change `optional_ptr` to references
   - `-dag`: [`11b6f3163`](https://github.com/krlmlr/duckdb/commit/11b6f3163f7edf5b523fde7dcb7634dea6c3b0a4)
   - run #1: copied [`bb775d064`](https://github.com/krlmlr/duckdb/commit/bb775d0647fe639b3df4680286506174c8d68dc9)
   - run #2: copied [`ea26fdeca`](https://github.com/krlmlr/duckdb/commit/ea26fdeca96cab829ababee89ab339b8d635627b)
+  - run #3: copied [`288756216`](https://github.com/krlmlr/duckdb/commit/288756216697a0aaa7e663cf5ef735276722b82e)
 - [#22113](https://github.com/duckdb/duckdb/pull/22113) If the input to a function or cast is NULL, automatically emit a constant NULL instead of calling the function - as long as the function has `DEFAULT_NULL_HANDLING`
   - `-dag`: [`3c7478bf9`](https://github.com/krlmlr/duckdb/commit/3c7478bf9793181b78030870dcb205f7624884c8)
   - run #1: copied [`aecbaeb60`](https://github.com/krlmlr/duckdb/commit/aecbaeb608f5e6e868a5bd379086def1f4601d26)
   - run #2: copied [`5943a5825`](https://github.com/krlmlr/duckdb/commit/5943a5825b46aea2331852c123d64e03cf1a9940)
+  - run #3: copied [`ea670718c`](https://github.com/krlmlr/duckdb/commit/ea670718c53495567cdaa30e672a178435ca4bd6)
 - [#22112](https://github.com/duckdb/duckdb/pull/22112) Move callbacks in Cast / Tuple Data Gather behind a function call
   - `-dag`: [`54428346c`](https://github.com/krlmlr/duckdb/commit/54428346c79336bfd7d2182cb54450d50c12c147)
   - run #1: copied [`144a73ac1`](https://github.com/krlmlr/duckdb/commit/144a73ac140a39f3afc89a61e39cc6e936f015e9)
   - run #2: copied [`1c32b107c`](https://github.com/krlmlr/duckdb/commit/1c32b107c76841d0b13e838663f687b955925148)
+  - run #3: copied [`9d5caa16c`](https://github.com/krlmlr/duckdb/commit/9d5caa16c0a3c29d249fa584e9cd2763658aadeb)
 - [#22114](https://github.com/duckdb/duckdb/pull/22114) PEG parser sample bug
   - `-dag`: [`7426b88c3`](https://github.com/krlmlr/duckdb/commit/7426b88c3006c07a69fa891e98a5a7842f852689)
   - run #1: copied [`f501b858e`](https://github.com/krlmlr/duckdb/commit/f501b858e0fc57b97fce3e36da6db9d7a9c22d51)
   - run #2: copied [`e9865fe87`](https://github.com/krlmlr/duckdb/commit/e9865fe87fb17cdeccbaf8333c0011557d1c35cb)
+  - run #3: copied [`2d11ad323`](https://github.com/krlmlr/duckdb/commit/2d11ad3237efcd4048140f8c8798d96ef6bca32c)
 - [#22116](https://github.com/duckdb/duckdb/pull/22116) Add a sel_count and capacity to the DictionaryBuffer
   - `-dag`: [`7c173c633`](https://github.com/krlmlr/duckdb/commit/7c173c6337240262749f909df316d5fb9f5041f8)
   - run #1: copied [`b4a033ff5`](https://github.com/krlmlr/duckdb/commit/b4a033ff5b583e880fc6c761018ea0efe83139e6)
   - run #2: copied [`5a7e63c8f`](https://github.com/krlmlr/duckdb/commit/5a7e63c8f4f92b9287ec5bf993e1324fcbe2260d)
+  - run #3: copied [`9d52cd84e`](https://github.com/krlmlr/duckdb/commit/9d52cd84e56751fbf73709169483aa1f3d7339ac)
 - [#21904](https://github.com/duckdb/duckdb/pull/21904) Fix https://redirect.github.com/duckdb/duckdb/pull/21904 MERGE INTO invalid column reference not rejected
   - `-dag`: [`f2da1da2b`](https://github.com/krlmlr/duckdb/commit/f2da1da2b2daaac7acdd965d135db152b5f9427b)
   - run #1: copied [`e1fea52a1`](https://github.com/krlmlr/duckdb/commit/e1fea52a14227cd89b597ab264a1511d466d8ba3)
   - run #2: copied [`7286f3504`](https://github.com/krlmlr/duckdb/commit/7286f3504c8caa0fde4effd70a2e9032c2fe7d1a)
+  - run #3: copied [`4821db0c3`](https://github.com/krlmlr/duckdb/commit/4821db0c303e2a6ef9f61a69e3e90f476d25e50c)
 - [#22118](https://github.com/duckdb/duckdb/pull/22118) Remove friend classes from `Vector`
   - `-dag`: [`0236c162c`](https://github.com/krlmlr/duckdb/commit/0236c162cb742e1d5702edbc349b1e14feb361db)
   - run #1: copied [`986bf3076`](https://github.com/krlmlr/duckdb/commit/986bf3076fbbed56fcdb59a7e69dee03a8c74259)
   - run #2: copied [`c2667d875`](https://github.com/krlmlr/duckdb/commit/c2667d875b161908fc5f9ab82ac07fbf3299c039)
+  - run #3: copied [`36f2b3966`](https://github.com/krlmlr/duckdb/commit/36f2b3966141e55bd943f7e187ed77b9b7c07de4)
 - [#22077](https://github.com/duckdb/duckdb/pull/22077) Set max cardinality for table functions when provided cardinality is exact
   - `-dag`: [`f96a548f3`](https://github.com/krlmlr/duckdb/commit/f96a548f3c7342d61f83c88ecb1b3de92bc86195)
   - run #1: copied [`ad8d16a59`](https://github.com/krlmlr/duckdb/commit/ad8d16a59ad387b18cd7e641073b38ec4c0762b3)
   - run #2: copied [`9eaffd63b`](https://github.com/krlmlr/duckdb/commit/9eaffd63bc9eabf4d08bb14d97f87a053ce6c4ac)
+  - run #3: copied [`10669866f`](https://github.com/krlmlr/duckdb/commit/10669866f0085ca7515d4b57d6d5f33b82769462)
 - [#8920](https://github.com/duckdb/duckdb/pull/8920) Internal https://redirect.github.com/duckdb/duckdb/pull/8920: Window Value Mutex
   - `-dag`: [`8c9d25012`](https://github.com/krlmlr/duckdb/commit/8c9d250124be939010edaa10f4343a375d423bdd)
   - run #1: copied [`81909bf8f`](https://github.com/krlmlr/duckdb/commit/81909bf8f0ca664d4f4706998a8efa533a186000)
   - run #2: copied [`a254ccb9b`](https://github.com/krlmlr/duckdb/commit/a254ccb9b74806758b112e7ad24bfd13c49ab1c4)
+  - run #3: copied [`b118ba49d`](https://github.com/krlmlr/duckdb/commit/b118ba49d0de385d61f81369f4eac1a2feda0df4)
 - [#22122](https://github.com/duckdb/duckdb/pull/22122) Make `FlatVector::Validity` return a `const ValidityMask &`, and add `FlatVector::ValidityMutable` which returns a mutable reference
   - `-dag`: [`cf1198c7d`](https://github.com/krlmlr/duckdb/commit/cf1198c7d64dced413c67e6df179ef93c769144e)
   - run #1: copied [`12afdb302`](https://github.com/krlmlr/duckdb/commit/12afdb3022fef1a31c5632944da05d1ae18216f3)
   - run #2: copied [`ded094397`](https://github.com/krlmlr/duckdb/commit/ded0943976aa0e4265bfc7656f7895d726eba12a)
+  - run #3: copied [`63f5e991f`](https://github.com/krlmlr/duckdb/commit/63f5e991fea9a5f8b1dc9c32e8509a5f4ff72d12)
 - [#22117](https://github.com/duckdb/duckdb/pull/22117) Fix broken main, fail CI early, and avoid breaking CI on main
   - `-dag`: [`5fba4f906`](https://github.com/krlmlr/duckdb/commit/5fba4f906fda3238cf0a4ab19f63a60abb9c179e)
   - run #1: copied [`31948bd0f`](https://github.com/krlmlr/duckdb/commit/31948bd0f45cac5f964e6657ec81d62f912844f6)
   - run #2: copied [`76e347832`](https://github.com/krlmlr/duckdb/commit/76e3478320bc3eadc5ba1f377fc37fe0c4560d68)
+  - run #3: copied [`e56d2b54f`](https://github.com/krlmlr/duckdb/commit/e56d2b54fc219fa546aa386c197bbd2fdcfce6de)
 - [#22127](https://github.com/duckdb/duckdb/pull/22127) Fix typo: entrys -> entries
   - `-dag`: [`d09b28e9e`](https://github.com/krlmlr/duckdb/commit/d09b28e9e4c2f6f474b64afdd50f77b30e8e26ea)
   - run #1: copied [`7dc6ee8c5`](https://github.com/krlmlr/duckdb/commit/7dc6ee8c5d836c5469df6b3f91e3034d2ce22e55)
   - run #2: copied [`b24924588`](https://github.com/krlmlr/duckdb/commit/b24924588fadba3348b23b4a673a17d1d269eb7f)
+  - run #3: copied [`c6dd97514`](https://github.com/krlmlr/duckdb/commit/c6dd97514ab1feaafeba63e9d535800220c63ebe)
 - [#22131](https://github.com/duckdb/duckdb/pull/22131) Use boolean type for input parameters in InvokeCI
   - `-dag`: [`a63891210`](https://github.com/krlmlr/duckdb/commit/a638912105a37aec6e84ac9ec7662a412868e443)
   - run #1: copied [`29a77773a`](https://github.com/krlmlr/duckdb/commit/29a77773a43c2fffd76ec9291e05e02c05aae019)
   - run #2: copied [`51aa6e289`](https://github.com/krlmlr/duckdb/commit/51aa6e289dc33fd393f358bc7b347e5720035918)
+  - run #3: copied [`9fa998fb4`](https://github.com/krlmlr/duckdb/commit/9fa998fb46dc6ae6a3cb970a34fa2572b176fc27)
 - [#22134](https://github.com/duckdb/duckdb/pull/22134) When resizing a list vector, keep the original child Vector in the new buffer
   - `-dag`: [`bfabd3919`](https://github.com/krlmlr/duckdb/commit/bfabd3919eddc2a2e412270c125edd70fdd727b9)
   - run #1: copied [`cfffa03ee`](https://github.com/krlmlr/duckdb/commit/cfffa03eeabdddcb3b9125ae75cc6658d801473b)
   - run #2: copied [`5d52c6193`](https://github.com/krlmlr/duckdb/commit/5d52c6193c2822c812e623dee5aefcf81978c0c3)
+  - run #3: copied [`a5eace11f`](https://github.com/krlmlr/duckdb/commit/a5eace11f572e54c6301d64d5c449e320cde8c7c)
 - [#22123](https://github.com/duckdb/duckdb/pull/22123) Remove capacity from `DataChunk`
   - `-dag`: [`a342caca1`](https://github.com/krlmlr/duckdb/commit/a342caca108fb842ab3a76c8c61a5013fa8b27ab)
   - run #1: copied [`9361d3cc0`](https://github.com/krlmlr/duckdb/commit/9361d3cc08f42d38e9e5c58ea32f0540577b82e2)
   - run #2: copied [`bafe4534f`](https://github.com/krlmlr/duckdb/commit/bafe4534fbdf7b9ddda507a71644f2386d03c882)
+  - run #3: copied [`4ae9ea8c2`](https://github.com/krlmlr/duckdb/commit/4ae9ea8c2645b6946de9bb7848ee6c518fc4d7f9)
 - [#8876](https://github.com/duckdb/duckdb/pull/8876) Internal https://redirect.github.com/duckdb/duckdb/pull/8876: Window Function Evaluate
   - `-dag`: [`b4ef7231b`](https://github.com/krlmlr/duckdb/commit/b4ef7231b75b53ba6c105f94e52c8e3c7c36a8fb)
   - run #1: copied [`d1b7a9412`](https://github.com/krlmlr/duckdb/commit/d1b7a9412c89a675a2289afdeb8368b6c5d7b2b7)
   - run #2: copied [`e88e53ee9`](https://github.com/krlmlr/duckdb/commit/e88e53ee927951775414abcbc636005e7807e54d)
+  - run #3: copied [`c390d367f`](https://github.com/krlmlr/duckdb/commit/c390d367fc8117f92eace5d29c3fa53526a2ed0f)
 - [#21803](https://github.com/duckdb/duckdb/pull/21803) Extend ieee_floating_point_ops to math domain functions
   - `-dag`: [`2f9146a23`](https://github.com/krlmlr/duckdb/commit/2f9146a23291d95a0ea8eef4b119778b4cdec1be)
   - run #1: copied [`fdecc5c00`](https://github.com/krlmlr/duckdb/commit/fdecc5c00d58965e4ed153cd8d7af4a7e7a96b02)
   - run #2: copied [`9d64054ea`](https://github.com/krlmlr/duckdb/commit/9d64054ea34e732aff7e1ac5fe92a0190913fc2b)
+  - run #3: copied [`f9901627c`](https://github.com/krlmlr/duckdb/commit/f9901627cc80c6c418d69a4cd39f17076d375325)
 - [#22129](https://github.com/duckdb/duckdb/pull/22129) Improve metric script and json for script that generates metric docs
   - `-dag`: [`949fab1c2`](https://github.com/krlmlr/duckdb/commit/949fab1c2cdc73cde3b1a6450d4ea22356a2f0c8)
   - run #1: copied [`d1b520bcc`](https://github.com/krlmlr/duckdb/commit/d1b520bcc8dee35187023a626970b7c8aa8c7c89)
   - run #2: copied [`7b4e19e1d`](https://github.com/krlmlr/duckdb/commit/7b4e19e1d79140b75ae6a24f3827089e934da748)
+  - run #3: copied [`a8a48e803`](https://github.com/krlmlr/duckdb/commit/a8a48e803e03f59893d785d87a8011e2020c19af)
 - [#22140](https://github.com/duckdb/duckdb/pull/22140) PEG script verify grammar
   - `-dag`: [`814a38204`](https://github.com/krlmlr/duckdb/commit/814a382041a657d028bb8583394e8b05a87611c5)
   - run #1: copied [`553604055`](https://github.com/krlmlr/duckdb/commit/553604055fe7e6a60c7ea01e60fa542b298c2901)
   - run #2: copied [`f2a961e59`](https://github.com/krlmlr/duckdb/commit/f2a961e599146989eb6a76656c9c0a03515d33c6)
+  - run #3: copied [`9eda329e4`](https://github.com/krlmlr/duckdb/commit/9eda329e426d908f99b94fa9f93ae4ce213e3d38)
 - [#22152](https://github.com/duckdb/duckdb/pull/22152) Fix TRY_CAST debug assertion failure for MAP
   - `-dag`: [`b5637b9ed`](https://github.com/krlmlr/duckdb/commit/b5637b9ed2de407c18a6d819e419647b35f34366)
   - run #1: copied [`b622b4bdf`](https://github.com/krlmlr/duckdb/commit/b622b4bdf517e91a5c541ebd3974b7177731968a)
   - run #2: copied [`b9df4eea1`](https://github.com/krlmlr/duckdb/commit/b9df4eea1ef3a7305df0fd11e7194910656b254d)
+  - run #3: copied [`a792b8c1f`](https://github.com/krlmlr/duckdb/commit/a792b8c1f770fd04851002685273781cc0a46fff)
 - [#22156](https://github.com/duckdb/duckdb/pull/22156) Move ConstantVector::Reference to dedicated function, unify with ConstantVector::SetNull
   - `-dag`: [`b6168ddca`](https://github.com/krlmlr/duckdb/commit/b6168ddcae6137bdf887484d9bed645481e9b498)
   - run #1: copied [`8212a26e5`](https://github.com/krlmlr/duckdb/commit/8212a26e599cfb25091f68b7c3711c3ecc580eb7)
   - run #2: copied [`d65d0c603`](https://github.com/krlmlr/duckdb/commit/d65d0c603c1a78e8d372dabd046645bd193067a9)
+  - run #3: copied [`effcd381f`](https://github.com/krlmlr/duckdb/commit/effcd381f48a16325f766c4ca296508bd9157c2c)
 - [#21889](https://github.com/duckdb/duckdb/pull/21889) Implement DROP TRIGGER end-to-end
   - `-dag`: [`2611bd2ed`](https://github.com/krlmlr/duckdb/commit/2611bd2ed6f42fbf2607e7ec0b67fa5ee9212141)
   - run #1: copied [`5b6a442f0`](https://github.com/krlmlr/duckdb/commit/5b6a442f05740675bb3864dd8b9d54a67f20c89f)
   - run #2: copied [`13f7c70d7`](https://github.com/krlmlr/duckdb/commit/13f7c70d7423a0960fe0bb8e4cd8939a5c77402d)
+  - run #3: copied [`7ffef8b30`](https://github.com/krlmlr/duckdb/commit/7ffef8b30ef42ef144751e6e38c68adaa1d2a4f7)
 - [#22005](https://github.com/duckdb/duckdb/pull/22005) Unify constant filter with expression filter
   - `-dag`: [`c11d108f1`](https://github.com/krlmlr/duckdb/commit/c11d108f15cf67ee7c8cbb6fa721033fc2c88588)
   - run #1: copied [`ba7ee5f39`](https://github.com/krlmlr/duckdb/commit/ba7ee5f39bc98cfd91992b3578e71d5015f11746)
   - run #2: copied [`dbd363781`](https://github.com/krlmlr/duckdb/commit/dbd363781a1b8decffda7b389ed81754cbec675a)
+  - run #3: copied [`87796ef01`](https://github.com/krlmlr/duckdb/commit/87796ef019085342f98fd52a82891817272a48b1)
 - [#22157](https://github.com/duckdb/duckdb/pull/22157) Deprecate `ListVector::GetEntry`, add `ListVector::GetChild` and `ListVector::GetChildMutable`
   - `-dag`: [`5716d89f4`](https://github.com/krlmlr/duckdb/commit/5716d89f4983115eb465eace45f8b1e7e9d45b72)
   - run #1: copied [`048c18332`](https://github.com/krlmlr/duckdb/commit/048c18332d847d9cb6c9009709caf4167f25ef0c)
   - run #2: copied [`1cebb8c5f`](https://github.com/krlmlr/duckdb/commit/1cebb8c5f96c9db9dcddaeca10575bb02f439558)
+  - run #3: copied [`3fa579c8b`](https://github.com/krlmlr/duckdb/commit/3fa579c8b33361e5246663d4587e07c105396098)
 - [#22161](https://github.com/duckdb/duckdb/pull/22161) Improve clangd checks and fix InvokeCI -> notify call
   - `-dag`: [`133776c39`](https://github.com/krlmlr/duckdb/commit/133776c39a2d013eb7f75602a025f86dba033443)
   - run #1: copied [`085fc4a1d`](https://github.com/krlmlr/duckdb/commit/085fc4a1d1a8442927348851c3af096f86a87131)
   - run #2: copied [`b6e686863`](https://github.com/krlmlr/duckdb/commit/b6e6868632db11c3e4bb6618170ab4236d506f44)
+  - run #3: copied [`b1be8afb1`](https://github.com/krlmlr/duckdb/commit/b1be8afb117f83d90dd651774be8c83b00580bc9)
 - [#21745](https://github.com/duckdb/duckdb/pull/21745) Try clangd-tidy in CI
   - `-dag`: [`90b208e04`](https://github.com/krlmlr/duckdb/commit/90b208e04a6e6717c8d7288c005b35f971282409)
   - run #1: copied [`d5ec398c5`](https://github.com/krlmlr/duckdb/commit/d5ec398c5ea66570ac733baf450d4a37c9bfe32d)
   - run #2: copied [`e95d96e4f`](https://github.com/krlmlr/duckdb/commit/e95d96e4f5a38a8db2941ab72f328761d705ec5a)
+  - run #3: copied [`074f5961e`](https://github.com/krlmlr/duckdb/commit/074f5961e152d55f138f67299006892517850c6b)
 - [#22158](https://github.com/duckdb/duckdb/pull/22158) Fix several warnings that pop up with newer clang version
   - `-dag`: [`880f51582`](https://github.com/krlmlr/duckdb/commit/880f5158219dfcb54b6a5cff8f669ccd233ffe81)
   - run #1: copied [`f340e781f`](https://github.com/krlmlr/duckdb/commit/f340e781f73c62128a92d9b12c79b6a66406a860)
   - run #2: copied [`b17f1f757`](https://github.com/krlmlr/duckdb/commit/b17f1f757e5b18cfb36e6792aa9834bbcefb30f6)
+  - run #3: copied [`454e0399e`](https://github.com/krlmlr/duckdb/commit/454e0399e88c2de95e6c9dd18b7b8dcf9471c27b)
 - [#22163](https://github.com/duckdb/duckdb/pull/22163) Add support for octal and hexadecimal sequences in peg parser
   - `-dag`: [`4d8e51523`](https://github.com/krlmlr/duckdb/commit/4d8e51523b9ed69cded063e1884858933ad4594c)
   - run #1: copied [`2c2f0107f`](https://github.com/krlmlr/duckdb/commit/2c2f0107f9e08520d3c04effa9c07c7d6f6196b5)
   - run #2: copied [`fbd998d51`](https://github.com/krlmlr/duckdb/commit/fbd998d51230f53f00f7832c9511d51959e85bce)
+  - run #3: copied [`94396101b`](https://github.com/krlmlr/duckdb/commit/94396101bf8533605edf92d0f8da383595c88c3a)
 - [#22162](https://github.com/duckdb/duckdb/pull/22162) Refactor Query Decorrelation
   - `-dag`: [`883f9d7b4`](https://github.com/krlmlr/duckdb/commit/883f9d7b4519fa4b1542030650eb0db0726d2459)
   - run #1: copied [`f987d9703`](https://github.com/krlmlr/duckdb/commit/f987d9703f7e93088b8be663f61704d365ce1e10)
   - run #2: copied [`fe82fb40f`](https://github.com/krlmlr/duckdb/commit/fe82fb40f6dee0a783750c7f23240a68f2f0ff9f)
+  - run #3: copied [`c6e38e1dc`](https://github.com/krlmlr/duckdb/commit/c6e38e1dc4cb42e7b663c4ca88f7871f0186c57b)
 - [#22165](https://github.com/duckdb/duckdb/pull/22165) Unify in filter with expression filter
   - `-dag`: [`20533b90e`](https://github.com/krlmlr/duckdb/commit/20533b90e5e6548a8cba70cb8a16be11d5d174e1)
   - run #1: copied [`2b1bb2fc0`](https://github.com/krlmlr/duckdb/commit/2b1bb2fc02deec2b4954c3e84ce873af42b8184e)
   - run #2: copied [`db6ad96a0`](https://github.com/krlmlr/duckdb/commit/db6ad96a0a91186207b4261d748cfe78c2ec38da)
+  - run #3: copied [`89516c4d3`](https://github.com/krlmlr/duckdb/commit/89516c4d3c6f1592f8b281d4f75058e03f3aae7f)
 - [#22166](https://github.com/duckdb/duckdb/pull/22166) Add a capacity to `SelectionVector`
   - `-dag`: [`570a52892`](https://github.com/krlmlr/duckdb/commit/570a52892ab9799dfeaabaa785161849a6c9e52e)
   - run #1: copied [`66b40ffa5`](https://github.com/krlmlr/duckdb/commit/66b40ffa5a062c3d45395295ee6f2defccd0acff)
   - run #2: copied [`3832178f9`](https://github.com/krlmlr/duckdb/commit/3832178f923bff947411dd0afb076deaf9d18f71)
+  - run #3: copied [`5104b06d2`](https://github.com/krlmlr/duckdb/commit/5104b06d239c589d50b06ab86b3c4042589c843b)
 - [#21895](https://github.com/duckdb/duckdb/pull/21895) OR predicate selectivity for join ordering
   - `-dag`: [`7390acc41`](https://github.com/krlmlr/duckdb/commit/7390acc41326d9aee2ad8731f88ffe9ce3e54423)
   - run #1: copied [`dc4f7b783`](https://github.com/krlmlr/duckdb/commit/dc4f7b7833d1873550d9b7a172e733a096765247)
   - run #2: copied [`eb4fd9aab`](https://github.com/krlmlr/duckdb/commit/eb4fd9aab1ddd3619c536885e06b7a28485e4cb2)
+  - run #3: copied [`36b3dfe80`](https://github.com/krlmlr/duckdb/commit/36b3dfe80b613439f15c9db022107a2e7e2cdcd1)
 - [#22168](https://github.com/duckdb/duckdb/pull/22168) fix loop iterator deprecation warning for httpfs extension
   - `-dag`: [`b3f73c10b`](https://github.com/krlmlr/duckdb/commit/b3f73c10b8e0cbd4f147ace3436565334a699b8d)
   - run #1: copied [`2b5a0cab3`](https://github.com/krlmlr/duckdb/commit/2b5a0cab3e4940a318a49613f29a7ac409c71fcc)
   - run #2: copied [`3254461ed`](https://github.com/krlmlr/duckdb/commit/3254461ed67d46fe9537f148b0e16a6aaf7b2970)
+  - run #3: copied [`3e378d918`](https://github.com/krlmlr/duckdb/commit/3e378d918404f6607b5a85ef58fe91b95088fb7b)
 - [#22184](https://github.com/duckdb/duckdb/pull/22184) Fix GCC-12 build and notify external repo CI jobs
   - `-dag`: [`cfe83d0ec`](https://github.com/krlmlr/duckdb/commit/cfe83d0ec7b1522fdd4b9a8f5f2b3a95002fa9fe)
   - run #1: copied [`b396cb323`](https://github.com/krlmlr/duckdb/commit/b396cb323b3d28cfb5a8ca43f6476f892eadd797)
   - run #2: copied [`85254907b`](https://github.com/krlmlr/duckdb/commit/85254907b405e154fbdb2fa2c6420d9e7aa9466c)
+  - run #3: copied [`f6b7a8daf`](https://github.com/krlmlr/duckdb/commit/f6b7a8dafd1da22f0c96583bc78a63abe42cadc9)
 - [#8571](https://github.com/duckdb/duckdb/pull/8571) Internal https://redirect.github.com/duckdb/duckdb/pull/8571: Window Streaming APIs
   - `-dag`: [`6a9b90fbc`](https://github.com/krlmlr/duckdb/commit/6a9b90fbcfec18d5d7a55339041f57f8a87eb0b0)
   - run #1: copied [`5bf8c2f80`](https://github.com/krlmlr/duckdb/commit/5bf8c2f80a943bdc3d7e3877fe5138ab73c6b44c)
   - run #2: copied [`9cf3f0539`](https://github.com/krlmlr/duckdb/commit/9cf3f05397884822f46b4999b856e898abbb33e5)
+  - run #3: copied [`2dccd948a`](https://github.com/krlmlr/duckdb/commit/2dccd948afcee40484fc5c0c1fd960b5da40c15b)
 - [#22182](https://github.com/duckdb/duckdb/pull/22182) Unify null filter with expression filter
   - `-dag`: [`56e46e1b0`](https://github.com/krlmlr/duckdb/commit/56e46e1b065e72cd3e37e29a964d83d0a1394f7f)
   - run #1: copied [`438a6545e`](https://github.com/krlmlr/duckdb/commit/438a6545e5d688f75c4a23ac49c71c3b863db930)
   - run #2: copied [`f6289be07`](https://github.com/krlmlr/duckdb/commit/f6289be079443e360a22e28a02cc7f5a8e234ad9)
+  - run #3: copied [`c6d0db25b`](https://github.com/krlmlr/duckdb/commit/c6d0db25b2b345ef5f5e526356e01fc6d877e15f)
 - [#21997](https://github.com/duckdb/duckdb/pull/21997) Allow multiple DML statements in a single WITH clause
   - `-dag`: [`67fcc032b`](https://github.com/krlmlr/duckdb/commit/67fcc032b77421dd150a0afc2e7862721594778a)
   - run #1: copied [`d5065f3fe`](https://github.com/krlmlr/duckdb/commit/d5065f3feecadfe3eafa5c99bb9f08a6066967f8)
   - run #2: copied [`8c9f3e20f`](https://github.com/krlmlr/duckdb/commit/8c9f3e20f8947b6187ba725c9f07186785ff6506)
+  - run #3: copied [`bd54b3f54`](https://github.com/krlmlr/duckdb/commit/bd54b3f5458d866385d1d1ed7b73e8a367dd46b2)
 - [#21796](https://github.com/duckdb/duckdb/pull/21796) seq.currval() can only be called after seq.nextval()
   - `-dag`: [`c3551270e`](https://github.com/krlmlr/duckdb/commit/c3551270e93029163a372f891c950e857b7dcb8b)
   - run #1: copied [`41a5d141c`](https://github.com/krlmlr/duckdb/commit/41a5d141c3a151a0a6d5ee4bcec5aa6ad2d4c053)
   - run #2: copied [`fa3fe7ca1`](https://github.com/krlmlr/duckdb/commit/fa3fe7ca18f48dd646d91bed6745c0ad5a984c9a)
+  - run #3: copied [`97c50a194`](https://github.com/krlmlr/duckdb/commit/97c50a1948a2f1e5b446e3a7740f9373b206a5fc)
 - [#22093](https://github.com/duckdb/duckdb/pull/22093) [Fix] Allow DDL after DML within the same transaction
   - `-dag`: [`0b38abfb4`](https://github.com/krlmlr/duckdb/commit/0b38abfb4ea914f0214888621169b73c9ad226ac)
   - run #1: copied [`050ac444a`](https://github.com/krlmlr/duckdb/commit/050ac444a90089cad626e784a0ad8f2ac2027dd9)
   - run #2: copied [`05c0d1b11`](https://github.com/krlmlr/duckdb/commit/05c0d1b113a86aef8c0d489e83b9e6293fb62025)
+  - run #3: copied [`c3b4aaaf6`](https://github.com/krlmlr/duckdb/commit/c3b4aaaf60ad56cbbc040541c9efc5bcc6372e93)
 - [#22193](https://github.com/duckdb/duckdb/pull/22193) Rework `FlatVector::Writer` to push values into the result vector, instead of allowing random access 
   - `-dag`: [`8487969b7`](https://github.com/krlmlr/duckdb/commit/8487969b7627e229ba49277945ab510a3170ead0)
   - run #1: copied [`15943f54d`](https://github.com/krlmlr/duckdb/commit/15943f54db5cec9ea793127d9dab29f616cdfbd9)
   - run #2: copied [`756c79e5e`](https://github.com/krlmlr/duckdb/commit/756c79e5e5b9ddd358ce105823a95f8f8af15bd9)
+  - run #3: copied [`7ecb59ea4`](https://github.com/krlmlr/duckdb/commit/7ecb59ea4dd0161346de3eb10b39d453eb5016c1)
 - [#22192](https://github.com/duckdb/duckdb/pull/22192) Add `DUCKDB_FORMAT_SKIP_FETCH ` environment variable to skip fetching new changes from main in make format-main
   - `-dag`: [`2cf8d91a1`](https://github.com/krlmlr/duckdb/commit/2cf8d91a163998d30fb9ad5d443e8dcfe6a35b8c)
   - run #1: copied [`74d277747`](https://github.com/krlmlr/duckdb/commit/74d277747e2f99f76c8ef139d2ae8118eb0a25ae)
   - run #2: copied [`65badcdc2`](https://github.com/krlmlr/duckdb/commit/65badcdc29187d47b9353333aa080765327bf8f3)
+  - run #3: copied [`46b74f6ba`](https://github.com/krlmlr/duckdb/commit/46b74f6bacf2c1d7450150cfd4b404b225fc4b25)
 - [#22195](https://github.com/duckdb/duckdb/pull/22195) Move `VectorOperations::Copy()` to `VectorBuffer`, and make `Resize` resize vector buffers in-place again (restoring old behavior) 
   - `-dag`: [`37e1e5390`](https://github.com/krlmlr/duckdb/commit/37e1e5390604bf26072e80f78eaf079eb1609176)
   - run #1: copied [`0db543d2d`](https://github.com/krlmlr/duckdb/commit/0db543d2d9c70e67bfc99b461ce43c8dd319b17d)
   - run #2: copied [`f7863648d`](https://github.com/krlmlr/duckdb/commit/f7863648d26a7c80f0358d4e1a3ee539cee88ff3)
+  - run #3: copied [`3b7830688`](https://github.com/krlmlr/duckdb/commit/3b7830688c7c717bf7621aae771929a662e40f9c)
 - [#22196](https://github.com/duckdb/duckdb/pull/22196) fix failures summary in test runner
   - `-dag`: [`e537c8c39`](https://github.com/krlmlr/duckdb/commit/e537c8c39628be0ec03eb831e6e40668bd9bfe69)
   - run #1: copied [`4ad977cbf`](https://github.com/krlmlr/duckdb/commit/4ad977cbf830305efcd135b85a81a15d38d699b7)
   - run #2: copied [`b1676020a`](https://github.com/krlmlr/duckdb/commit/b1676020a9dd199530010a8459b258a872a4336b)
+  - run #3: copied [`ecacb59fd`](https://github.com/krlmlr/duckdb/commit/ecacb59fd22bdc9e7c9d9b27b5e9f2cd7264b697)
 - [#22205](https://github.com/duckdb/duckdb/pull/22205) Vector Rework: Add append methods to `Vector`, and remove `source_offset` from ListAppend
   - `-dag`: [`a73076a04`](https://github.com/krlmlr/duckdb/commit/a73076a04ef42aab8109a39252178cf49d4a00e9)
   - run #1: copied [`5a87af4f3`](https://github.com/krlmlr/duckdb/commit/5a87af4f3f1b27c424b8202e832896e320761661)
   - run #2: copied [`b4ecb0828`](https://github.com/krlmlr/duckdb/commit/b4ecb08289e4c29c02bfb312a35378d7de3f41ee)
+  - run #3: copied [`1d2411a6a`](https://github.com/krlmlr/duckdb/commit/1d2411a6a41b5eadfa2b3e466e72b405545ee7b3)
 - [#22210](https://github.com/duckdb/duckdb/pull/22210) GCC 12 could not convert unique_ptr result
   - `-dag`: [`e17300957`](https://github.com/krlmlr/duckdb/commit/e17300957197cca879d0a04fbadf164d862a0f79)
   - run #1: copied [`09e62b57c`](https://github.com/krlmlr/duckdb/commit/09e62b57c653f4e1c6895e16bdfaad2a5262ccc3)
   - run #2: copied [`9f258da01`](https://github.com/krlmlr/duckdb/commit/9f258da01b24598fa0b8867a9cb3d5f45b965665)
+  - run #3: copied [`463402e16`](https://github.com/krlmlr/duckdb/commit/463402e16c4ba74540f9bb5efcf5e201520d4566)
 - [#22208](https://github.com/duckdb/duckdb/pull/22208) Fix memory limit reset
   - `-dag`: [`e14178d65`](https://github.com/krlmlr/duckdb/commit/e14178d65bd9ac05d593b7a200db69f1bcf9c02b)
   - run #1: copied [`f1c3c5d5f`](https://github.com/krlmlr/duckdb/commit/f1c3c5d5ff9379f7b8a77db1c36b3e0ca030f50e)
   - run #2: copied [`6f683947e`](https://github.com/krlmlr/duckdb/commit/6f683947e2a241b74900b6b98ead6a7bc81976b1)
+  - run #3: copied [`1d537363b`](https://github.com/krlmlr/duckdb/commit/1d537363b491401c017fba41bcf1bc64ade4fe78)
 - [#22199](https://github.com/duckdb/duckdb/pull/22199) Add support for deferred binding of views in the SQL layer
   - `-dag`: [`150f7e7a4`](https://github.com/krlmlr/duckdb/commit/150f7e7a42c0e16a48a7611c44dc30240daf8503)
   - run #1: copied [`949032a67`](https://github.com/krlmlr/duckdb/commit/949032a6714203de361181a44c1365e4a38d0703)
   - run #2: copied [`a7abe661a`](https://github.com/krlmlr/duckdb/commit/a7abe661aaad8f5c09efa39a2ab0122db2433cd6)
+  - run #3: copied [`d107dd6e4`](https://github.com/krlmlr/duckdb/commit/d107dd6e42ecdc904fba829376f77aa8b508d254)
 - [#8961](https://github.com/duckdb/duckdb/pull/8961) Internal https://redirect.github.com/duckdb/duckdb/pull/8961: Streaming Nth Value
   - `-dag`: [`e7035df02`](https://github.com/krlmlr/duckdb/commit/e7035df02d55fb5ae5398d628da40d9074e24ae7)
   - run #1: copied [`796963c1f`](https://github.com/krlmlr/duckdb/commit/796963c1f6d11730d016c96dec2c8a6dd92a5e56)
   - run #2: copied [`0d054bbd2`](https://github.com/krlmlr/duckdb/commit/0d054bbd2c43451ebcd8748d3d937f9336157322)
+  - run #3: copied [`f5231a748`](https://github.com/krlmlr/duckdb/commit/f5231a748c4ec1236c46f7014962332de607a3fb)
 - [#22213](https://github.com/duckdb/duckdb/pull/22213) Fix various `clang` warnings
   - `-dag`: [`8c54b6c9e`](https://github.com/krlmlr/duckdb/commit/8c54b6c9ee0286456eca50b927d46824a53443bd)
   - run #1: copied [`08bd121e4`](https://github.com/krlmlr/duckdb/commit/08bd121e4b56be61a7cb856dd4e8b9bafe90a17d)
   - run #2: copied [`a95c2e0fb`](https://github.com/krlmlr/duckdb/commit/a95c2e0fbf3da59558e95a49f3f9b7fcf69aed21)
+  - run #3: copied [`cd3e0a031`](https://github.com/krlmlr/duckdb/commit/cd3e0a031aca910dfbfce44ff1923a57576b2598)
 - [#20706](https://github.com/duckdb/duckdb/pull/20706) Fix union type casting rules
   - `-dag`: [`ac7941003`](https://github.com/krlmlr/duckdb/commit/ac7941003d980682beb2128baf300528b133c672)
   - run #1: copied [`8c9b67546`](https://github.com/krlmlr/duckdb/commit/8c9b67546b8cd41f8b2efe8b37bffb144af8b396)
   - run #2: copied [`54b2e9daa`](https://github.com/krlmlr/duckdb/commit/54b2e9daa08329659c87f25f8b60bd764564eb7a)
+  - run #3: copied [`9849551f8`](https://github.com/krlmlr/duckdb/commit/9849551f8b5fef8aece1ce47cebba1c6217d43ed)
 - [#22188](https://github.com/duckdb/duckdb/pull/22188) Parquet skip page scan
   - `-dag`: [`5257499ea`](https://github.com/krlmlr/duckdb/commit/5257499ea124ca85cb529e7e9c026d50927a5a64)
   - run #1: copied [`f49208198`](https://github.com/krlmlr/duckdb/commit/f492081983c3aceae8c08b62815782a5d60bac00)
   - run #2: copied [`315c8670c`](https://github.com/krlmlr/duckdb/commit/315c8670c200e6205c854d0c39fa46a0c7651015)
+  - run #3: copied [`9c8857b7e`](https://github.com/krlmlr/duckdb/commit/9c8857b7e22042163683ec72d2245b3e07a1e2d3)
 - [#22207](https://github.com/duckdb/duckdb/pull/22207) Unify struct filter with expression filter
   - `-dag`: [`5248ae6a7`](https://github.com/krlmlr/duckdb/commit/5248ae6a72b797c161db591d6ad683261d32085e)
   - run #1: copied [`7bf2dfced`](https://github.com/krlmlr/duckdb/commit/7bf2dfcedde4e6e74cb3b80671078990910fdaef)
   - run #2: copied [`ff3e38025`](https://github.com/krlmlr/duckdb/commit/ff3e38025bd67a5bc21ff7c9c98225277888ae1d)
+  - run #3: copied [`8e00483f8`](https://github.com/krlmlr/duckdb/commit/8e00483f8e0a800b397990836f7dc869438055f0)
 - [#22214](https://github.com/duckdb/duckdb/pull/22214) Merge InvokeCI into Main workflow
   - `-dag`: [`252cc5c26`](https://github.com/krlmlr/duckdb/commit/252cc5c2680fda9fb2b1f4c85cde9f69449de086)
   - run #1: copied [`b092da457`](https://github.com/krlmlr/duckdb/commit/b092da45743509ef34967eb06ce1852a9c1f913e)
   - run #2: copied [`6370b4570`](https://github.com/krlmlr/duckdb/commit/6370b457009c37a8b6a6ad111d655b9328ff0273)
+  - run #3: copied [`46b3818be`](https://github.com/krlmlr/duckdb/commit/46b3818bebcbb116437f3fccef891794e9b39604)
 - [#22190](https://github.com/duckdb/duckdb/pull/22190) Detect typos in code using typos-cli
   - `-dag`: [`b6b797592`](https://github.com/krlmlr/duckdb/commit/b6b797592c16ba98f42057c9942034f5078e38c5)
   - run #1: copied [`76c44a494`](https://github.com/krlmlr/duckdb/commit/76c44a4947aab76b0486b25461f7aed885b29315)
   - run #2: copied [`60bcce562`](https://github.com/krlmlr/duckdb/commit/60bcce5627e8ee9059381d22315f8c5780ec40cc)
+  - run #3: copied [`f405426b4`](https://github.com/krlmlr/duckdb/commit/f405426b426cdd2a0905a6032e053076b95abf02)
 - [#8893](https://github.com/duckdb/duckdb/pull/8893) Internal https://redirect.github.com/duckdb/duckdb/pull/8893: Window Callback Cleanup
   - `-dag`: [`77b5ca450`](https://github.com/krlmlr/duckdb/commit/77b5ca4507c97e7c7f89e1f528a8b4ad5a66456f)
   - run #1: copied [`aa6068a36`](https://github.com/krlmlr/duckdb/commit/aa6068a3652109cace300a7f173c20ac2af880e3)
   - run #2: copied [`f21db5e91`](https://github.com/krlmlr/duckdb/commit/f21db5e91d60ebc7b24f186657f6f90085510123)
+  - run #3: copied [`7880e5423`](https://github.com/krlmlr/duckdb/commit/7880e54233391bb93380ff6256d893d5601a180f)
 - [#22212](https://github.com/duckdb/duckdb/pull/22212) Remove ListVectors' `child_size` and use the child vectors' size instead
   - `-dag`: [`0fc33ebd4`](https://github.com/krlmlr/duckdb/commit/0fc33ebd49fae5c132af3ca783ec476859d82434)
   - run #1: copied [`164b6a028`](https://github.com/krlmlr/duckdb/commit/164b6a028da8b4001792e05050bfa0499bd09404)
   - run #2: copied [`0d37bbf56`](https://github.com/krlmlr/duckdb/commit/0d37bbf56bb7fc6e73562a608a544e1d9301fab7)
+  - run #3: copied [`28c139343`](https://github.com/krlmlr/duckdb/commit/28c13934332768121e87c1aa40e378cc919dbc23)
 - [#22219](https://github.com/duckdb/duckdb/pull/22219) Protect function members
   - `-dag`: [`915eb67fa`](https://github.com/krlmlr/duckdb/commit/915eb67faff57c9256b3709bb63b3a9636e36d28)
   - run #1: copied [`a10c42345`](https://github.com/krlmlr/duckdb/commit/a10c4234589fbf5519a786b35912077b04d7fff4)
   - run #2: copied [`dff2e3d8b`](https://github.com/krlmlr/duckdb/commit/dff2e3d8bb3f963dd85e3dc9c32df11504acf544)
+  - run #3: copied [`8877ee5b8`](https://github.com/krlmlr/duckdb/commit/8877ee5b868d475ff794a741744262d3adcbed82)
 - [#22217](https://github.com/duckdb/duckdb/pull/22217) Removing the amalgamation build, so long
   - `-dag`: [`e5622075f`](https://github.com/krlmlr/duckdb/commit/e5622075f09ad1d0dddcb8db3ff278c0565890d4)
   - run #1: copied [`6f73b1477`](https://github.com/krlmlr/duckdb/commit/6f73b1477e0f6ea4586a3b4ade33bdb81d72a1f6)
   - run #2: copied [`1f60e7603`](https://github.com/krlmlr/duckdb/commit/1f60e7603be8f38d282947645584c45e6feb9e51)
+  - run #3: copied [`44f0baedb`](https://github.com/krlmlr/duckdb/commit/44f0baedbfaa4183a09109da4587319a1100d807)
 - [#22223](https://github.com/duckdb/duckdb/pull/22223) Prefer using `Vector::Append(Value)` instead of `DataChunk::SetValue()` in various table functions
   - `-dag`: [`e2f6bb0a9`](https://github.com/krlmlr/duckdb/commit/e2f6bb0a9fb8725b5be633178b97fcd69294d8d2)
   - run #1: copied [`0d2a99e72`](https://github.com/krlmlr/duckdb/commit/0d2a99e72cfab4e890d33b42189828c04a41b15e)
   - run #2: copied [`ab715753b`](https://github.com/krlmlr/duckdb/commit/ab715753ba56d8a748aa3e942c143c915355af28)
+  - run #3: copied [`aaf4a42f3`](https://github.com/krlmlr/duckdb/commit/aaf4a42f395b0204af74aab05a9b6ca03419d67b)
 - [#22228](https://github.com/duckdb/duckdb/pull/22228) Improve error message with mismatching VALUES lists
   - `-dag`: [`09d41c1d8`](https://github.com/krlmlr/duckdb/commit/09d41c1d887871bab349e6626d5dc4cceb5740db)
   - run #1: copied [`a945f8d91`](https://github.com/krlmlr/duckdb/commit/a945f8d91fc2e82254b9d4350d351b806ee8915b)
   - run #2: copied [`eda791d1f`](https://github.com/krlmlr/duckdb/commit/eda791d1f62ac7151a6b87deb57aba5700359f1b)
+  - run #3: copied [`7940ed946`](https://github.com/krlmlr/duckdb/commit/7940ed94657ec6965746e94593231033cc00e647)
 - [#22229](https://github.com/duckdb/duckdb/pull/22229) Remove dictionary size in VectorBuffer, instead use child-vector size
   - `-dag`: [`6154720cd`](https://github.com/krlmlr/duckdb/commit/6154720cd7a0a4b556f8b957b2e8f5bfd18356f0)
   - run #1: copied [`19af148cf`](https://github.com/krlmlr/duckdb/commit/19af148cff1d9496a27daded42afc69f7e12e449)
   - run #2: copied [`6dffc888d`](https://github.com/krlmlr/duckdb/commit/6dffc888df149e6b838517db013df20d76de6c16)
+  - run #3: copied [`22a7312e2`](https://github.com/krlmlr/duckdb/commit/22a7312e2bf494034dcf3e6bcdcf13a85c6470c2)
 - [#21953](https://github.com/duckdb/duckdb/pull/21953) Move statement splitting responsibility to the peg grammar
   - `-dag`: [`81b2e57ba`](https://github.com/krlmlr/duckdb/commit/81b2e57ba9caff26c69d18edfeaa1ce9a10cb1e9)
   - run #1: copied [`5088bd9af`](https://github.com/krlmlr/duckdb/commit/5088bd9af66e62732891c1268905b4515bb240ca)
   - run #2: copied [`1c11fc1c7`](https://github.com/krlmlr/duckdb/commit/1c11fc1c7ee49d98550d09d693b60bc505cd7f2f)
+  - run #3: copied [`8252aebaf`](https://github.com/krlmlr/duckdb/commit/8252aebaf366df5adee8bcddcb3f510a200f2d00)
 - [#22231](https://github.com/duckdb/duckdb/pull/22231) Fix compile errors
   - `-dag`: [`6b30524e3`](https://github.com/krlmlr/duckdb/commit/6b30524e38cea9b26f3d82953a9150d18443005b)
   - run #1: copied [`f5503ac02`](https://github.com/krlmlr/duckdb/commit/f5503ac02c63ab29cee1b5bfaf90b6533833874c)
   - run #2: copied [`571d41295`](https://github.com/krlmlr/duckdb/commit/571d41295894901a8e9f8e92a7f959bd6ac43578)
+  - run #3: copied [`534568ead`](https://github.com/krlmlr/duckdb/commit/534568eadac6ac5a38cbb40a2557b52cbf5fa4c7)
 - [#7385](https://github.com/duckdb/duckdb/pull/7385) Internal https://redirect.github.com/duckdb/duckdb/pull/7385: ICU Unity Builds
   - `-dag`: [`732a7dd5d`](https://github.com/krlmlr/duckdb/commit/732a7dd5d19981821092d386d82d19f6a03bda93)
   - run #1: copied [`6ef886eb7`](https://github.com/krlmlr/duckdb/commit/6ef886eb71f9c9734f6d4c6b0e98fe5afd1e5043)
   - run #2: copied [`6b3d80645`](https://github.com/krlmlr/duckdb/commit/6b3d8064557170e7a05c97de5b4baab394198da6)
+  - run #3: copied [`2ece35d3f`](https://github.com/krlmlr/duckdb/commit/2ece35d3fca225b33e6d6955c7baa2b1302dd0e5)
 - [#22234](https://github.com/duckdb/duckdb/pull/22234) [Parquet][Dev] Parquet bundle arguments into `ColumnReaderInput`
   - `-dag`: [`fd382876b`](https://github.com/krlmlr/duckdb/commit/fd382876bba94241e1a5832e43215597a13f8496)
   - run #1: copied [`f30d46ed3`](https://github.com/krlmlr/duckdb/commit/f30d46ed3e098fbc88a1b8f12135d77846408393)
   - run #2: copied [`761970a7b`](https://github.com/krlmlr/duckdb/commit/761970a7bbfc3022d426d70059e5da677dbc5a7c)
+  - run #3: copied [`519951209`](https://github.com/krlmlr/duckdb/commit/51995120988fbec5f8a6508558a73febf7b5a9c9)
 - [#22233](https://github.com/duckdb/duckdb/pull/22233) Make the `BLOCK_START` header public in the `SingleFileBlockManager`
   - `-dag`: [`09d2221b0`](https://github.com/krlmlr/duckdb/commit/09d2221b0edd7050bd8ece1dc0ee9cb0a79bb2a4)
   - run #1: copied [`2a00560f1`](https://github.com/krlmlr/duckdb/commit/2a00560f1b4f457423d89279b4304e4e13cbb8fc)
   - run #2: copied [`a59c8151e`](https://github.com/krlmlr/duckdb/commit/a59c8151ebf9de3a27f19aa2504ee162c8c01162)
+  - run #3: copied [`b627b8c1f`](https://github.com/krlmlr/duckdb/commit/b627b8c1fa80cb3e8c306150a4d46f2d38f50d19)
 - [#22225](https://github.com/duckdb/duckdb/pull/22225) Hive-partitioned Write Rework
   - `-dag`: [`656107e61`](https://github.com/krlmlr/duckdb/commit/656107e612a4fa34289fd791112d02e9609ac4a5)
   - run #1: copied [`a40d5d6fb`](https://github.com/krlmlr/duckdb/commit/a40d5d6fbae9f3e613c1b483a2e7b9b6c724e3a7)
   - run #2: copied [`075c7d942`](https://github.com/krlmlr/duckdb/commit/075c7d9425b5d39947072036866e1b55cc5ca3e4)
+  - run #3: copied [`d9590e6bf`](https://github.com/krlmlr/duckdb/commit/d9590e6bfbc5f9a715fc6cd8b7a9733912ca4d63)
 - [#8975](https://github.com/duckdb/duckdb/pull/8975) Internal https://redirect.github.com/duckdb/duckdb/pull/8975: Streaming Value Cleanup
   - `-dag`: [`802e4d9b3`](https://github.com/krlmlr/duckdb/commit/802e4d9b317a7869e1e2912885facfa7497689ed)
   - run #1: copied [`3d5288022`](https://github.com/krlmlr/duckdb/commit/3d528802252c18ab4e39dd2fc3f907111efa24de)
   - run #2: copied [`e9fde6383`](https://github.com/krlmlr/duckdb/commit/e9fde6383e4bf581b856846906711605d8ad5fda)
+  - run #3: copied [`99e62443f`](https://github.com/krlmlr/duckdb/commit/99e62443f29c39929ce9ad2b97c743d42c858ab2)
 - [#22236](https://github.com/duckdb/duckdb/pull/22236) Add `count_t` and `capacity_t` types and use in certain Vector interfaces
   - `-dag`: [`da46ad8a6`](https://github.com/krlmlr/duckdb/commit/da46ad8a64cce8d7611a1bc2d09831286dca3586)
   - run #1: copied [`1501a11f0`](https://github.com/krlmlr/duckdb/commit/1501a11f0e5befb825854fb0dbdddb630545e301)
   - run #2: copied [`d568b085b`](https://github.com/krlmlr/duckdb/commit/d568b085b17499310b3379677f1d44ae83d6b607)
+  - run #3: copied [`54542d2d4`](https://github.com/krlmlr/duckdb/commit/54542d2d4c979eda022aab3ce84f4401552fe27e)
 - [#22240](https://github.com/duckdb/duckdb/pull/22240) Fix GCC 12 issue and use ref for consistent checkouts
   - `-dag`: [`deadfba28`](https://github.com/krlmlr/duckdb/commit/deadfba28e369f8ee4246608fe87678eb2d6d1ab)
   - run #1: copied [`3c76e45c1`](https://github.com/krlmlr/duckdb/commit/3c76e45c18c4c89be0116b59201192f6d875ea55)
   - run #2: copied [`1b6a2e1c3`](https://github.com/krlmlr/duckdb/commit/1b6a2e1c369542d45aa5db61833d93ba262f1e05)
+  - run #3: copied [`3682d3449`](https://github.com/krlmlr/duckdb/commit/3682d3449a3f67cf125c6daccac2164701cdc0fd)
 - [#22197](https://github.com/duckdb/duckdb/pull/22197) Local Cache for adaptive filters in multi-file readers
   - `-dag`: [`0b35a7c7d`](https://github.com/krlmlr/duckdb/commit/0b35a7c7d667987e61974ce46c3c4e32430d8c34)
   - run #1: copied [`58b5ae12a`](https://github.com/krlmlr/duckdb/commit/58b5ae12a96b85edf4cfb12c10cb63eecf842443)
   - run #2: copied [`fc124fb46`](https://github.com/krlmlr/duckdb/commit/fc124fb46c8174684192b8a14342bbe35e7ba902)
+  - run #3: copied [`2792c24df`](https://github.com/krlmlr/duckdb/commit/2792c24df54a5d3da249b7e8c3b4292af03a428d)
 - [#22243](https://github.com/duckdb/duckdb/pull/22243) Use merge-base for linux-base build, and test with GCC 12
   - `-dag`: [`9c9285d6c`](https://github.com/krlmlr/duckdb/commit/9c9285d6c6f2fc5435fa17d43b12262076199a24)
   - run #1: copied [`beeadf2a9`](https://github.com/krlmlr/duckdb/commit/beeadf2a97e6da2851d15979aa45bf47b5d29e13)
   - run #2: copied [`43576c1ee`](https://github.com/krlmlr/duckdb/commit/43576c1eeeb131d6544cb736c47ea6a049d1066f)
+  - run #3: copied [`170f106a9`](https://github.com/krlmlr/duckdb/commit/170f106a964002dd22505f39865ea2fe6fac5267)
 - [#22143](https://github.com/duckdb/duckdb/pull/22143) Add aggregate_window_batch_t — batched variant of the window callback
   - `-dag`: [`bb45bbb42`](https://github.com/krlmlr/duckdb/commit/bb45bbb42d4b00994b9d8e91b4230b1e52e309f8)
   - run #1: copied [`f3bf2a92d`](https://github.com/krlmlr/duckdb/commit/f3bf2a92ddb15aa18211109cf3d32611f204b5ba)
   - run #2: copied [`6b7b9fd95`](https://github.com/krlmlr/duckdb/commit/6b7b9fd95aa85262c6bd3a6d128c608880e8128f)
+  - run #3: copied [`2942d3a7c`](https://github.com/krlmlr/duckdb/commit/2942d3a7cc5c4946c535140443d768a6643516f7)
 - [#22250](https://github.com/duckdb/duckdb/pull/22250) Set `temp_file_encryption` setting outside of loop
   - `-dag`: [`ae1133785`](https://github.com/krlmlr/duckdb/commit/ae1133785b87e217b3463a3eec48b5fbd377ff67)
   - run #1: copied [`b3c0990e4`](https://github.com/krlmlr/duckdb/commit/b3c0990e4b7eec673a5c36623c8dea5e607abf69)
   - run #2: copied [`b1e9c6bcf`](https://github.com/krlmlr/duckdb/commit/b1e9c6bcfe95eb5ff507a281418c74e1c8a4c050)
+  - run #3: copied [`2ca341742`](https://github.com/krlmlr/duckdb/commit/2ca3417422d10fbed17ec4c5ed5b1707727c8b4d)
 - [#22252](https://github.com/duckdb/duckdb/pull/22252) Implement optimized Slice(offset, count) for dictionary vectors, and add method to DataChunk
   - `-dag`: [`a4f4b734d`](https://github.com/krlmlr/duckdb/commit/a4f4b734dad5a4fef5349a697a4bec08bad821e7)
   - run #1: copied [`b38d10eaf`](https://github.com/krlmlr/duckdb/commit/b38d10eafa637aaffea6c71c3f762f910126fb36)
   - run #2: copied [`bcc54e7c2`](https://github.com/krlmlr/duckdb/commit/bcc54e7c20e5b9c6ad591283f3fe699ccdbf3ee7)
+  - run #3: copied [`d9fc151b2`](https://github.com/krlmlr/duckdb/commit/d9fc151b249ec1c15eb709fd31f8f89d77d63c9d)
 - [#22249](https://github.com/duckdb/duckdb/pull/22249) Checkpoint new row group instead of old row group in `RowGroupCollection::Checkpoint`
   - `-dag`: [`7b8e6d957`](https://github.com/krlmlr/duckdb/commit/7b8e6d95725cf926488bc9616d2bb3c82623654b)
   - run #1: copied [`964321c41`](https://github.com/krlmlr/duckdb/commit/964321c4178468692fa0a895de883775c8ad249d)
   - run #2: copied [`dd278c922`](https://github.com/krlmlr/duckdb/commit/dd278c922d279ea71c5228fe8bc6c90e0278b491)
+  - run #3: copied [`a2aaa3224`](https://github.com/krlmlr/duckdb/commit/a2aaa3224417fb19f221902cd5bec63e67f3d398)
 - [#22247](https://github.com/duckdb/duckdb/pull/22247) [Parquet][Dev] Replace `root_reader` with the decomposed `column_readers` vector
   - `-dag`: [`be06c47d9`](https://github.com/krlmlr/duckdb/commit/be06c47d98033005f4c917f04bbcc6e3a35af561)
   - run #1: copied [`f59bd9503`](https://github.com/krlmlr/duckdb/commit/f59bd950373510eece47d409e89dd82bdc118fd9)
   - run #2: copied [`ac1ad3839`](https://github.com/krlmlr/duckdb/commit/ac1ad3839d53d590c63ca25176d01f1417a4d531)
+  - run #3: copied [`e562c7224`](https://github.com/krlmlr/duckdb/commit/e562c7224d4466d32ec6e6db957aee80761394a7)
 - [#22254](https://github.com/duckdb/duckdb/pull/22254) Clean-up Vector::Append and unify Vector::Reserve / Vector::Resize
   - `-dag`: [`7965e2619`](https://github.com/krlmlr/duckdb/commit/7965e2619f5d323a7581ffea9567eb0ba2a70c59)
   - run #1: copied [`d5eab716e`](https://github.com/krlmlr/duckdb/commit/d5eab716e2a3ff54c6c2f7fe0d1eaef2aefd707d)
   - run #2: copied [`6298b7ce5`](https://github.com/krlmlr/duckdb/commit/6298b7ce5b61e3f059185d8fae4c7ba2eb746163)
+  - run #3: copied [`6f55a2033`](https://github.com/krlmlr/duckdb/commit/6f55a203366837c92c33fa8478c751e87b9b4da3)
 - [#22255](https://github.com/duckdb/duckdb/pull/22255) Preserve lazily loaded column metadata through `CHECKPOINT`, `ADD COLUMN` and `DROP COLUMN`
   - `-dag`: [`12ca93c72`](https://github.com/krlmlr/duckdb/commit/12ca93c72b9c1721e19afdc683c5006ea973ed8f)
   - run #1: copied [`8219c57f7`](https://github.com/krlmlr/duckdb/commit/8219c57f73df5036a9d9a2decf18c8719cf4c039)
   - run #2: copied [`243f70d21`](https://github.com/krlmlr/duckdb/commit/243f70d21bd6d1905ed5aba418c10f157fe8fa3d)
+  - run #3: copied [`b11573c61`](https://github.com/krlmlr/duckdb/commit/b11573c61d76f34adc887fd3470df46aae15eef5)
 - [#22246](https://github.com/duckdb/duckdb/pull/22246) Fix symbols in linux-debug and remove extension copies
   - `-dag`: [`7c52e6c5c`](https://github.com/krlmlr/duckdb/commit/7c52e6c5c15217b0713b1fc612e5c5ff578b15fd)
   - run #1: copied [`92d651306`](https://github.com/krlmlr/duckdb/commit/92d6513068933057ba39f49f7a9071554a4035f6)
   - run #2: copied [`e86fa0998`](https://github.com/krlmlr/duckdb/commit/e86fa099813ae107e75967548883fe2a5f16ed6d)
+  - run #3: copied [`8126bfd01`](https://github.com/krlmlr/duckdb/commit/8126bfd01f3b96eb1948e1debf53838b3425537f)
 - [#22264](https://github.com/duckdb/duckdb/pull/22264) Trim ccache on ccache v3 (used in manylinux image)
   - `-dag`: [`353115646`](https://github.com/krlmlr/duckdb/commit/3531156467b6d64bd364e7556506b1d3bff318fb)
   - run #1: copied [`ed3f2ff91`](https://github.com/krlmlr/duckdb/commit/ed3f2ff9192501031412143f70c029bc32b4acb1)
   - run #2: copied [`81c5c1175`](https://github.com/krlmlr/duckdb/commit/81c5c117559d270c8fa1b48bdc70f5c9f6e181b0)
+  - run #3: copied [`a214c9f18`](https://github.com/krlmlr/duckdb/commit/a214c9f18530d58161234832ea4e4e57d0404fb0)
 - [#22257](https://github.com/duckdb/duckdb/pull/22257) Don't copy input parameters for StartsWith
   - `-dag`: [`4248b80dc`](https://github.com/krlmlr/duckdb/commit/4248b80dce523ffd03b8d6b285a738410739906f)
   - run #1: copied [`f304876c6`](https://github.com/krlmlr/duckdb/commit/f304876c60eb2dd7952a9250aed1af323ce14184)
   - run #2: copied [`78234f9e0`](https://github.com/krlmlr/duckdb/commit/78234f9e0d5b4116c94bb02c8879fd65fc0bbb95)
+  - run #3: copied [`8faaa1111`](https://github.com/krlmlr/duckdb/commit/8faaa111167af316347fb8ca337f128516ef7e26)
 - [#22198](https://github.com/duckdb/duckdb/pull/22198) Defer commit drop side effects until after flush commit
   - `-dag`: [`d613999e4`](https://github.com/krlmlr/duckdb/commit/d613999e4e7345126246751ee50d41942e50d886)
   - run #1: copied [`21ba4ce55`](https://github.com/krlmlr/duckdb/commit/21ba4ce55b57a60fe0c24863dedf6ff01b5e030e)
   - run #2: copied [`862727a57`](https://github.com/krlmlr/duckdb/commit/862727a57cbc3dad64ea2c4dece66f22ca8cd9c6)
+  - run #3: copied [`de0006a1d`](https://github.com/krlmlr/duckdb/commit/de0006a1de1ae8784a7ab073f852b598c4ebe3a4)
 - [#22270](https://github.com/duckdb/duckdb/pull/22270) Allow extending format checks for downstream extension usage
   - `-dag`: [`f63f5a851`](https://github.com/krlmlr/duckdb/commit/f63f5a8519e1a10bfa295654303711e58f343455)
   - run #1: copied [`c2039c3ed`](https://github.com/krlmlr/duckdb/commit/c2039c3ed360132ae7ffa2eca00cf666ca5b2403)
   - run #2: copied [`ded10fb54`](https://github.com/krlmlr/duckdb/commit/ded10fb545b9700bb7b96c4202ae15cdfc06a893)
+  - run #3: copied [`44ce6a7f8`](https://github.com/krlmlr/duckdb/commit/44ce6a7f8c5861498af6c09dd06211c206a9b25d)
 - [#22268](https://github.com/duckdb/duckdb/pull/22268) Require methods that create a `ConstantVector` (e.g. `ConstantVector::SetNull`, `Vector::Reference(Value &)`)) to provide a `count`
   - `-dag`: [`7cc89ea01`](https://github.com/krlmlr/duckdb/commit/7cc89ea01577b2506a941b2a8599aca5307b1b0f)
   - run #1: copied [`f53f98e5e`](https://github.com/krlmlr/duckdb/commit/f53f98e5e55ba78b6e3f194f4e63ac0c4e8176c8)
   - run #2: copied [`16cc037e3`](https://github.com/krlmlr/duckdb/commit/16cc037e38be9255c5aee082efcc77168f233adc)
+  - run #3: copied [`ee0241d6e`](https://github.com/krlmlr/duckdb/commit/ee0241d6e346dfa87fa36dbda57b9c7ab2b58a48)
 - [#22271](https://github.com/duckdb/duckdb/pull/22271) Make test more flexible
   - `-dag`: [`feea8fcf8`](https://github.com/krlmlr/duckdb/commit/feea8fcf81bbc070fcbb60a7c2d537bb65dd7dd7)
   - run #1: copied [`427160100`](https://github.com/krlmlr/duckdb/commit/427160100e28c83562740047d93048f556544c1b)
   - run #2: copied [`b80debd3b`](https://github.com/krlmlr/duckdb/commit/b80debd3b0a5661596a94c73782f61a280f1134b)
+  - run #3: copied [`554616bed`](https://github.com/krlmlr/duckdb/commit/554616bed3d6568a0d2763bf90cde09426429a08)
 - [#22237](https://github.com/duckdb/duckdb/pull/22237) Correctly handle quoting of type
   - `-dag`: [`61ad09abc`](https://github.com/krlmlr/duckdb/commit/61ad09abc4826fd31d2b2d2c7698a56cf511550b)
   - run #1: copied [`684e28bc6`](https://github.com/krlmlr/duckdb/commit/684e28bc6e2b9a9e901a041fd47d4c94252b0a2c)
   - run #2: copied [`2429401f8`](https://github.com/krlmlr/duckdb/commit/2429401f876e6da8f18d049d9ab3822011c0bcaf)
+  - run #3: copied [`5799afae7`](https://github.com/krlmlr/duckdb/commit/5799afae76e118d5198f7b38d588520d3fa2ad2d)
 - [#22194](https://github.com/duckdb/duckdb/pull/22194) [WIP] Replace PostgreSQL parser with PEG-based parser
   - `-dag`: [`925485c82`](https://github.com/krlmlr/duckdb/commit/925485c829c907fabe15d96a285fbef70381eb0b)
   - run #1: copied [`e511c5ded`](https://github.com/krlmlr/duckdb/commit/e511c5ded14235cc26171ac4c7fb89c50207d3d9)
   - run #2: copied [`d8ca729bd`](https://github.com/krlmlr/duckdb/commit/d8ca729bd8b1d63a2bd6bb4faa920ebf5d7062ad)
+  - run #3: copied [`bd2b738b7`](https://github.com/krlmlr/duckdb/commit/bd2b738b7185bba8f4552320b3a72a95686a8cfd)
 
 - **[checkpoint] Run #14 back-merge** [#22283](https://github.com/duckdb/duckdb/pull/22283) "Merge `v1.5-variegata` into main"
   - `-dag`: [`c4e33e271`](https://github.com/krlmlr/duckdb/commit/c4e33e271a9bb2c6c744ca9d84efe69a9b50e389)
   - run #1: copied (merge) [`350a792c7`](https://github.com/krlmlr/duckdb/commit/350a792c7b79348228c8bc2cfc90508c0ecbcae4)
   - run #2: copied (merge) [`a826a6b25`](https://github.com/krlmlr/duckdb/commit/a826a6b25bec5904ca9c88050c63a09d9f7028c6)
+  - run #3: copied (merge) [`76bbda0c9`](https://github.com/krlmlr/duckdb/commit/76bbda0c9df9bae9b4485bb7ea149e01e5618369)
 
 ### Run #15 segment
 - [#21746](https://github.com/duckdb/duckdb/pull/21746) Fix tpcds extension to generate data matching tpcds tools 
   - `-dag`: [`554cdc78a`](https://github.com/krlmlr/duckdb/commit/554cdc78abb54e14e9e1d265929ab9f91002c359)
   - run #1: copied [`22c2d504b`](https://github.com/krlmlr/duckdb/commit/22c2d504b82e891b011e01fbc10b98ec8134c383)
   - run #2: copied [`4ed0b519d`](https://github.com/krlmlr/duckdb/commit/4ed0b519d6791abab2778ce311072b221b3e32ce)
+  - run #3: copied [`892b2350b`](https://github.com/krlmlr/duckdb/commit/892b2350b27d252fb8f412d6cccef4c43bdb0143)
 - [#22287](https://github.com/duckdb/duckdb/pull/22287) Fix sporadic test failure in CI: set temp dir before setting temp dir encryption
   - `-dag`: [`350b89325`](https://github.com/krlmlr/duckdb/commit/350b8932577a4388c8f93af2894140432989c420)
   - run #1: copied [`ebedc901f`](https://github.com/krlmlr/duckdb/commit/ebedc901fe9cd15623ddb0dea39c872385ce89a6)
   - run #2: copied [`f8ed06364`](https://github.com/krlmlr/duckdb/commit/f8ed063649be1e1149f9aea1a75c02bf6d57edc4)
+  - run #3: copied [`5295fc7cf`](https://github.com/krlmlr/duckdb/commit/5295fc7cf07f0a9fd9d1592fec9263c1238903fe)
 - [#22293](https://github.com/duckdb/duckdb/pull/22293) Cleanup usage of Vector APIs to improve propagation of vector sizes
   - `-dag`: [`e9c849459`](https://github.com/krlmlr/duckdb/commit/e9c849459ed5faaf32159c5075a8ce94fa335235)
   - run #1: copied [`772cb26c9`](https://github.com/krlmlr/duckdb/commit/772cb26c955a760dbb69801536da83140f0535f3)
   - run #2: copied [`cf63211a5`](https://github.com/krlmlr/duckdb/commit/cf63211a59086a74179f1971f3b0150dcb3a8466)
+  - run #3: copied [`1124099e6`](https://github.com/krlmlr/duckdb/commit/1124099e60c1cf7eb5f83a2f885b9fc82407de93)
 - [#22309](https://github.com/duckdb/duckdb/pull/22309) Fix: Move count setting in FSSTVector out of loop
   - `-dag`: [`edf4ac68c`](https://github.com/krlmlr/duckdb/commit/edf4ac68c01f99313095f021b1f4aa4cf029e207)
   - run #1: copied [`76fe4cddc`](https://github.com/krlmlr/duckdb/commit/76fe4cddcff63a18c292e50dbf6c347ce3263037)
   - run #2: copied [`0be8dc2f3`](https://github.com/krlmlr/duckdb/commit/0be8dc2f3a9e52ec8faae9b153b570ab27f32cc2)
+  - run #3: copied [`41a51099c`](https://github.com/krlmlr/duckdb/commit/41a51099ceee5a0bd9be8988d7c353f3e1ff908c)
 - [#22299](https://github.com/duckdb/duckdb/pull/22299) TPC-DS: Fix log-scaled table row counts at non-standard SF
   - `-dag`: [`9886f97e4`](https://github.com/krlmlr/duckdb/commit/9886f97e493a584b9c1beb4f449af51a51945f38)
   - run #1: copied [`c9ef42795`](https://github.com/krlmlr/duckdb/commit/c9ef42795c94d20deb9dbba9f29166d6f3304f45)
   - run #2: copied [`59f354183`](https://github.com/krlmlr/duckdb/commit/59f35418385eaf437e9c1f2c62bbcaf3f43a1e72)
+  - run #3: copied [`874c1168b`](https://github.com/krlmlr/duckdb/commit/874c1168b1c2150a05dc983fa8b51cf861fcf0f4)
 - [#9011](https://github.com/duckdb/duckdb/pull/9011) Internal https://redirect.github.com/duckdb/duckdb/pull/9011: Time Zone 2026b
   - `-dag`: [`717903093`](https://github.com/krlmlr/duckdb/commit/717903093b0fe1e467458834d636e8e20b76b416)
   - run #1: copied [`4807b07df`](https://github.com/krlmlr/duckdb/commit/4807b07dffff53e812f43b818404297ca51396ed)
   - run #2: copied [`d6371a2c1`](https://github.com/krlmlr/duckdb/commit/d6371a2c15b360db751ffc9ab49a06c211fc88fc)
+  - run #3: copied [`65046ec0e`](https://github.com/krlmlr/duckdb/commit/65046ec0e3df27b1c0d798285b382f78cb8cfcd4)
 - [#22095](https://github.com/duckdb/duckdb/pull/22095) AFTER trigger firing for INSERT/UPDATE/DELETE (FOR EACH STATEMENT)
   - `-dag`: [`338d3c03f`](https://github.com/krlmlr/duckdb/commit/338d3c03f40bd9066f12f6f2a44881719fc0d21e)
   - run #1: copied [`ac63cf638`](https://github.com/krlmlr/duckdb/commit/ac63cf638b603e14ca8efef0cddc5f695511fc48)
   - run #2: copied [`d92ab8f4e`](https://github.com/krlmlr/duckdb/commit/d92ab8f4e97fac4c584b6ea1f39d4253fe0bcfbb)
+  - run #3: copied [`5859791d7`](https://github.com/krlmlr/duckdb/commit/5859791d77c53c6b8cdb91f5f1e4b87e7201468f)
 - [#21776](https://github.com/duckdb/duckdb/pull/21776) Pull up projections with non-colref expressions 
   - `-dag`: [`fbd539590`](https://github.com/krlmlr/duckdb/commit/fbd5395906742a0e022fb48a4a03628c03cc1657)
   - run #1: copied [`179f0ed8d`](https://github.com/krlmlr/duckdb/commit/179f0ed8d7b8782aef7e17bdfead58ab79eb92b8)
   - run #2: copied [`890add2a6`](https://github.com/krlmlr/duckdb/commit/890add2a65a2072e981130a778d503ed66122260)
+  - run #3: copied [`c7caf82c3`](https://github.com/krlmlr/duckdb/commit/c7caf82c3d14afa5223a1a4aedc473d4ce5628a6)
 - [#22306](https://github.com/duckdb/duckdb/pull/22306) Skip late-materialization when projection columns are all already required by the scan
   - `-dag`: [`a83b0aabe`](https://github.com/krlmlr/duckdb/commit/a83b0aabe047fbab2174bfbbb65e3313b99cc1bd)
   - run #1: copied [`0d834c54b`](https://github.com/krlmlr/duckdb/commit/0d834c54b14c2ca6dbabdf572bcf690fd83894b0)
   - run #2: copied [`100b92aca`](https://github.com/krlmlr/duckdb/commit/100b92aca6048846eea3eef2f8942ced5585b161)
+  - run #3: copied [`b9b62097f`](https://github.com/krlmlr/duckdb/commit/b9b62097fbc05da1334e8b29c17bad03080c9b70)
 - [#21056](https://github.com/duckdb/duckdb/pull/21056) Optimize Limited Distinct
   - `-dag`: [`f4f426344`](https://github.com/krlmlr/duckdb/commit/f4f426344f6659730dc2387ee4873fc507495cb7)
   - run #1: copied [`2619b9f11`](https://github.com/krlmlr/duckdb/commit/2619b9f11205cabe683d12d6930efba0c6ba125d)
   - run #2: copied [`30a0bae44`](https://github.com/krlmlr/duckdb/commit/30a0bae4431691a9b99ea95114195a850d717d73)
+  - run #3: copied [`9f7f11f41`](https://github.com/krlmlr/duckdb/commit/9f7f11f41ee76ca5f57e9e08a343572495a5026b)
 - [#22272](https://github.com/duckdb/duckdb/pull/22272) Move function callbacks/properties into separate structs
   - `-dag`: [`3090216b7`](https://github.com/krlmlr/duckdb/commit/3090216b77c4acf9b0ba21c9ff38d7909f475d9c)
   - run #1: copied [`a82efc296`](https://github.com/krlmlr/duckdb/commit/a82efc296b99976af22c4222469d106661e7f1e1)
   - run #2: copied [`f57a669ef`](https://github.com/krlmlr/duckdb/commit/f57a669efc133d875a36118ca5cae1f48aa54580)
+  - run #3: copied [`6f8e02d89`](https://github.com/krlmlr/duckdb/commit/6f8e02d89f04bc2dc5a0f9e5df975de09835696f)
 - [#22273](https://github.com/duckdb/duckdb/pull/22273) [avro] bump for C++17 and apply patches
   - `-dag`: [`cfe77239f`](https://github.com/krlmlr/duckdb/commit/cfe77239f2dedeb775ea6aeb03cb669e8ed69018)
   - run #1: copied [`c21353e8b`](https://github.com/krlmlr/duckdb/commit/c21353e8b221a411aa2ecf13ef0ff163f8ca893d)
   - run #2: copied [`b2fb5c08f`](https://github.com/krlmlr/duckdb/commit/b2fb5c08f7c7cdad42686759ad5507a9365bed56)
+  - run #3: copied [`1b4a679f8`](https://github.com/krlmlr/duckdb/commit/1b4a679f8254d3bb9f5d9ca30221a450338a08c5)
 - [#22259](https://github.com/duckdb/duckdb/pull/22259) ISSUE-22235: Fix timetz casting offset
   - `-dag`: [`c6f2e9cd2`](https://github.com/krlmlr/duckdb/commit/c6f2e9cd25c729bf3246cb28677e1025ed32cf3f)
   - run #1: copied [`8c7be409e`](https://github.com/krlmlr/duckdb/commit/8c7be409e97357887c39340e7285ebc880622f52)
   - run #2: copied [`1ef2cb61a`](https://github.com/krlmlr/duckdb/commit/1ef2cb61ab50713f5dfac4f3655cd611142cf86f)
+  - run #3: copied [`bc571c974`](https://github.com/krlmlr/duckdb/commit/bc571c974a96c9667514214dac7649b41f420d89)
 - [#22317](https://github.com/duckdb/duckdb/pull/22317) Preserve CREATE INDEX WITH options across checkpoint reload
   - `-dag`: [`b8070da33`](https://github.com/krlmlr/duckdb/commit/b8070da3367032cf177b3f913641ffe184317ecd)
   - run #1: copied [`4a5067d89`](https://github.com/krlmlr/duckdb/commit/4a5067d89a255bd2fc5b3dbf7feaeae530b23064)
   - run #2: copied [`20468a578`](https://github.com/krlmlr/duckdb/commit/20468a5789c0776dba3db4b97a132a77f85701ed)
+  - run #3: copied [`34de67f34`](https://github.com/krlmlr/duckdb/commit/34de67f34eac44b512e4699962f7eb5f810ecca7)
 - [#22183](https://github.com/duckdb/duckdb/pull/22183) Fix copy parquet from table with nullable columns
   - `-dag`: [`b7d3c8c3e`](https://github.com/krlmlr/duckdb/commit/b7d3c8c3e31851ac342d36299e4e3d39d67f3f68)
   - run #1: copied [`90c366c53`](https://github.com/krlmlr/duckdb/commit/90c366c53a9ead28a48ec1c604172a32522ef616)
   - run #2: copied [`4c02f077e`](https://github.com/krlmlr/duckdb/commit/4c02f077e557d5e27df38bb675092f3e48fe4d4b)
+  - run #3: copied [`30ae121e6`](https://github.com/krlmlr/duckdb/commit/30ae121e6cae2e5b2d6ca238cc130fbbe3583ba7)
 - [#22290](https://github.com/duckdb/duckdb/pull/22290) CLI: PostBind hook to determine if _ might be used in query, if not, reclaim memory early
   - `-dag`: [`ecbc2e71e`](https://github.com/krlmlr/duckdb/commit/ecbc2e71ef8f766a45cabd2ff6c81037538f0161)
   - run #1: copied [`bc113b642`](https://github.com/krlmlr/duckdb/commit/bc113b642e09d743233d4b1e677a06e2ab847d5b)
   - run #2: copied [`1e82190bb`](https://github.com/krlmlr/duckdb/commit/1e82190bbb28d053435520d5de9ca2fcf62c993b)
+  - run #3: copied [`e045ed6b9`](https://github.com/krlmlr/duckdb/commit/e045ed6b9f69407432665ec7e489a606ff9dc95b)
 - [#22326](https://github.com/duckdb/duckdb/pull/22326) Add `CLAUDE.md`
   - `-dag`: [`19edabd86`](https://github.com/krlmlr/duckdb/commit/19edabd867dc3cd3ade4d4e784dbd2c6f8ffc467)
   - run #1: copied [`b803a72a6`](https://github.com/krlmlr/duckdb/commit/b803a72a68f6fc564bd8c36fb462e9a612066da2)
   - run #2: copied [`13b05a073`](https://github.com/krlmlr/duckdb/commit/13b05a07360db3503ebbdd8860d934c2051da008)
+  - run #3: copied [`507a4285b`](https://github.com/krlmlr/duckdb/commit/507a4285bcdcf999d3f6afd3ba07f5b250fb405c)
 - [#22322](https://github.com/duckdb/duckdb/pull/22322) Fix some threading issues in `PhysicalCopyToFile`
   - `-dag`: [`ca94a7f14`](https://github.com/krlmlr/duckdb/commit/ca94a7f1423ceb6dc9bc3cc1e93fd3fb86366cd0)
   - run #1: copied [`4228001c0`](https://github.com/krlmlr/duckdb/commit/4228001c0a734f522542db8c4f2e73ca49506c92)
   - run #2: copied [`5386efce8`](https://github.com/krlmlr/duckdb/commit/5386efce8426db6f63d5ade6855c09d51bc866f2)
+  - run #3: copied [`7eb1cc280`](https://github.com/krlmlr/duckdb/commit/7eb1cc280a3f5a2f217fcd7d364a7831be5cd9ca)
 - [#22330](https://github.com/duckdb/duckdb/pull/22330) apply avro patches
   - `-dag`: [`2f8f68752`](https://github.com/krlmlr/duckdb/commit/2f8f6875269d8e747321c967ce3015db9a26cee1)
   - run #1: copied [`45ff6d580`](https://github.com/krlmlr/duckdb/commit/45ff6d58058da98020bd3b6924a7ca41afcce722)
   - run #2: copied [`f515d507d`](https://github.com/krlmlr/duckdb/commit/f515d507dd767b917d91760808529b4866f850b2)
+  - run #3: copied [`3d90ba5e3`](https://github.com/krlmlr/duckdb/commit/3d90ba5e361e83ebe77b46991b03207d883c9122)
 - [#22318](https://github.com/duckdb/duckdb/pull/22318) Remove `BaseScalarFunction`
   - `-dag`: [`2e2e1e864`](https://github.com/krlmlr/duckdb/commit/2e2e1e86465c4ea119589c1934cdaa299b4c0581)
   - run #1: copied [`a86193cd4`](https://github.com/krlmlr/duckdb/commit/a86193cd49355de4c7d0ed2870d1be73e148c98d)
   - run #2: copied [`b00dc4dc6`](https://github.com/krlmlr/duckdb/commit/b00dc4dc66e082012a36239201b353a57187ee19)
+  - run #3: copied [`c951cd278`](https://github.com/krlmlr/duckdb/commit/c951cd278f5aa1d7e8d2c427582495385dddd960)
 - [#22332](https://github.com/duckdb/duckdb/pull/22332) Removed unused scripts
   - `-dag`: [`a41830d75`](https://github.com/krlmlr/duckdb/commit/a41830d7519350c307ac13666d7428273e5ca23b)
   - run #1: copied [`ea6856934`](https://github.com/krlmlr/duckdb/commit/ea685693479f668f82f2e08ceb16f50829673c08)
   - run #2: copied [`f1bed4740`](https://github.com/krlmlr/duckdb/commit/f1bed4740394d39256136ba0c2b2ec33fbc99bef)
+  - run #3: copied [`15f74591c`](https://github.com/krlmlr/duckdb/commit/15f74591ce09b6c6f9377172fe64c1105421e9f6)
 - [#22331](https://github.com/duckdb/duckdb/pull/22331) Improve CLAUDE.md for parser
   - `-dag`: [`96971efb1`](https://github.com/krlmlr/duckdb/commit/96971efb1289c0c53e10540c68943d4efcb6c5d3)
   - run #1: copied [`f91465e92`](https://github.com/krlmlr/duckdb/commit/f91465e929cb6e1156ba4bd6135eb983a262b65e)
   - run #2: copied [`a0a16e384`](https://github.com/krlmlr/duckdb/commit/a0a16e3842b0d24d8242fcc02aa7f1d5dceffe06)
+  - run #3: copied [`5b5813778`](https://github.com/krlmlr/duckdb/commit/5b58137783d89697679b4f4d6d4617c4e20ab49e)
 - [#22329](https://github.com/duckdb/duckdb/pull/22329) Error when CMAKE_CXX_STANDARD is explicit and less than 17
   - `-dag`: [`8533fad21`](https://github.com/krlmlr/duckdb/commit/8533fad218804ce80315f177026518b7da56a8a5)
   - run #1: copied [`dce45fcfb`](https://github.com/krlmlr/duckdb/commit/dce45fcfbf7cbe6cc70c3934caf6620f779533f1)
   - run #2: copied [`e6836c0f8`](https://github.com/krlmlr/duckdb/commit/e6836c0f8c72ea32f629da99bda6e3ba4699b687)
+  - run #3: copied [`f36abde89`](https://github.com/krlmlr/duckdb/commit/f36abde8927f5cfcb4b6102236c4bdc5c57d42e0)
 - [#22337](https://github.com/duckdb/duckdb/pull/22337) Skip sporadically broken test for now
   - `-dag`: [`770dc2c44`](https://github.com/krlmlr/duckdb/commit/770dc2c44f7a416ca391b2bb334dfbe70733e79a)
   - run #1: copied [`05f58e07b`](https://github.com/krlmlr/duckdb/commit/05f58e07b5feba3b306018131a4dab1b34b2db0a)
   - run #2: copied [`aa6e79473`](https://github.com/krlmlr/duckdb/commit/aa6e7947375aab873db307970cf5d59794f4de08)
+  - run #3: copied [`78b9b28b4`](https://github.com/krlmlr/duckdb/commit/78b9b28b4e9f8c4a677baeb3f8c20fce800df154)
 - [#22335](https://github.com/duckdb/duckdb/pull/22335) Add OPTIONS to HTTPUtil and httpfs
   - `-dag`: [`2ab795668`](https://github.com/krlmlr/duckdb/commit/2ab795668ed14828231c8c9902391acca27b299c)
   - run #1: copied [`b1359e19a`](https://github.com/krlmlr/duckdb/commit/b1359e19a71a19a57c90fc64f3f0bb366f72e711)
   - run #2: copied [`343524353`](https://github.com/krlmlr/duckdb/commit/3435243539659fca389b0ab472dceaf8fa934d9f)
+  - run #3: copied [`9cf4008bd`](https://github.com/krlmlr/duckdb/commit/9cf4008bdc6539e4bbdbec85c8a372af03eacebf)
 - [#22338](https://github.com/duckdb/duckdb/pull/22338) Fix add column if not exists for PEG parser
   - `-dag`: [`160401c1e`](https://github.com/krlmlr/duckdb/commit/160401c1e77accb1048d0b9aa04db3400b7b21fd)
   - run #1: copied [`326ca2779`](https://github.com/krlmlr/duckdb/commit/326ca277932996abdfd2927cd5bce2e3b7161247)
   - run #2: copied [`7bdb63fdd`](https://github.com/krlmlr/duckdb/commit/7bdb63fdd78dfd7e1ab11df054d46d081c039b05)
+  - run #3: copied [`f91a1a9df`](https://github.com/krlmlr/duckdb/commit/f91a1a9df742b83c869a1c65e4ae51fecb07dc87)
 - [#22334](https://github.com/duckdb/duckdb/pull/22334) Add `debug_verify_statement` setting which splits off some verification from `PRAGMA enable_verification`
   - `-dag`: [`ee9b9ffa4`](https://github.com/krlmlr/duckdb/commit/ee9b9ffa49841cecfd520c7212b94afc220491a5)
   - run #1: copied [`777814f62`](https://github.com/krlmlr/duckdb/commit/777814f6235df03c21022adf9c96060a2fbdb773)
   - run #2: copied [`d5a48f10d`](https://github.com/krlmlr/duckdb/commit/d5a48f10dabcf0615b4586c9fc408379c14ac764)
+  - run #3: copied [`bcdf11d22`](https://github.com/krlmlr/duckdb/commit/bcdf11d22b46e3fa05e184e3bb03feba8c3f9115)
 - [#22345](https://github.com/duckdb/duckdb/pull/22345) Move stats verification to dedicated `debug_verify_stats` toggle and remove from `query_verification_enabled`
   - `-dag`: [`1f2ca07d1`](https://github.com/krlmlr/duckdb/commit/1f2ca07d171ffaa6fce5da71baec6187dc72c022)
   - run #1: copied [`ff57f286d`](https://github.com/krlmlr/duckdb/commit/ff57f286d2948d4b9ecc1cbc71c048881564c0c0)
   - run #2: copied [`c7bfcf97e`](https://github.com/krlmlr/duckdb/commit/c7bfcf97ec356cb07b8998528f56bca93b982e33)
+  - run #3: copied [`7e2ac6dc8`](https://github.com/krlmlr/duckdb/commit/7e2ac6dc8201df914b7ec0f90a3000c3adb36d67)
 - [#22349](https://github.com/duckdb/duckdb/pull/22349) Move (de)serialization verification to statement verifiers, and remove unnecessary verifiers / verification tests
   - `-dag`: [`fcef56a20`](https://github.com/krlmlr/duckdb/commit/fcef56a203960903ccc7781ee3ec730f2d58c844)
   - run #1: copied [`e329be4ce`](https://github.com/krlmlr/duckdb/commit/e329be4cead7c2542cbaa46cee1b600e31976ca8)
   - run #2: copied [`5ba6005b3`](https://github.com/krlmlr/duckdb/commit/5ba6005b3e5472549cab331f8a96e245056916cd)
+  - run #3: copied [`343987dad`](https://github.com/krlmlr/duckdb/commit/343987dad23fb8d66f65f811c5de759f292cc61d)
 - [#22342](https://github.com/duckdb/duckdb/pull/22342) Introduce `Bound(Scalar/Aggregate/Window)` functions
   - `-dag`: [`cd568fdce`](https://github.com/krlmlr/duckdb/commit/cd568fdce37d073408889e5924c3e3941876e815)
   - run #1: copied [`6f15bacab`](https://github.com/krlmlr/duckdb/commit/6f15bacab06f81511bedaf18ed905ed08dc8475a)
   - run #2: copied [`265cf4d7b`](https://github.com/krlmlr/duckdb/commit/265cf4d7ba816a1c65e35baab7ac4e657e94ef14)
+  - run #3: copied [`1f89e4ad1`](https://github.com/krlmlr/duckdb/commit/1f89e4ad12cd467485ff32e9b9c48501e9a61512)
 - [#22350](https://github.com/duckdb/duckdb/pull/22350) Move `verify_fetch_row`, `verify_external`, `enable_caching_operators` and `disable_optimizer` out of `enable_verification` and into dedicated runs
   - `-dag`: [`dd841ba50`](https://github.com/krlmlr/duckdb/commit/dd841ba50d1d5e5f9d66b761e8584b8637d8f53b)
   - run #1: copied [`c88747792`](https://github.com/krlmlr/duckdb/commit/c88747792e9fc288466dd4bca6d1b4470e2b3df4)
   - run #2: copied [`8928157cf`](https://github.com/krlmlr/duckdb/commit/8928157cfb9a99ac154df04e11d36e262d07e880)
+  - run #3: copied [`bcb249b8f`](https://github.com/krlmlr/duckdb/commit/bcb249b8ffe20831c873bff004edca60ba55d150)
 - [#22294](https://github.com/duckdb/duckdb/pull/22294) Collapse FD-derived GROUP BY groups
   - `-dag`: [`56b047f61`](https://github.com/krlmlr/duckdb/commit/56b047f61228b6b56dd264e3084e6305aec30184)
   - run #1: copied [`6850e8fea`](https://github.com/krlmlr/duckdb/commit/6850e8fea8785deaa7cb31455caee0e74b4b3dac)
   - run #2: copied [`021d87fe2`](https://github.com/krlmlr/duckdb/commit/021d87fe284b982ec5091014135aa32f87b81e8d)
+  - run #3: copied [`737facdfd`](https://github.com/krlmlr/duckdb/commit/737facdfdadbfec4c6e55010a67bd1dc005dd0fe)
 - [#22354](https://github.com/duckdb/duckdb/pull/22354) Move prepared and explain statement verification runs to statement verification, remove old client verify code
   - `-dag`: [`5b1ba4ddc`](https://github.com/krlmlr/duckdb/commit/5b1ba4ddc1664c033ded945f538f5a17651ef5ea)
   - run #1: copied [`39174bd7d`](https://github.com/krlmlr/duckdb/commit/39174bd7d68afd91cc239d9ae36f20adc65cf4e7)
   - run #2: copied [`1288bca68`](https://github.com/krlmlr/duckdb/commit/1288bca684a27a782b548b8dd73effe314b19ea3)
+  - run #3: copied [`af36e97af`](https://github.com/krlmlr/duckdb/commit/af36e97afe46e816a7fa676cf623e3a6c65fb845)
 - [#22356](https://github.com/duckdb/duckdb/pull/22356) Fix three performance-move-const-arg issues on main
   - `-dag`: [`05f27413a`](https://github.com/krlmlr/duckdb/commit/05f27413a1fa50c495d3238065fadf6795c99531)
   - run #1: copied [`e281d3031`](https://github.com/krlmlr/duckdb/commit/e281d30310ae3779f1e420909ce8270884dc0dc7)
   - run #2: copied [`ab5527a7d`](https://github.com/krlmlr/duckdb/commit/ab5527a7de7bb433674e81fecb2f8b08f22491b7)
+  - run #3: copied [`831b3e95a`](https://github.com/krlmlr/duckdb/commit/831b3e95a6641c39381374d03d3e495e2aa23646)
 - [#22357](https://github.com/duckdb/duckdb/pull/22357) fix for uninitialized variable error
   - `-dag`: [`342ad897d`](https://github.com/krlmlr/duckdb/commit/342ad897decdb749e4fddafd22dc5bbf8f0eeefa)
   - run #1: copied [`a4f08c413`](https://github.com/krlmlr/duckdb/commit/a4f08c413423023ba14a48ba43c8fd9aa9eaa569)
   - run #2: copied [`29a4c25fa`](https://github.com/krlmlr/duckdb/commit/29a4c25fa81df418957c34d22fa2fcfaa9f73c54)
+  - run #3: copied [`ed52e8466`](https://github.com/krlmlr/duckdb/commit/ed52e8466b49612551cd3ab4c9c2defa28318112)
 - [#22351](https://github.com/duckdb/duckdb/pull/22351) Protect `(Base)Expression` members
   - `-dag`: [`1a3240902`](https://github.com/krlmlr/duckdb/commit/1a3240902438d44ba923b0a5c18a45165fedf053)
   - run #1: copied [`77321ee80`](https://github.com/krlmlr/duckdb/commit/77321ee807124f478763e5dad42cfa1bd16d4327)
   - run #2: copied [`07877f9b0`](https://github.com/krlmlr/duckdb/commit/07877f9b0935b61ae0a526327c82d99db622e26a)
+  - run #3: copied [`b240873de`](https://github.com/krlmlr/duckdb/commit/b240873defeb3efce52acd76a7bd1518099f8d0f)
 - [#22346](https://github.com/duckdb/duckdb/pull/22346) Flat struct_map list to get the correct size
   - `-dag`: [`943bb7d53`](https://github.com/krlmlr/duckdb/commit/943bb7d53abad8491e10019ea0ed07c6cc806c05)
   - run #1: copied [`d87377aa0`](https://github.com/krlmlr/duckdb/commit/d87377aa058a2fd4c9eca138a87e8e3b7ab12fe2)
   - run #2: copied [`03777f8e0`](https://github.com/krlmlr/duckdb/commit/03777f8e0573e5586d3a504211d3f418e690c66a)
+  - run #3: copied [`438268799`](https://github.com/krlmlr/duckdb/commit/438268799c04542617ae42de117128c7a2dad116)
 - [#22361](https://github.com/duckdb/duckdb/pull/22361) Deprecate `PRAGMA enable_verification` and friends, move `verify_serializer` to separate option and verification run
   - `-dag`: [`ec56d7454`](https://github.com/krlmlr/duckdb/commit/ec56d7454df2e300bf7714de2c46749da35be9be)
   - run #1: copied [`f81f62b59`](https://github.com/krlmlr/duckdb/commit/f81f62b598b53d0b08a29f0c4c3a93071b2f2ec6)
   - run #2: copied [`cb61f9d14`](https://github.com/krlmlr/duckdb/commit/cb61f9d1449e36108c0472d573d6ee7a2b3b206c)
+  - run #3: copied [`9f5bc810b`](https://github.com/krlmlr/duckdb/commit/9f5bc810bc257fb87ba8ad32384ac3a7b25a6a7f)
 - [#22366](https://github.com/duckdb/duckdb/pull/22366) Reject running unittest without run_tests.py in CI workflows
   - `-dag`: [`f35423ef4`](https://github.com/krlmlr/duckdb/commit/f35423ef4dc5b0418daebde61ece0559f45409d7)
   - run #1: copied [`dff3a842a`](https://github.com/krlmlr/duckdb/commit/dff3a842af0cfb0f471444310888b46078444307)
   - run #2: copied [`6aca074bd`](https://github.com/krlmlr/duckdb/commit/6aca074bd2cfe18863264a9a5c77443a7c1c5f3c)
+  - run #3: copied [`67d78265c`](https://github.com/krlmlr/duckdb/commit/67d78265cad5e7b6cccbedc1cb7b0ff0a21f7e59)
 - [#22296](https://github.com/duckdb/duckdb/pull/22296) ISSUE-22267: Fix correlated EXISTS decorrelation with derived table
   - `-dag`: [`cb48a0a9d`](https://github.com/krlmlr/duckdb/commit/cb48a0a9d449a49cde34c25cca78ed859b5ed202)
   - run #1: copied [`746dbcba1`](https://github.com/krlmlr/duckdb/commit/746dbcba1b19c2b5256290c437430fd662ca8a77)
   - run #2: copied [`2f15871a6`](https://github.com/krlmlr/duckdb/commit/2f15871a6c36c5d8919e3d5f80af1a74f2a583d7)
+  - run #3: copied [`895d5f9f2`](https://github.com/krlmlr/duckdb/commit/895d5f9f23edf5ea130db86f986ca4af724a5188)
 - [#22358](https://github.com/duckdb/duckdb/pull/22358) Move `PEGTransformerFactory` into `ParserCache`
   - `-dag`: [`fae04f2c2`](https://github.com/krlmlr/duckdb/commit/fae04f2c2f7a1dcaeede02aa0d2d9469d02a9551)
   - run #1: copied [`ed23244af`](https://github.com/krlmlr/duckdb/commit/ed23244afadf59f1bc32cce6ee91ee623f08db9c)
   - run #2: copied [`c2bad8315`](https://github.com/krlmlr/duckdb/commit/c2bad8315e77e056349af2d8ba48cc3c7702d85f)
+  - run #3: copied [`0d366b30f`](https://github.com/krlmlr/duckdb/commit/0d366b30fd1a54da1bc74fa1eed173058e0c2079)
 - [#22224](https://github.com/duckdb/duckdb/pull/22224) Enable clang for linux-relassert CI jobs
   - `-dag`: [`5900cea98`](https://github.com/krlmlr/duckdb/commit/5900cea987da7d2c70684137199b3af73fe27a83)
   - run #1: copied [`5522675c5`](https://github.com/krlmlr/duckdb/commit/5522675c5b46df3a41fc2fef03dd8c109a066075)
   - run #2: copied [`daed7ad33`](https://github.com/krlmlr/duckdb/commit/daed7ad33e006eb33b84ceb09cf58a74c775db59)
+  - run #3: copied [`ac8eaee3c`](https://github.com/krlmlr/duckdb/commit/ac8eaee3c88e4e4cdbdf2a511bed9270a66a59d0)
 - [#22265](https://github.com/duckdb/duckdb/pull/22265) Replace awscli s3 uploads with rclone
   - `-dag`: [`93d7fa4cc`](https://github.com/krlmlr/duckdb/commit/93d7fa4ccae8895aff24bfc04647b3c6c394c734)
   - run #1: copied [`e3b5be404`](https://github.com/krlmlr/duckdb/commit/e3b5be40460cc7f05f9484b2df998c2b72230a0e)
   - run #2: copied [`d75eb4ed9`](https://github.com/krlmlr/duckdb/commit/d75eb4ed9d0d07266fc53b42430298f849254233)
+  - run #3: copied [`349512e34`](https://github.com/krlmlr/duckdb/commit/349512e343c9a256281f04f46dc41f0d640e385a)
 - [#22336](https://github.com/duckdb/duckdb/pull/22336) `PartitionedExecution` optimizer
   - `-dag`: [`77381fd49`](https://github.com/krlmlr/duckdb/commit/77381fd49f034bd1f6ad15fd88beeb408df78ddf)
   - run #1: copied [`ed04d2dc4`](https://github.com/krlmlr/duckdb/commit/ed04d2dc41289fd9285d6ef49700bffa331dd58f)
   - run #2: copied [`25b6f5d71`](https://github.com/krlmlr/duckdb/commit/25b6f5d71b0d364eea4c203c1fbb0a061d3cc6cc)
+  - run #3: copied [`1c32148d1`](https://github.com/krlmlr/duckdb/commit/1c32148d100565aaecd80d9ec705da5ad0745d31)
 - [#22372](https://github.com/duckdb/duckdb/pull/22372) Add type hints to the grammar
   - `-dag`: [`fca263bdf`](https://github.com/krlmlr/duckdb/commit/fca263bdf19f88de06bdb91a86757697ccf90f93)
   - run #1: copied [`fadde23b0`](https://github.com/krlmlr/duckdb/commit/fadde23b0c2c9e0510119123bfd4f68259bc8a55)
   - run #2: copied [`3bf2f891b`](https://github.com/krlmlr/duckdb/commit/3bf2f891b39ab8f5f188aecb53a0c71d97879e88)
+  - run #3: copied [`59ca2032e`](https://github.com/krlmlr/duckdb/commit/59ca2032e469fca330a8c345b6a4bdc9f8ed9a3f)
 - [#22368](https://github.com/duckdb/duckdb/pull/22368) Fix nightly tests
   - `-dag`: [`d766c8924`](https://github.com/krlmlr/duckdb/commit/d766c8924d67918f612b55bf4579c648dc18e2ff)
   - run #1: copied [`72c537e4f`](https://github.com/krlmlr/duckdb/commit/72c537e4f04972088ead28809546290fba45244f)
   - run #2: copied [`7f7137787`](https://github.com/krlmlr/duckdb/commit/7f7137787a11ffe891826207d3709e046eaea370)
+  - run #3: copied [`86999011f`](https://github.com/krlmlr/duckdb/commit/86999011fe7bb806e5e5045720e5e459c838a994)
 - [#22369](https://github.com/duckdb/duckdb/pull/22369) Use -mcpu=native on aarch64 when compiling with `NATIVE_ARCH=1`
   - `-dag`: [`77eb8f7f6`](https://github.com/krlmlr/duckdb/commit/77eb8f7f6cde804bd541f81222244b04f16d8c45)
   - run #1: copied [`48346a62d`](https://github.com/krlmlr/duckdb/commit/48346a62d8f5c24675b01ae0e7916430b495c6f7)
   - run #2: copied [`a8ca7664d`](https://github.com/krlmlr/duckdb/commit/a8ca7664d582df23e35e92203be724184476be00)
+  - run #3: copied [`1d5430ce7`](https://github.com/krlmlr/duckdb/commit/1d5430ce78d7578feabbbdeb68533909a78a9939)
 - [#22365](https://github.com/duckdb/duckdb/pull/22365) Avoid `DefaultExpression` greedily consuming `NOT NULL` constraint
   - `-dag`: [`0c1c1a005`](https://github.com/krlmlr/duckdb/commit/0c1c1a005c161771da448fd67b8a99a3a6826d8c)
   - run #1: copied [`c6038dce6`](https://github.com/krlmlr/duckdb/commit/c6038dce67848dd719156f8e20ce01bd0adc1380)
   - run #2: copied [`6eac60d5e`](https://github.com/krlmlr/duckdb/commit/6eac60d5ec01cc820d042624bfd4a7b2e7203c1e)
+  - run #3: copied [`22be798b4`](https://github.com/krlmlr/duckdb/commit/22be798b47da4a3b0d25fbf8b8a15c71002ed1f9)
 - [#22374](https://github.com/duckdb/duckdb/pull/22374) Deprecate `KeywordHelper::Write[Optionally]Quoted` - and improve support for `SQLString` and `SQLIdentifier` instead
   - `-dag`: [`a21b69e88`](https://github.com/krlmlr/duckdb/commit/a21b69e8808da3ec54af703854869b12c851dadc)
   - run #1: copied [`38efada7b`](https://github.com/krlmlr/duckdb/commit/38efada7b99ac81c8bf8d8b4d52bb04b2bd702b7)
   - run #2: copied [`32ad7caee`](https://github.com/krlmlr/duckdb/commit/32ad7caee6b251e5cd729dc02a7bd1a9baf88b15)
+  - run #3: copied [`1bc0b8f1d`](https://github.com/krlmlr/duckdb/commit/1bc0b8f1d0247ebda8ff876b81c7dc0b53229fe6)
 - [#9075](https://github.com/duckdb/duckdb/pull/9075) Internal https://redirect.github.com/duckdb/duckdb/pull/9075: TimeZone Offset Parsing
   - `-dag`: [`cc3fa9c66`](https://github.com/krlmlr/duckdb/commit/cc3fa9c66317ae97e75f80ad80f7837a4953a090)
   - run #1: copied [`5e81bacd9`](https://github.com/krlmlr/duckdb/commit/5e81bacd985a56772ef35aeba6610e491305a14d)
   - run #2: copied [`6c052bded`](https://github.com/krlmlr/duckdb/commit/6c052bded6f431903b59fba0b36b8833d57b88e8)
+  - run #3: copied [`73bb61957`](https://github.com/krlmlr/duckdb/commit/73bb6195765bb45a6bf2e4d3a849ec28be66d737)
 - [#22371](https://github.com/duckdb/duckdb/pull/22371) Use Clang++ and clangd version 20 in CI
   - `-dag`: [`71b0e9450`](https://github.com/krlmlr/duckdb/commit/71b0e94500693837acdf002677bad3b640f54bea)
   - run #1: copied [`f517acb30`](https://github.com/krlmlr/duckdb/commit/f517acb30733c6807c83a89d7c5abbb9e96691c8)
   - run #2: copied [`4cc9db1eb`](https://github.com/krlmlr/duckdb/commit/4cc9db1ebe5c0405861bb0ee21614465759d52e5)
+  - run #3: copied [`c860bb2dd`](https://github.com/krlmlr/duckdb/commit/c860bb2dd7d6b9832531f443054c2f2a541af3e5)
 - [#22385](https://github.com/duckdb/duckdb/pull/22385) Limit choco output, and show rclone command
   - `-dag`: [`81e892679`](https://github.com/krlmlr/duckdb/commit/81e8926791a77b4b82eac4a1dc02c6b113df7521)
   - run #1: copied [`968347d17`](https://github.com/krlmlr/duckdb/commit/968347d173ff06a56edb030254f78a16fcef450c)
   - run #2: copied [`f7dbfccb0`](https://github.com/krlmlr/duckdb/commit/f7dbfccb010cf4ae1dfac4b33baece3f0353a844)
+  - run #3: copied [`05c7ab7e9`](https://github.com/krlmlr/duckdb/commit/05c7ab7e96a9ebed1273c5c7207ca25cfd9aa66c)
 - [#22370](https://github.com/duckdb/duckdb/pull/22370) `GROUPING()`/`GROUPING_ID()` with no args uses all `GROUP BY` columns by default
   - `-dag`: [`6725b92c0`](https://github.com/krlmlr/duckdb/commit/6725b92c0ca784d4f3dfdfd9292afaa4656b7781)
   - run #1: copied [`a6ff6fa9a`](https://github.com/krlmlr/duckdb/commit/a6ff6fa9ad5ad444fbe864e1f79095a23c922c08)
   - run #2: copied [`fadcacd3b`](https://github.com/krlmlr/duckdb/commit/fadcacd3b44ee91a1cc6fa1d2f6fbb8cd1db115c)
+  - run #3: copied [`0229eb150`](https://github.com/krlmlr/duckdb/commit/0229eb1507e6a4af91a5486ee3f44dce0c819f3b)
 - [#22383](https://github.com/duckdb/duckdb/pull/22383) Trust parquet stats for fixed-width missing exactness flag files
   - `-dag`: [`f7e72ff26`](https://github.com/krlmlr/duckdb/commit/f7e72ff267b3b5e75ba419c965f796c78b0d8fd5)
   - run #1: copied [`c8d1c3aeb`](https://github.com/krlmlr/duckdb/commit/c8d1c3aeb4ce5e6781f96e89f36f069a89a42d9f)
   - run #2: copied [`1692b4ef5`](https://github.com/krlmlr/duckdb/commit/1692b4ef5f8006c7fcf34852c5a5bd47d7a66101)
+  - run #3: copied [`fae8baa16`](https://github.com/krlmlr/duckdb/commit/fae8baa16bdbdceae7a92e8562e0063e74c29302)
 - [#22352](https://github.com/duckdb/duckdb/pull/22352) Handle blocks with no rows correctly. Fixes https://redirect.github.com/duckdb/duckdb/pull/22352
   - `-dag`: [`6eb22734f`](https://github.com/krlmlr/duckdb/commit/6eb22734f0b1424001e26d8d361653174f1fe088)
   - run #1: copied [`52bfb902f`](https://github.com/krlmlr/duckdb/commit/52bfb902fdb2be00ef16340fd2d0e925ee112b4f)
   - run #2: copied [`e1c028b2c`](https://github.com/krlmlr/duckdb/commit/e1c028b2cf7d5aca98ca8e897de514e7c74ee264)
+  - run #3: copied [`4adf1980f`](https://github.com/krlmlr/duckdb/commit/4adf1980f0ea0eb0abf74e8bd76ac570e3f8c819)
 - [#22377](https://github.com/duckdb/duckdb/pull/22377) Make `Vector` sizes mandatory, and add verification pass to `DataChunk::Verify` that verifies all children have the same size as the DataChunk
   - `-dag`: [`fcc542f2b`](https://github.com/krlmlr/duckdb/commit/fcc542f2b6321ecf9c55ef8640d7132876f4e934)
   - run #1: copied [`98a540541`](https://github.com/krlmlr/duckdb/commit/98a540541a34c60f8788a6895cb38f21eae95c09)
   - run #2: copied [`d780a3658`](https://github.com/krlmlr/duckdb/commit/d780a3658e0da0a8b9940b72a1403be8305efabe)
+  - run #3: copied [`b86a80a3b`](https://github.com/krlmlr/duckdb/commit/b86a80a3bd773ecec3ee5c65c795939f4b5aea74)
 - [#22281](https://github.com/duckdb/duckdb/pull/22281) Fix duckdb_param_type returning INVALID for nested casts
   - `-dag`: [`e9d02e717`](https://github.com/krlmlr/duckdb/commit/e9d02e7170d2574154be369227791eb722a0444d)
   - run #1: copied [`596811d3f`](https://github.com/krlmlr/duckdb/commit/596811d3f162fca107fe0578617f19976c8d6d68)
   - run #2: copied [`3432c7fec`](https://github.com/krlmlr/duckdb/commit/3432c7fecfb4edc268b3baf9cdd8465559028e59)
+  - run #3: copied [`f41e4b247`](https://github.com/krlmlr/duckdb/commit/f41e4b24776a5d5b7f4e52d34ba2b8716248f298)
 - [#22388](https://github.com/duckdb/duckdb/pull/22388) Fix hidden merge conflict
   - `-dag`: [`a95457bc7`](https://github.com/krlmlr/duckdb/commit/a95457bc71303846d840171bc8d2b565b26695b3)
   - run #1: copied [`68ea8ca09`](https://github.com/krlmlr/duckdb/commit/68ea8ca09331abcb0bf7bde5183b8f9007f01cce)
   - run #2: copied [`7062790cc`](https://github.com/krlmlr/duckdb/commit/7062790cc9ffa169c777a2eb5be079c5e76396c4)
+  - run #3: copied [`f72742333`](https://github.com/krlmlr/duckdb/commit/f7274233368470e7d3dcf96aea4d868ae92cb4c5)
 - [#22348](https://github.com/duckdb/duckdb/pull/22348) Add bounds checks for ALPRD scan sizes before memcpy
   - `-dag`: [`f3ef50d7d`](https://github.com/krlmlr/duckdb/commit/f3ef50d7d160e679892b0a512a9050d5a32691a9)
   - run #1: copied [`6521cdf51`](https://github.com/krlmlr/duckdb/commit/6521cdf5113c7db9b38cf364e3f244f4f846ec2c)
   - run #2: copied [`8827381f2`](https://github.com/krlmlr/duckdb/commit/8827381f2ac8031909544628b7f5d712b356402b)
+  - run #3: copied [`88cf99ae4`](https://github.com/krlmlr/duckdb/commit/88cf99ae48b3f41dd4636e0e5be9be61bc1e9665)
 - [#22387](https://github.com/duckdb/duckdb/pull/22387) bump azure extension to be c++17 compatible
   - `-dag`: [`0d1800ac1`](https://github.com/krlmlr/duckdb/commit/0d1800ac18c52b8c71c5826379dd214cefe51688)
   - run #1: copied [`5c572cc2a`](https://github.com/krlmlr/duckdb/commit/5c572cc2a812edce1a2bf6a0b87ffe8c0b9d9cf4)
   - run #2: copied [`ee9ae0b0b`](https://github.com/krlmlr/duckdb/commit/ee9ae0b0b65e6b89e12f630a253c7fb49c1ef162)
+  - run #3: copied [`273dd7e93`](https://github.com/krlmlr/duckdb/commit/273dd7e939dab0055dd3394f736b42be64ff8614)
 - [#22390](https://github.com/duckdb/duckdb/pull/22390) Switch to using `std::optional`
   - `-dag`: [`eff522eb0`](https://github.com/krlmlr/duckdb/commit/eff522eb064b66862dcc00f5acb11e5afeacd04f)
   - run #1: copied [`d73e2ec8f`](https://github.com/krlmlr/duckdb/commit/d73e2ec8fcbae7de626e8c891441984ee3567f44)
   - run #2: copied [`b7186365f`](https://github.com/krlmlr/duckdb/commit/b7186365f927428a2b239a7a5844da58627f7344)
+  - run #3: copied [`710a5639d`](https://github.com/krlmlr/duckdb/commit/710a5639d82f3e148bd458a39924338f516a7037)
 - [#22389](https://github.com/duckdb/duckdb/pull/22389) Parquet statistics support UUID, BOOLEAN
   - `-dag`: [`e8fc68eab`](https://github.com/krlmlr/duckdb/commit/e8fc68eabe136090399f4f75306bc7ba1dab43ff)
   - run #1: copied [`1dd7015db`](https://github.com/krlmlr/duckdb/commit/1dd7015db5e738f62182c6c05827fd09c913d55a)
   - run #2: copied [`8b65bf540`](https://github.com/krlmlr/duckdb/commit/8b65bf54046966f27357425b587768a561f741a9)
+  - run #3: copied [`69cf29564`](https://github.com/krlmlr/duckdb/commit/69cf29564c7a131c485e17d925f648569e2682dd)
 - [#22391](https://github.com/duckdb/duckdb/pull/22391) Fix vector size issue in extensions 
   - `-dag`: [`f784b60cc`](https://github.com/krlmlr/duckdb/commit/f784b60cc256d93bf55e722b5a9a778614dd2772)
   - run #1: copied [`6218f16c4`](https://github.com/krlmlr/duckdb/commit/6218f16c4d019b8dec90cec51a8e962b7cf0e89d)
   - run #2: copied [`bcf004212`](https://github.com/krlmlr/duckdb/commit/bcf004212f095e1ce34f4a20ce1649318c326930)
+  - run #3: copied [`8e177bf27`](https://github.com/krlmlr/duckdb/commit/8e177bf27cb171245418904c77688e111f17f11d)
 - [#22393](https://github.com/duckdb/duckdb/pull/22393) Fix validity map bisect underflow
   - `-dag`: [`93c94183d`](https://github.com/krlmlr/duckdb/commit/93c94183d3eba5d11dadbeee4fcba6d554f86991)
   - run #1: copied [`1c7775ea1`](https://github.com/krlmlr/duckdb/commit/1c7775ea1e1d002eebb1a9df75177ba30ab560e8)
   - run #2: copied [`62f66e4ac`](https://github.com/krlmlr/duckdb/commit/62f66e4ac1194d98b060ec0971bd2d5d6ee7e3aa)
+  - run #3: copied [`f87b02fa6`](https://github.com/krlmlr/duckdb/commit/f87b02fa659ba29bc0f5d1963bbd07cad60812c9)
 - [#22397](https://github.com/duckdb/duckdb/pull/22397) Add variadic executor that replaces senary / septenary executors and is used internally in the ternary executor
   - `-dag`: [`005ca100c`](https://github.com/krlmlr/duckdb/commit/005ca100c5ae35061fb8999c5d6ae1df35b9f014)
   - run #1: copied [`7a5de0c5c`](https://github.com/krlmlr/duckdb/commit/7a5de0c5caf0451b8972af93764fcd5719987d28)
   - run #2: copied [`846468d06`](https://github.com/krlmlr/duckdb/commit/846468d06fc5d586078b9ab7dbff0a160efc2997)
+  - run #3: copied [`d5074b398`](https://github.com/krlmlr/duckdb/commit/d5074b39822666e725c442c0310283c54b5a828c)
 - [#22396](https://github.com/duckdb/duckdb/pull/22396) Do not perform more operations than copying for r2 buckets
   - `-dag`: [`ff2967d5d`](https://github.com/krlmlr/duckdb/commit/ff2967d5d8c612b70f4aa6753cff66109d876187)
   - run #1: copied [`0b94071e2`](https://github.com/krlmlr/duckdb/commit/0b94071e24892950a730f9dccb4b5701b09d4a58)
   - run #2: copied [`5b4114cff`](https://github.com/krlmlr/duckdb/commit/5b4114cff0eaa6d61a99589ec460692f8f5ce171)
+  - run #3: copied [`90cc4beab`](https://github.com/krlmlr/duckdb/commit/90cc4beab91a9ec5441b87e4ff106907bbb92d06)
 - [#22340](https://github.com/duckdb/duckdb/pull/22340) Add small-build-side dictionary emission for hash joins
   - `-dag`: [`41c19d9ec`](https://github.com/krlmlr/duckdb/commit/41c19d9ec294f2a85feb455f7a4703e50213bbbf)
   - run #1: copied [`de6d89653`](https://github.com/krlmlr/duckdb/commit/de6d89653770f3008928867fc1f24afd446d3f0f)
   - run #2: copied [`90f751278`](https://github.com/krlmlr/duckdb/commit/90f751278e1827273e4227b76c0fa4a418fbe655)
+  - run #3: copied [`7406098ec`](https://github.com/krlmlr/duckdb/commit/7406098ec2fc22e0b1efc9affb9b4b15a1e4f502)
 - [#22401](https://github.com/duckdb/duckdb/pull/22401) Add note in `CLAUDE.md` to not use `const_cast`
   - `-dag`: [`22fa39f03`](https://github.com/krlmlr/duckdb/commit/22fa39f036ced9517e4ffd4cdf73ba4037c4eeaa)
   - run #1: copied [`2f4389fc7`](https://github.com/krlmlr/duckdb/commit/2f4389fc7e9202a3c63220c9a3b342733b9fd66d)
   - run #2: copied [`3644ae8e9`](https://github.com/krlmlr/duckdb/commit/3644ae8e9220de5c2178386aad552201aaf2facc)
+  - run #3: copied [`7e79c2997`](https://github.com/krlmlr/duckdb/commit/7e79c2997334fd030a5994685af8a1d0e35dc0ff)
 - [#22400](https://github.com/duckdb/duckdb/pull/22400) Executors: replace `ExecuteWithNulls` with returning an `optional<X>`
   - `-dag`: [`35325edb1`](https://github.com/krlmlr/duckdb/commit/35325edb1e94d9119c7510770696f6b7aa0219cb)
   - run #1: copied [`9dc68caa4`](https://github.com/krlmlr/duckdb/commit/9dc68caa4b8b4daa8dc1a013796727d23c8fa4d0)
   - run #2: copied [`69076360c`](https://github.com/krlmlr/duckdb/commit/69076360c06020e5e065406ef98c2c27ab7ad131)
+  - run #3: copied [`cf5d95e4d`](https://github.com/krlmlr/duckdb/commit/cf5d95e4df7f810c4312aec73c73581c1947ab5a)
 - [#22404](https://github.com/duckdb/duckdb/pull/22404) Make `FileBuffer` internals private, and make an explicit distinction between `GetData` and `GetDataMutable`
   - `-dag`: [`c0724c9dd`](https://github.com/krlmlr/duckdb/commit/c0724c9dd7182b71d1542a4fcad1d98f312c7b9f)
   - run #1: copied [`2db9f7613`](https://github.com/krlmlr/duckdb/commit/2db9f761320c6d1de1abf915cc54fc18ead14f6d)
   - run #2: copied [`0b031750b`](https://github.com/krlmlr/duckdb/commit/0b031750b9cf450423b1c218228cabfd959a834c)
+  - run #3: copied [`90eb83379`](https://github.com/krlmlr/duckdb/commit/90eb83379ca0f72b8f453c2dc2369f80b0dd1d6d)
 - [#22407](https://github.com/duckdb/duckdb/pull/22407) VectorBuffer::SetVectorSize - Set vector size of children for structs / arrays
   - `-dag`: [`39582f5cc`](https://github.com/krlmlr/duckdb/commit/39582f5cc23be8e26c0a29e8d0f59bf13239d473)
   - run #1: copied [`bff1f06e6`](https://github.com/krlmlr/duckdb/commit/bff1f06e68fc704f0d5fc5aea6e63d9794bb6c6d)
   - run #2: copied [`f6b0bb1d6`](https://github.com/krlmlr/duckdb/commit/f6b0bb1d6aacf928830b9571cbd307b276e8f358)
+  - run #3: copied [`5c9006529`](https://github.com/krlmlr/duckdb/commit/5c900652981cb86047e1b6a752c6cb5907d78d2a)
 - [#22384](https://github.com/duckdb/duckdb/pull/22384) Add `ArgProperties` for stats forward-bounds
   - `-dag`: [`8149eb8ff`](https://github.com/krlmlr/duckdb/commit/8149eb8ffebd017bdba535cfdf51aebc91cb5696)
   - run #1: copied [`e676bba06`](https://github.com/krlmlr/duckdb/commit/e676bba065e59089ed426ccc3ea94c8ed4ddea4b)
   - run #2: copied [`aa3f7f385`](https://github.com/krlmlr/duckdb/commit/aa3f7f38579abc7ffc73fa424ac50a3a8eecfdbe)
+  - run #3: copied [`f5ceab904`](https://github.com/krlmlr/duckdb/commit/f5ceab90486de71e5e79f2ed310abc450764b1c3)
 - [#22284](https://github.com/duckdb/duckdb/pull/22284) Optimize regexp_replace for anchored capture-then-truncate patterns
   - `-dag`: [`e6bcaafb0`](https://github.com/krlmlr/duckdb/commit/e6bcaafb0ce2764a5974dd4775e854ea1f196a1f)
   - run #1: copied [`073a4a15c`](https://github.com/krlmlr/duckdb/commit/073a4a15ca918fa8651bec0725b6de957198ff54)
   - run #2: copied [`87890d896`](https://github.com/krlmlr/duckdb/commit/87890d8967ad80c855938ffd598e5a26cbbeddb1)
+  - run #3: copied [`5fb0be648`](https://github.com/krlmlr/duckdb/commit/5fb0be64845add7a7c99c18fff9f15f4047be208)
 - [#21807](https://github.com/duckdb/duckdb/pull/21807) Add `TableFunctionParallelism` enum and `parallelize_sequential_sources` setting
   - `-dag`: [`ec23ec886`](https://github.com/krlmlr/duckdb/commit/ec23ec886136b5679f90b572cffbb121114b9d4d)
   - run #1: copied [`25c02675f`](https://github.com/krlmlr/duckdb/commit/25c02675f594bdab71112801b3ec45532d767c5d)
   - run #2: copied [`484369e0d`](https://github.com/krlmlr/duckdb/commit/484369e0d9e095451977caac305341ba498d4554)
+  - run #3: copied [`81e02b5de`](https://github.com/krlmlr/duckdb/commit/81e02b5dea4d85a6b9b58121d2bf4f4ff3f62012)
 - [#22416](https://github.com/duckdb/duckdb/pull/22416) Fix tidy error performance-move-const-arg
   - `-dag`: [`9e84bd2b3`](https://github.com/krlmlr/duckdb/commit/9e84bd2b30f8ff566caafa1f041ef0f3a5cee84e)
   - run #1: copied [`5428e5601`](https://github.com/krlmlr/duckdb/commit/5428e5601f7f3a479aac13770a3ade9b5c302803)
   - run #2: copied [`124a7ed2c`](https://github.com/krlmlr/duckdb/commit/124a7ed2cf745be1e98945dc7690fe96919aea9f)
+  - run #3: copied [`09dcd1d53`](https://github.com/krlmlr/duckdb/commit/09dcd1d53282dc25e5dae7a0c2dd69edd2a313cc)
 - [#22417](https://github.com/duckdb/duckdb/pull/22417) Add support for `Vector::Values<VectorStructType<...>>` allowing iteration over structs with a fixed (known) schema
   - `-dag`: [`e2e672d15`](https://github.com/krlmlr/duckdb/commit/e2e672d15444bddb34acc3efbb27c3d682a6911f)
   - run #1: copied [`a3d3fe9c6`](https://github.com/krlmlr/duckdb/commit/a3d3fe9c6b17a62360f2a20ec128489761c4f61b)
   - run #2: copied [`5cf115d54`](https://github.com/krlmlr/duckdb/commit/5cf115d549d188acb3c9304e494d189fb9c4c35e)
+  - run #3: copied [`9cb9a9bd4`](https://github.com/krlmlr/duckdb/commit/9cb9a9bd4675e028f9a1929f288f7c7a1c12ea43)
 - [#22424](https://github.com/duckdb/duckdb/pull/22424) Ignore queue branch for push and merge tidy check jobs
   - `-dag`: [`b34a7464e`](https://github.com/krlmlr/duckdb/commit/b34a7464eed69a414814c36dc06300e49abe68df)
   - run #1: copied [`bb26e6891`](https://github.com/krlmlr/duckdb/commit/bb26e68915f3819977e2e563339a98224fa5591d)
   - run #2: copied [`64d57ef59`](https://github.com/krlmlr/duckdb/commit/64d57ef597b16305261ed91f59bfce1b400de645)
+  - run #3: copied [`61faafc02`](https://github.com/krlmlr/duckdb/commit/61faafc024a121e8535b7765a553295eb199acf1)
 - [#22422](https://github.com/duckdb/duckdb/pull/22422) Add support for Vector::Values<VectorListType<...>> allowing iteration over lists with a fixed (known) schema
   - `-dag`: [`c1b1defbe`](https://github.com/krlmlr/duckdb/commit/c1b1defbeb1f1ceebb1b8ef814d3634dfbb72763)
   - run #1: copied [`cbf1135e1`](https://github.com/krlmlr/duckdb/commit/cbf1135e18d3f8c9c0bbd70c81968ff5094bd480)
   - run #2: copied [`d4f901188`](https://github.com/krlmlr/duckdb/commit/d4f901188bb65a36318a3d978890820bc4d4f25d)
+  - run #3: copied [`bd5901261`](https://github.com/krlmlr/duckdb/commit/bd5901261d9ff50b3a361f38d732fd76bbc01f22)
 - [#22419](https://github.com/duckdb/duckdb/pull/22419) Fix typo in env var for linux-relassert CI job
   - `-dag`: [`aa04afa8e`](https://github.com/krlmlr/duckdb/commit/aa04afa8e3e54198478714180ea2f4ec88edee53)
   - run #1: copied [`2cc2dd451`](https://github.com/krlmlr/duckdb/commit/2cc2dd451b96e52db1b691d257b1baa89f4a9eac)
   - run #2: copied [`fc2f87f78`](https://github.com/krlmlr/duckdb/commit/fc2f87f78ea205a364b6b484e5a8afc15b188421)
+  - run #3: copied [`82d4cd5f4`](https://github.com/krlmlr/duckdb/commit/82d4cd5f49fa58b9da9cc9cb7597854abfe6bc34)
 - [#22421](https://github.com/duckdb/duckdb/pull/22421) Allow TypeName keywords to be used properly
   - `-dag`: [`75446ecdd`](https://github.com/krlmlr/duckdb/commit/75446ecdd4f4fc8f80432e3e1168c9d0e9d50dfa)
   - run #1: copied [`304d01971`](https://github.com/krlmlr/duckdb/commit/304d01971c3a14c2a2f2ade0f84390a9ff4074d7)
   - run #2: copied [`28dbef495`](https://github.com/krlmlr/duckdb/commit/28dbef495f27384ef9e8032ceec7151c7bc44c59)
+  - run #3: copied [`de8c5f148`](https://github.com/krlmlr/duckdb/commit/de8c5f148d2ce57a9f57d1669040576b9248001e)
 - [#22440](https://github.com/duckdb/duckdb/pull/22440) Use FlatVector Writer in geometry conversion functions
   - `-dag`: [`6a6b58a53`](https://github.com/krlmlr/duckdb/commit/6a6b58a532a8d497df24e98c35527f980a36d54d)
   - run #1: copied [`6ee46cfcd`](https://github.com/krlmlr/duckdb/commit/6ee46cfcd7c3ddbdb63454348d709731faa8cb51)
   - run #2: copied [`eac99a207`](https://github.com/krlmlr/duckdb/commit/eac99a2073e698a00b5435477d5d78fa7235a9b5)
+  - run #3: copied [`c9c496eb7`](https://github.com/krlmlr/duckdb/commit/c9c496eb78ab4d27abc08943fd6654e37c0a31fb)
 - [#22443](https://github.com/duckdb/duckdb/pull/22443) Add support for writing struct types using `FlatVector::Writer<VectorStructType<...>>` and use it in the geometry methods
   - `-dag`: [`1ccf68c05`](https://github.com/krlmlr/duckdb/commit/1ccf68c057783d8c8d7e65dab621d6b7efed8cc2)
   - run #1: copied [`fbf431888`](https://github.com/krlmlr/duckdb/commit/fbf431888bc86c4c3d5d9e1cb1119783f726bac1)
   - run #2: copied [`3af3248e2`](https://github.com/krlmlr/duckdb/commit/3af3248e2ade0b4b04e6ada878a3e70fb8f6e728)
+  - run #3: copied [`916426fe2`](https://github.com/krlmlr/duckdb/commit/916426fe2258e57f4af885936e741041630228ba)
 - [#22446](https://github.com/duckdb/duckdb/pull/22446) Add support for writing list types using `FlatVector::Writer<VectorListType<...>>` and use it in the geometry methods
   - `-dag`: [`ef8bdc018`](https://github.com/krlmlr/duckdb/commit/ef8bdc018b6b9c425b5ded62cd7d326aa41edd35)
   - run #1: copied [`a934051f2`](https://github.com/krlmlr/duckdb/commit/a934051f24950369aa35f9c619823c433bc5480b)
   - run #2: copied [`df36571ea`](https://github.com/krlmlr/duckdb/commit/df36571ea0d0174219a0fc9d197d68e22ba2da53)
+  - run #3: copied [`b9345cf87`](https://github.com/krlmlr/duckdb/commit/b9345cf87cf0d6853340504519b4a803b5744e23)
 - [#9027](https://github.com/duckdb/duckdb/pull/9027) Internal https://redirect.github.com/duckdb/duckdb/pull/9027: ICU 78.3 Update
   - `-dag`: [`57389b66f`](https://github.com/krlmlr/duckdb/commit/57389b66f2bb4e642b573a8dc60a425e9101c608)
   - run #1: copied [`97c2bc900`](https://github.com/krlmlr/duckdb/commit/97c2bc9006a82509a25ea8eef57b554e28ccef3f)
   - run #2: copied [`daa0ad252`](https://github.com/krlmlr/duckdb/commit/daa0ad252c04994370f51d00b3c47bc0dc5567be)
+  - run #3: copied [`8b1521d0c`](https://github.com/krlmlr/duckdb/commit/8b1521d0c9d58c06a620102ea1ac5d73084ce292)
 - [#8974](https://github.com/duckdb/duckdb/pull/8974) Internal https://redirect.github.com/duckdb/duckdb/pull/8974: Nanosecond Timestamp TimeZone
   - `-dag`: [`93c985f03`](https://github.com/krlmlr/duckdb/commit/93c985f03f86bc025ebab2b65498669512f0fb3c)
   - run #1: copied [`6ac6ff3ad`](https://github.com/krlmlr/duckdb/commit/6ac6ff3ad0b7c1de832f2c8d808ec95b440634eb)
   - run #2: copied [`028008a5f`](https://github.com/krlmlr/duckdb/commit/028008a5f08ef72af941ccf85f38771d87b51417)
+  - run #3: copied [`116f86d1e`](https://github.com/krlmlr/duckdb/commit/116f86d1ef5cf74bc8111c5d7451a4ba2574e00a)
 - [#8947](https://github.com/duckdb/duckdb/pull/8947) Internal https://redirect.github.com/duckdb/duckdb/pull/8947: Builtin Window Batching
   - `-dag`: [`a2dbe2966`](https://github.com/krlmlr/duckdb/commit/a2dbe2966822e20c6a7cdf8051a1db923cd2e70c)
   - run #1: copied [`4f2ec116b`](https://github.com/krlmlr/duckdb/commit/4f2ec116b0966f23b65c84bfb6e305c019f2f269)
   - run #2: copied [`3670aaf1a`](https://github.com/krlmlr/duckdb/commit/3670aaf1ad7fe84e36f2c236eaa0a5af4d52c642)
+  - run #3: copied [`40dae01b0`](https://github.com/krlmlr/duckdb/commit/40dae01b062902d47b609bdf65bb3dc7cc528a30)
 - [#22441](https://github.com/duckdb/duckdb/pull/22441) Disallow negate operator for unsigned input
   - `-dag`: [`389e6208d`](https://github.com/krlmlr/duckdb/commit/389e6208d884e1c960704efa96921d8bcb48bcc4)
   - run #1: copied [`4d46c0503`](https://github.com/krlmlr/duckdb/commit/4d46c0503ac6468e60e8855c106e4d6ffd8d6321)
   - run #2: copied [`adfcacc14`](https://github.com/krlmlr/duckdb/commit/adfcacc1452b6a06ac3482ff2599fb38d67ec083)
+  - run #3: copied [`c79fcb207`](https://github.com/krlmlr/duckdb/commit/c79fcb20777ad936bb860ac42532bc700d002584)
 - [#22451](https://github.com/duckdb/duckdb/pull/22451) Make vector verification use the vector's size instead of pushing in the size, and fix various vector size issues 
   - `-dag`: [`a07829634`](https://github.com/krlmlr/duckdb/commit/a078296345d44b2453ab19073afa6668cef3c313)
   - run #1: copied [`a48b447c5`](https://github.com/krlmlr/duckdb/commit/a48b447c56a9bd69bbc35292e6fa6d871b6c2414)
   - run #2: copied [`33a501fda`](https://github.com/krlmlr/duckdb/commit/33a501fda8e85564edb4e5e2ac58a3145ebab05c)
+  - run #3: copied [`10a1a7c0a`](https://github.com/krlmlr/duckdb/commit/10a1a7c0adb15338d41aa824dcd4993b49b13d75)
 - [#22423](https://github.com/duckdb/duckdb/pull/22423) Improved `FILE_SIZE_BYTES` / `ROW_GROUPS_PER_FILE`
   - `-dag`: [`1444d3410`](https://github.com/krlmlr/duckdb/commit/1444d341018423ff35604bd329da8c0d5f3450d9)
   - run #1: copied [`8072d570d`](https://github.com/krlmlr/duckdb/commit/8072d570d119eb86e3ead15432765796578e7da0)
   - run #2: copied [`ee533b0ad`](https://github.com/krlmlr/duckdb/commit/ee533b0ad8478c16ee9fc6635dcbde8a1d8d9f5d)
+  - run #3: copied [`09e8d6680`](https://github.com/krlmlr/duckdb/commit/09e8d66801af76eb1b07f696420627cc60179903)
 - [#22263](https://github.com/duckdb/duckdb/pull/22263) Make multi-file scan's filter pushdown skip files instead of opening them
   - `-dag`: [`5db10c085`](https://github.com/krlmlr/duckdb/commit/5db10c085282f812340395c01c884a1abdeb3c10)
   - run #1: copied [`425452582`](https://github.com/krlmlr/duckdb/commit/425452582605f9856ff625b37dd5007eca5e8a28)
   - run #2: copied [`9fd9a9b69`](https://github.com/krlmlr/duckdb/commit/9fd9a9b69cc468a20e016efb71ba4684deba111c)
+  - run #3: copied [`f004348e3`](https://github.com/krlmlr/duckdb/commit/f004348e35f083e4e203fff454cf31c86653b407)
 - [#22453](https://github.com/duckdb/duckdb/pull/22453) Add support for writing dynamic lists using both `FlatVector::Writer<VectorListType<...>>` and `FlatVector::Writer<list_entry_t>`
   - `-dag`: [`24627c003`](https://github.com/krlmlr/duckdb/commit/24627c0030f8aa081c4dcdfc6c4f0a64e6fa27e7)
   - run #1: copied [`990b8021d`](https://github.com/krlmlr/duckdb/commit/990b8021d9a001de94fd4eaf73ae655f6c363e7e)
   - run #2: copied [`319f3cae0`](https://github.com/krlmlr/duckdb/commit/319f3cae0f544156d78032debefd5014b83f0aa2)
+  - run #3: copied [`8370442c6`](https://github.com/krlmlr/duckdb/commit/8370442c624dcd8b85b2e7ad4ed5a10553957ceb)
 - [#22428](https://github.com/duckdb/duckdb/pull/22428) Split `(Bound)Function` inheritance and introduce `Function(Signature/Parameter)`
   - `-dag`: [`4dc9a846d`](https://github.com/krlmlr/duckdb/commit/4dc9a846d4ce519112802cb88d3910803dedbe96)
   - run #1: copied [`6f34553b4`](https://github.com/krlmlr/duckdb/commit/6f34553b49dccfc0b7a1aad3922f9417e02b30ed)
   - run #2: copied [`656fd81a1`](https://github.com/krlmlr/duckdb/commit/656fd81a1c7fec67990ecdd04701c3558d3e88b4)
+  - run #3: copied [`1e8ae3262`](https://github.com/krlmlr/duckdb/commit/1e8ae3262766847488a877161b4825e5e9771882)
 - [#22426](https://github.com/duckdb/duckdb/pull/22426)  Fix for slice-derived caching
   - `-dag`: [`85fbe9b28`](https://github.com/krlmlr/duckdb/commit/85fbe9b2857407490a078d6915707a2a52b1b10d)
   - run #1: copied [`867961328`](https://github.com/krlmlr/duckdb/commit/8679613285c566f36b59bc1cd0b546cd8552eaca)
   - run #2: copied [`2987dbd94`](https://github.com/krlmlr/duckdb/commit/2987dbd949d0e007e2ee80b830b8602b70092a71)
+  - run #3: copied [`4430ee6c8`](https://github.com/krlmlr/duckdb/commit/4430ee6c83513efdbf50e197d69463e8cfb8ab29)
 - [#22266](https://github.com/duckdb/duckdb/pull/22266) [MultiFileReader][Parquet] Support pushdown of `struct_extract` expression to the scan
   - `-dag`: [`4e9711705`](https://github.com/krlmlr/duckdb/commit/4e97117054c711645e873b1d8520f17da2e3ebce)
   - run #1: copied [`9c8e53d10`](https://github.com/krlmlr/duckdb/commit/9c8e53d10b02e500781d2ca6ab84368a20c84939)
   - run #2: copied [`bd29c8e8b`](https://github.com/krlmlr/duckdb/commit/bd29c8e8bdc194cd42a3150982ce6dfc8d80449a)
+  - run #3: copied [`5eedcbfdc`](https://github.com/krlmlr/duckdb/commit/5eedcbfdcccabf844f8def1397764bc311312429)
 - [#22458](https://github.com/duckdb/duckdb/pull/22458) Remove several instances of `UnifiedVectorFormat` and replace with new Vector iterators
   - `-dag`: [`cc74e2c5d`](https://github.com/krlmlr/duckdb/commit/cc74e2c5d59ea497a9377c1508c3f6322762796b)
   - run #1: copied [`dad0f75cc`](https://github.com/krlmlr/duckdb/commit/dad0f75cc15fd0be6e36590801bc2f2db2fc6709)
   - run #2: copied [`c2cccdd5d`](https://github.com/krlmlr/duckdb/commit/c2cccdd5d1b2aa0c48075244d3b61c6163620e2e)
+  - run #3: copied [`2f02cce54`](https://github.com/krlmlr/duckdb/commit/2f02cce543cb9ee396fb76d485c3565ab7a5fb06)
 - [#22460](https://github.com/duckdb/duckdb/pull/22460) Re-apply Window Self Join Optimizer Fix
   - `-dag`: [`b6c014843`](https://github.com/krlmlr/duckdb/commit/b6c014843e4c4bacdcb610402dabfb3615813823)
   - run #1: copied [`ad75b3fa5`](https://github.com/krlmlr/duckdb/commit/ad75b3fa5f14f6f56fa68494e025cf2ceb2a9650)
   - run #2: copied [`e624c78fc`](https://github.com/krlmlr/duckdb/commit/e624c78fce8968e7a68a5723431574d87daaf645)
+  - run #3: copied [`757abe892`](https://github.com/krlmlr/duckdb/commit/757abe8921309a20abf982519f1c1fe774c84698)
 - [#21700](https://github.com/duckdb/duckdb/pull/21700) Make external file cache size tunable
   - `-dag`: [`51a74af9a`](https://github.com/krlmlr/duckdb/commit/51a74af9a8bce0f1a16c11c1aa749c7e4274809a)
   - run #1: copied [`24e48102b`](https://github.com/krlmlr/duckdb/commit/24e48102b47041d01ee4332a21c53917a37f24f7)
   - run #2: copied [`7ca64de10`](https://github.com/krlmlr/duckdb/commit/7ca64de1064326ec584678a27bf4175f3f5d834e)
+  - run #3: copied [`db7d2f788`](https://github.com/krlmlr/duckdb/commit/db7d2f788d378f6a8f7b67227b318c010e65d5fc)
 - [#22462](https://github.com/duckdb/duckdb/pull/22462) [Parquet] Create `ParquetWriterOptions` to hold the parquet writer options
   - `-dag`: [`bb79f99dc`](https://github.com/krlmlr/duckdb/commit/bb79f99dcf233df6a3f57ca5985fd3aa1ab173b5)
   - run #1: copied [`9903c1844`](https://github.com/krlmlr/duckdb/commit/9903c1844817f6e901dd5b176dba81245efc0258)
   - run #2: copied [`74317c4bb`](https://github.com/krlmlr/duckdb/commit/74317c4bb00ca4f839ee061693b0dc13eba2c87b)
+  - run #3: copied [`1257ccb87`](https://github.com/krlmlr/duckdb/commit/1257ccb877904b48606b1d5da07c4768c3fec0ac)
 - [#22455](https://github.com/duckdb/duckdb/pull/22455) Disable tpcds temporarily to fix main CI
   - `-dag`: [`fce60f2f0`](https://github.com/krlmlr/duckdb/commit/fce60f2f02f0a188dda5b3a40dd3412b04825a27)
   - run #1: copied [`11b52f0c2`](https://github.com/krlmlr/duckdb/commit/11b52f0c2b63973f971a27b93ff17b1236661daf)
   - run #2: copied [`6907821b4`](https://github.com/krlmlr/duckdb/commit/6907821b460f082f61333927e4938a02ed9806a0)
+  - run #3: copied [`e77beed97`](https://github.com/krlmlr/duckdb/commit/e77beed971b6a570c0a0944eab38931f4a7bda04)
 - [#22464](https://github.com/duckdb/duckdb/pull/22464) [Parquet][Variant] Fix ability to disable shredding of VARIANT columns
   - `-dag`: [`5f37af9b0`](https://github.com/krlmlr/duckdb/commit/5f37af9b0a20bd10a78ff5d4f1f7468669734810)
   - run #1: copied [`924a1d45b`](https://github.com/krlmlr/duckdb/commit/924a1d45b6240e6e656e5a44d0a603f9bcf23019)
   - run #2: copied [`405e7684b`](https://github.com/krlmlr/duckdb/commit/405e7684b4a91d988a977db708ab5b33cc2fec3d)
+  - run #3: copied [`af32d692f`](https://github.com/krlmlr/duckdb/commit/af32d692f2b89dc3228df2a159d0f5eb607c504b)
 - [#22463](https://github.com/duckdb/duckdb/pull/22463) Encapsulate `ConstantExpr` and make it ... constant 🥁 (immutable)
   - `-dag`: [`1f1758b10`](https://github.com/krlmlr/duckdb/commit/1f1758b10fed435af35c64ab47e8e32a68af90a4)
   - run #1: copied [`66c9d6391`](https://github.com/krlmlr/duckdb/commit/66c9d639171dfc9469dd99c8c4256a5c441f30e6)
   - run #2: copied [`69d13d6fa`](https://github.com/krlmlr/duckdb/commit/69d13d6fae1205147f754ae323b762790e363b06)
+  - run #3: copied [`8bd32cc29`](https://github.com/krlmlr/duckdb/commit/8bd32cc29d3fdbc9847ea133841c1db42187364f)
 - [#22467](https://github.com/duckdb/duckdb/pull/22467) Make `Vector::Flatten()` no longer require a count and instead use the vectors' count, and fix several more vector sizes
   - `-dag`: [`44c0826cb`](https://github.com/krlmlr/duckdb/commit/44c0826cbb3ce4c2957bf6c03fef75f93dddb44a)
   - run #1: copied [`3eb58de4f`](https://github.com/krlmlr/duckdb/commit/3eb58de4fa2a15f1e30615e8a78ff0b7c2102ec0)
   - run #2: copied [`13b32a54a`](https://github.com/krlmlr/duckdb/commit/13b32a54a1628d0638e7c36079c9bf09ee6e98d7)
+  - run #3: copied [`1a6385a26`](https://github.com/krlmlr/duckdb/commit/1a6385a2687e9268e00804e45678b55b2090d322)
 - [#22472](https://github.com/duckdb/duckdb/pull/22472) Remove unused ccache and fix julia CI
   - `-dag`: [`ba3cbca64`](https://github.com/krlmlr/duckdb/commit/ba3cbca6498229c5448631e43d52b79f119bf5dd)
   - run #1: copied [`42d9e1013`](https://github.com/krlmlr/duckdb/commit/42d9e10139803ce53a7484b43a606d952de3ff87)
   - run #2: copied [`44afbed57`](https://github.com/krlmlr/duckdb/commit/44afbed57d0d797c7014d12341c44bf66101c7a1)
+  - run #3: copied [`860a8616d`](https://github.com/krlmlr/duckdb/commit/860a8616d093404d82a5a4bfe05f4e22575b3f47)
 - [#22447](https://github.com/duckdb/duckdb/pull/22447) Fix crash on truncated UTF-8 string statistics
   - `-dag`: [`307244585`](https://github.com/krlmlr/duckdb/commit/307244585ef3737a77c2f8d5aacb1e58eaa750a0)
   - run #1: copied [`d62b4215b`](https://github.com/krlmlr/duckdb/commit/d62b4215b3a9b5607a184ba28d92168fbcf2f691)
   - run #2: copied [`91912a5e3`](https://github.com/krlmlr/duckdb/commit/91912a5e39f3be1bf7cd4ad6bfbe190a74206c16)
+  - run #3: copied [`94c679ac7`](https://github.com/krlmlr/duckdb/commit/94c679ac79dd786930f0e81f2ce8a456a0eef7d4)
 - [#22473](https://github.com/duckdb/duckdb/pull/22473) Remove `Flatten` in many code paths and use more vector iterators / writers 
   - `-dag`: [`b31d5bb4e`](https://github.com/krlmlr/duckdb/commit/b31d5bb4e0be5e1fff6078fddffe5d19db39ef6c)
   - run #1: copied [`9b892a32d`](https://github.com/krlmlr/duckdb/commit/9b892a32d590035d947055bffb3d1b695b72faa5)
   - run #2: copied [`b13dfd5cd`](https://github.com/krlmlr/duckdb/commit/b13dfd5cda5893d82c3812036be9b4d8af1029e3)
+  - run #3: copied [`e27aea1cf`](https://github.com/krlmlr/duckdb/commit/e27aea1cf9c372b7d7f61330d1055c760cb86579)
 - [#22477](https://github.com/duckdb/duckdb/pull/22477) Convert more code to using vector writers, remove legacy UDF API in Connection
   - `-dag`: [`c4c105d89`](https://github.com/krlmlr/duckdb/commit/c4c105d89e940b860bd3fa87f7d6e7cf45179549)
   - run #1: copied [`021c9cbe5`](https://github.com/krlmlr/duckdb/commit/021c9cbe5672f87630f6bfd7926447d80e7b4eea)
   - run #2: copied [`58040d054`](https://github.com/krlmlr/duckdb/commit/58040d054455d9af441a4f1cd80e8ff6f2538556)
+  - run #3: copied [`fc9cda1e7`](https://github.com/krlmlr/duckdb/commit/fc9cda1e70e6fe7225f4b2ca226bd0b9366c1794)
 - [#22360](https://github.com/duckdb/duckdb/pull/22360) Bump DuckLake, remove patches, load tests
   - `-dag`: [`6ed1a596c`](https://github.com/krlmlr/duckdb/commit/6ed1a596c03077672687254b98fb6ad8a731ff08)
   - run #1: copied [`fd68243e7`](https://github.com/krlmlr/duckdb/commit/fd68243e7db44add51da5eb8c5b4ee426f56025d)
   - run #2: copied [`4b8db58f4`](https://github.com/krlmlr/duckdb/commit/4b8db58f4893997c17ec89cc8397a3e7a36407fb)
+  - run #3: copied [`728e4598c`](https://github.com/krlmlr/duckdb/commit/728e4598c3c411374bc74d50fec374205928fc72)
 - [#22449](https://github.com/duckdb/duckdb/pull/22449) date_trunc avoid decomposition
   - `-dag`: [`5334a46b5`](https://github.com/krlmlr/duckdb/commit/5334a46b5251fa998848c8bdf0b6c30222b83b05)
   - run #1: copied [`dca73e875`](https://github.com/krlmlr/duckdb/commit/dca73e8753af1a4f91bc10fc88b9e60091b58df7)
   - run #2: copied [`60eacf817`](https://github.com/krlmlr/duckdb/commit/60eacf8172d0f72701fbe661d01205d44730f933)
+  - run #3: copied [`e3b988124`](https://github.com/krlmlr/duckdb/commit/e3b988124151120c5f5763fba986b00e2de08bcb)
 - [#22482](https://github.com/duckdb/duckdb/pull/22482) Vector API: No longer require a count in `ToUnifiedFormat`
   - `-dag`: [`bbb9356c3`](https://github.com/krlmlr/duckdb/commit/bbb9356c37839b10f0c4c5b83f4ba6cbe86120ac)
   - run #1: copied [`7dc6b7228`](https://github.com/krlmlr/duckdb/commit/7dc6b722827c2e461e7a88fe1692230c21156933)
   - run #2: copied [`286934c59`](https://github.com/krlmlr/duckdb/commit/286934c59d2ab997b4eb6948a2b5d1da8af28850)
+  - run #3: copied [`b87e5c42f`](https://github.com/krlmlr/duckdb/commit/b87e5c42f165ff05a25517a4c6bd92a28277640b)
 - [#22457](https://github.com/duckdb/duckdb/pull/22457) Introduce checked integer numeric util class
   - `-dag`: [`a9d74f831`](https://github.com/krlmlr/duckdb/commit/a9d74f83115445d022a574dcb3aecee13868476b)
   - run #1: copied [`25c8af99c`](https://github.com/krlmlr/duckdb/commit/25c8af99ce3a9129316141ea44d84e802115f92a)
   - run #2: copied [`1a6eda956`](https://github.com/krlmlr/duckdb/commit/1a6eda95679b43ab632ee1d734dfc632ac942a3a)
+  - run #3: copied [`132b9f17b`](https://github.com/krlmlr/duckdb/commit/132b9f17b0f97e2b7b67a23e1574acff5db5d775)
 - [#22486](https://github.com/duckdb/duckdb/pull/22486) Make BoundBetweenExpression members private and add accessors
   - `-dag`: [`7571307ac`](https://github.com/krlmlr/duckdb/commit/7571307ac6e8590a74e76157588797cebab429f2)
   - run #1: copied [`075c43b1a`](https://github.com/krlmlr/duckdb/commit/075c43b1a78dd9b2f60d19176126574afce15c79)
   - run #2: copied [`29d47cfe8`](https://github.com/krlmlr/duckdb/commit/29d47cfe8e5c084a5a673f015c38548e0f462431)
+  - run #3: copied [`4a7dd7c37`](https://github.com/krlmlr/duckdb/commit/4a7dd7c3770787826b04acf32666aa030886f152)
 - [#22485](https://github.com/duckdb/duckdb/pull/22485) Make vector / chunk verification togglable with `debug_verification_mode` setting, instead of enabling in debug mode
   - `-dag`: [`415eed738`](https://github.com/krlmlr/duckdb/commit/415eed738ce616dac1d2e10cd04ce747e943695c)
   - run #1: copied [`9695a25ea`](https://github.com/krlmlr/duckdb/commit/9695a25ea9782735bbfc3e0239cfe93bd4df275b)
   - run #2: copied [`adf0e07ac`](https://github.com/krlmlr/duckdb/commit/adf0e07ac0f80c28842207440be651c1b4fbd2f0)
+  - run #3: copied [`36851a198`](https://github.com/krlmlr/duckdb/commit/36851a1987f8727fbf0cedbd718b5414c6fd887d)
 - [#22490](https://github.com/duckdb/duckdb/pull/22490) Deprecate `BoundBetweenExpression` and implement between as a `BoundFunctionExpression`
   - `-dag`: [`ede0ea589`](https://github.com/krlmlr/duckdb/commit/ede0ea589c16fb36b9d2643571731e35247034d2)
   - run #1: copied [`2d5ea022d`](https://github.com/krlmlr/duckdb/commit/2d5ea022dba28aed2dc1a57573fee7ae5976ba04)
   - run #2: copied [`c0beadf42`](https://github.com/krlmlr/duckdb/commit/c0beadf42234119ac6309e860aef19c463529464)
+  - run #3: copied [`c4ed04877`](https://github.com/krlmlr/duckdb/commit/c4ed04877211f014a057ccaf3d1220b060cabdef)
 - [#22492](https://github.com/duckdb/duckdb/pull/22492) Fix vsize = 2 issue in JSON create
   - `-dag`: [`000644c95`](https://github.com/krlmlr/duckdb/commit/000644c95d9eef1cfeff9c77366d2b0c23b90462)
   - run #1: copied [`0e8d62640`](https://github.com/krlmlr/duckdb/commit/0e8d626408ca45ba1710949d38f950beef656209)
   - run #2: copied [`b25b76215`](https://github.com/krlmlr/duckdb/commit/b25b762152424d0a1bcc3164c89f7f47a0a1cf25)
+  - run #3: copied [`23e24ef81`](https://github.com/krlmlr/duckdb/commit/23e24ef810ec3da44a46afec2fa2a2bc32f9f9d6)
 - [#22494](https://github.com/duckdb/duckdb/pull/22494) bump duckdb-sqlsmith
   - `-dag`: [`5e48eca59`](https://github.com/krlmlr/duckdb/commit/5e48eca59bde68a8311f5c17eb9642797fbacd14)
   - run #1: copied [`034d25163`](https://github.com/krlmlr/duckdb/commit/034d251631bd72cda6a717acf3979f26d1c612bb)
   - run #2: copied [`56bff068e`](https://github.com/krlmlr/duckdb/commit/56bff068e46adf7c034267acc642a76bf35da7c2)
+  - run #3: copied [`1338bdca4`](https://github.com/krlmlr/duckdb/commit/1338bdca405b7012d71e79c66fa7b70088d7482e)
 - [#22491](https://github.com/duckdb/duckdb/pull/22491) Reduce compile log output and remove old test runner
   - `-dag`: [`d2572bf5f`](https://github.com/krlmlr/duckdb/commit/d2572bf5f2c81b7dcf26193620516d8fdf4be2ff)
   - run #1: copied [`2ecaf5896`](https://github.com/krlmlr/duckdb/commit/2ecaf5896b8b787e32e6a4b4e91c3bd8dad9b1e5)
   - run #2: copied [`27f6ad2e3`](https://github.com/krlmlr/duckdb/commit/27f6ad2e3b219473cf9b6163c894161e86c060d1)
+  - run #3: copied [`4ec412b4e`](https://github.com/krlmlr/duckdb/commit/4ec412b4e7797f7887e8c741f4de9470ebcba493)
 - [#22130](https://github.com/duckdb/duckdb/pull/22130) Enhance interval type parsing precision and PostgreSQL compatibility.
   - `-dag`: [`91e4ae848`](https://github.com/krlmlr/duckdb/commit/91e4ae848bd2df7d8395086cfd08905715c0821c)
   - run #1: copied [`d1cea0a79`](https://github.com/krlmlr/duckdb/commit/d1cea0a790d736319c79dc7d9997bd9d7a17ad83)
   - run #2: copied [`c0482c8d9`](https://github.com/krlmlr/duckdb/commit/c0482c8d917504e1252a892d76ac21b9336245b8)
+  - run #3: copied [`944773f9a`](https://github.com/krlmlr/duckdb/commit/944773f9a852dc2beaeb3c4a01f485653bd99ee7)
 - [#22493](https://github.com/duckdb/duckdb/pull/22493) Deprecate `count` variants of `Flatten`, `ToUnifiedFormat`, `ToString`, `Print`
   - `-dag`: [`437eba87b`](https://github.com/krlmlr/duckdb/commit/437eba87bee19b72e4b67858e85d41fc2667580c)
   - run #1: copied [`920942f26`](https://github.com/krlmlr/duckdb/commit/920942f26cb4c4e063a2a54962db92e722248cba)
   - run #2: copied [`1d345a94c`](https://github.com/krlmlr/duckdb/commit/1d345a94c132030162954f22bb7163b0383ec6e9)
+  - run #3: copied [`253cdbc6f`](https://github.com/krlmlr/duckdb/commit/253cdbc6f7a8134f93d5e82e2821eeea58a5e768)
 - [#22496](https://github.com/duckdb/duckdb/pull/22496) Add comparison execution fast path
   - `-dag`: [`2a1560717`](https://github.com/krlmlr/duckdb/commit/2a156071723adf09f2079b5debf9d86884611db7)
   - run #1: copied [`979a4c2b5`](https://github.com/krlmlr/duckdb/commit/979a4c2b5a4c10c3ff89be15104a9fbdd1c68466)
   - run #2: copied [`88318a5a6`](https://github.com/krlmlr/duckdb/commit/88318a5a64e6d540a41ae34f4866d9e0d6b668da)
+  - run #3: copied [`e666fc2dc`](https://github.com/krlmlr/duckdb/commit/e666fc2dce2d22e4306bd1b8c9ece1a3c6afa663)
 - [#22507](https://github.com/duckdb/duckdb/pull/22507) Use 2m timeout and make apt more verbose in CI
   - `-dag`: [`f748275f1`](https://github.com/krlmlr/duckdb/commit/f748275f12512b5229ce865a4922ae8e6a1ce299)
   - run #1: copied [`4c91ee7c5`](https://github.com/krlmlr/duckdb/commit/4c91ee7c58218f956bf16c9537d277feee3bd6ef)
   - run #2: copied [`47e293eda`](https://github.com/krlmlr/duckdb/commit/47e293eda0c066e533f6a25b46447af7a9bc14a3)
+  - run #3: copied [`736787ac8`](https://github.com/krlmlr/duckdb/commit/736787ac8e8dfd59caa0305a9e18d7f61a5d82ea)
 - [#22481](https://github.com/duckdb/duckdb/pull/22481) Use simple update for aggregate states if groups are constant
   - `-dag`: [`03ae91884`](https://github.com/krlmlr/duckdb/commit/03ae9188415c6e9899f1f4104babc320a61cb394)
   - run #1: copied [`04fc52342`](https://github.com/krlmlr/duckdb/commit/04fc52342d406ba3ed59e5e7fa9b1a07bee17000)
   - run #2: copied [`c9e5511ee`](https://github.com/krlmlr/duckdb/commit/c9e5511ee0eb1b7bcaa30280021646228d776e3c)
+  - run #3: copied [`f95ba3c6c`](https://github.com/krlmlr/duckdb/commit/f95ba3c6c2e628777b18248f3a498771da37edd9)
 - [#22509](https://github.com/duckdb/duckdb/pull/22509) Fix nightly tests and ignore very slow tests for HASH_ZERO=1
   - `-dag`: [`658f2e5cd`](https://github.com/krlmlr/duckdb/commit/658f2e5cd7f51ba2d97da1196150fd2f0610d3ab)
   - run #1: copied [`5a8ba84d6`](https://github.com/krlmlr/duckdb/commit/5a8ba84d6679dcd867d62bb329239e23f9d28beb)
   - run #2: copied [`2bc5650dc`](https://github.com/krlmlr/duckdb/commit/2bc5650dc06690ac5525605d70d5072489e2f9ea)
+  - run #3: copied [`65b5a9019`](https://github.com/krlmlr/duckdb/commit/65b5a901914251dd4bec5e9c3342a9e21801be67)
 - [#22510](https://github.com/duckdb/duckdb/pull/22510) Vector API: Remove count parameter for vector iterators - these instead iterate over all values in the vector (i.e. default to `.size()`)
   - `-dag`: [`2a0069d88`](https://github.com/krlmlr/duckdb/commit/2a0069d88587ae04d730a2d6c6d32e7dd92d04c5)
   - run #1: copied [`8add994d8`](https://github.com/krlmlr/duckdb/commit/8add994d84e458b2f75c985e8ae7268bbc07f89f)
   - run #2: copied [`08152a2f4`](https://github.com/krlmlr/duckdb/commit/08152a2f461049d023815eeb1ec961c4ba084d11)
+  - run #3: copied [`7b2126c50`](https://github.com/krlmlr/duckdb/commit/7b2126c501b1d014d2470ea27c99bf5ce2c2d66e)
 - [#22522](https://github.com/duckdb/duckdb/pull/22522) Fixed the issue that `size_on_disk` was inflated
   - `-dag`: [`d1a40b247`](https://github.com/krlmlr/duckdb/commit/d1a40b2472a1d29e5f6fff0361a79c5a362c525f)
   - run #1: copied [`5917a9cbc`](https://github.com/krlmlr/duckdb/commit/5917a9cbc7711cb92be43598f9a107c94d23c435)
   - run #2: copied [`15b259904`](https://github.com/krlmlr/duckdb/commit/15b25990414ca0ae7bd41f99c4643694fe86265b)
+  - run #3: copied [`d67e1c1ee`](https://github.com/krlmlr/duckdb/commit/d67e1c1ee20710b94b0d1e7a0c9177b703e41c4e)
 - [#22505](https://github.com/duckdb/duckdb/pull/22505) Adapt Hive-partitioned write flushing to number of partitions
   - `-dag`: [`ef5d0a348`](https://github.com/krlmlr/duckdb/commit/ef5d0a3484d209eaaad91ef22045f6c38584d5e1)
   - run #1: copied [`a5ad75e89`](https://github.com/krlmlr/duckdb/commit/a5ad75e890e6e8aefe3a60e83e5c22b225574e5b)
   - run #2: copied [`a584b0a7f`](https://github.com/krlmlr/duckdb/commit/a584b0a7fef5c7b8f6013578d7aa737492ec9e38)
+  - run #3: copied [`517ad2c1a`](https://github.com/krlmlr/duckdb/commit/517ad2c1a674b539265580686c7bbf126267fecc)
 - [#22526](https://github.com/duckdb/duckdb/pull/22526) Add test_utils to linux-release and use 30s apt timeout
   - `-dag`: [`0e1b34a35`](https://github.com/krlmlr/duckdb/commit/0e1b34a35072e366b75c3a41959eb17ce47779df)
   - run #1: copied [`be00c6477`](https://github.com/krlmlr/duckdb/commit/be00c6477cdb7a9507495f9a3aabada2311acf3a)
   - run #2: copied [`13549dd27`](https://github.com/krlmlr/duckdb/commit/13549dd27e90f8aa5816cc2222200e368c526ed3)
+  - run #3: copied [`e21870b78`](https://github.com/krlmlr/duckdb/commit/e21870b786a9b8ef7b40946ae7286ea77213fa47)
 - [#9096](https://github.com/duckdb/duckdb/pull/9096) Internal https://redirect.github.com/duckdb/duckdb/pull/9096: Strong Timestamp Typing 
   - `-dag`: [`98f1d6d44`](https://github.com/krlmlr/duckdb/commit/98f1d6d4462c8056fb139dcd9810d56fc59ad57f)
   - run #1: copied [`eb9bfb72b`](https://github.com/krlmlr/duckdb/commit/eb9bfb72b589fdf326bf2fe1d8be0a09a6db13a9)
   - run #2: copied [`69cf0ea3a`](https://github.com/krlmlr/duckdb/commit/69cf0ea3a625bda0142e3a085a8a5aa7ee81706b)
+  - run #3: copied [`c0a10dc5c`](https://github.com/krlmlr/duckdb/commit/c0a10dc5c370d50da616c0163576eaafb0f7b401)
 - [#22514](https://github.com/duckdb/duckdb/pull/22514) Convert `BoundComparisonExpression` into a `BoundFunctionExpression`
   - `-dag`: [`89f49ca59`](https://github.com/krlmlr/duckdb/commit/89f49ca597d3701706b8283dafa1241caf76827f)
   - run #1: copied [`94e325719`](https://github.com/krlmlr/duckdb/commit/94e3257195e94035abb56ffcad0c0122fae7ba30)
   - run #2: copied [`4f290b9c4`](https://github.com/krlmlr/duckdb/commit/4f290b9c4f7342ffadf1cb84d62c78d3280a4506)
+  - run #3: copied [`7ad76d068`](https://github.com/krlmlr/duckdb/commit/7ad76d0686a345eea0b618ddeaa426698059a806)
 - [#22537](https://github.com/duckdb/duckdb/pull/22537) Keep stats at unsigned integer cast
   - `-dag`: [`42ae45774`](https://github.com/krlmlr/duckdb/commit/42ae4577404a5fb3e590a221bbf0be5efb31d4b1)
   - run #1: copied [`d034e57fe`](https://github.com/krlmlr/duckdb/commit/d034e57fe062d575ad6e4577d8fea25f1133afdd)
   - run #2: copied [`6fd7f415a`](https://github.com/krlmlr/duckdb/commit/6fd7f415a0f9a3c98ed2794f4a3c6f3a356bf265)
+  - run #3: copied [`0c5e94a6f`](https://github.com/krlmlr/duckdb/commit/0c5e94a6fa87f0300e708c737caa9362881651ad)
 - [#22529](https://github.com/duckdb/duckdb/pull/22529) Fix bwc test jobs
   - `-dag`: [`cf36551fb`](https://github.com/krlmlr/duckdb/commit/cf36551fbc579e00bb4755d89ba489f7a860c93d)
   - run #1: copied [`70239ae71`](https://github.com/krlmlr/duckdb/commit/70239ae7164f139d6f32371536753d4d6eb18520)
   - run #2: copied [`1788a3364`](https://github.com/krlmlr/duckdb/commit/1788a33642f5e28a5e73c5e7a4368a1cee8c9a59)
+  - run #3: copied [`c5aab6c59`](https://github.com/krlmlr/duckdb/commit/c5aab6c59c295e09f6bbd530da53dcf58b3f3d01)
 - [#22553](https://github.com/duckdb/duckdb/pull/22553) Move `debug_verify_column_bindings` and `debug_verification_projection` to settings and test configs
   - `-dag`: [`bdd8cb26a`](https://github.com/krlmlr/duckdb/commit/bdd8cb26a4227cc7ecd2cc80bd4c11e173f4f9da)
   - run #1: copied [`2ee2f4cba`](https://github.com/krlmlr/duckdb/commit/2ee2f4cba40ebcf4f7c04f974d75aa3d3260f1e4)
   - run #2: copied [`bc93fc18f`](https://github.com/krlmlr/duckdb/commit/bc93fc18fbfd3b6b251d35ee72306c0f689d536b)
+  - run #3: copied [`48ff1d43c`](https://github.com/krlmlr/duckdb/commit/48ff1d43cd1d565ecbc48471d835fb2e2306ba02)
 - [#22562](https://github.com/duckdb/duckdb/pull/22562) Add libduckdb_static.a to build artifact in CI
   - `-dag`: [`fd1929894`](https://github.com/krlmlr/duckdb/commit/fd1929894768608ac5397178e64cafdc5db825b1)
   - run #1: copied [`d606aea1d`](https://github.com/krlmlr/duckdb/commit/d606aea1d761ea726a12d541dc4c2309f7f17303)
   - run #2: copied [`279cd9abf`](https://github.com/krlmlr/duckdb/commit/279cd9abf322bfe0da2a3084fa249e3507ec4d07)
+  - run #3: copied [`ada420350`](https://github.com/krlmlr/duckdb/commit/ada42035000ac5b0f6d64ac1d128c8251296209a)
 - [#22555](https://github.com/duckdb/duckdb/pull/22555) Auto-generate part of transformer (Part 1/N)
   - `-dag`: [`0de9aa7b5`](https://github.com/krlmlr/duckdb/commit/0de9aa7b5a2d800213cd72bdc7452985ff24c7a9)
   - run #1: copied [`98d0d5b44`](https://github.com/krlmlr/duckdb/commit/98d0d5b4402cebd90950a2d371de6f50dac20645)
   - run #2: copied [`9d4c4571e`](https://github.com/krlmlr/duckdb/commit/9d4c4571e0d9fb9a00ce97de322356ce9d0639b1)
+  - run #3: copied [`501e133f5`](https://github.com/krlmlr/duckdb/commit/501e133f531efb25b20cb9a82a67532526c6149e)
 - [#22569](https://github.com/duckdb/duckdb/pull/22569) Add libatomic for missing __atomic_is_lock_free
   - `-dag`: [`2fe702749`](https://github.com/krlmlr/duckdb/commit/2fe7027490f6d96978fb974335aa4d8d952fc320)
   - run #1: copied [`1152045d2`](https://github.com/krlmlr/duckdb/commit/1152045d2dd93ba4854002edeadf1d58a5d18092)
   - run #2: copied [`c4ab6c595`](https://github.com/krlmlr/duckdb/commit/c4ab6c5958b2a9e458a162fcfc41801374a31247)
+  - run #3: copied [`d7620274b`](https://github.com/krlmlr/duckdb/commit/d7620274b7dc1b3f5089f78df34786ae693582fe)
 - [#22566](https://github.com/duckdb/duckdb/pull/22566) Fix fuzzer issue on empty subscript expression
   - `-dag`: [`ab4c9bc95`](https://github.com/krlmlr/duckdb/commit/ab4c9bc95541e84aa207c98343cbb5d068597060)
   - run #1: copied [`40244473d`](https://github.com/krlmlr/duckdb/commit/40244473d6e446c6708911038ae639ac3e7a87a9)
   - run #2: copied [`0b80e0a81`](https://github.com/krlmlr/duckdb/commit/0b80e0a81a25a57a8126fadd22f29276d0d991d3)
+  - run #3: copied [`3bd2d95d6`](https://github.com/krlmlr/duckdb/commit/3bd2d95d6bbe5fd8c3b233d678dd63f689d1efac)
 - [#22589](https://github.com/duckdb/duckdb/pull/22589) Fix duckdb fuzzer issues
   - `-dag`: [`63cfe2c30`](https://github.com/krlmlr/duckdb/commit/63cfe2c30592e6b2b72d3a4605a13475ed307ddd)
   - run #1: copied [`093081788`](https://github.com/krlmlr/duckdb/commit/0930817880bb5cf26deb578e677c89fbcd7cb001)
   - run #2: copied [`1c980b8cf`](https://github.com/krlmlr/duckdb/commit/1c980b8cf36156c11543f4205c950fdb4cc64d34)
+  - run #3: copied [`46b199ea7`](https://github.com/krlmlr/duckdb/commit/46b199ea783658b9aeaccadac1feac97af3c8b52)
 - [#22454](https://github.com/duckdb/duckdb/pull/22454) Adding extension aliasing
   - `-dag`: [`23898af29`](https://github.com/krlmlr/duckdb/commit/23898af29e038258b8f72ca19a7f648d9d4e2a34)
   - run #1: copied [`310ded061`](https://github.com/krlmlr/duckdb/commit/310ded061721b46d548318aa4d3ed55720fb23c7)
   - run #2: copied [`aa5b87386`](https://github.com/krlmlr/duckdb/commit/aa5b87386e89440cf3310b52649f49f8e77c92cf)
+  - run #3: copied [`fb0f3e936`](https://github.com/krlmlr/duckdb/commit/fb0f3e936cae5fb0a46091fe9dd175c0dd40ec7f)
 - [#22593](https://github.com/duckdb/duckdb/pull/22593) Move FSST compression headers to common header
   - `-dag`: [`d44180bf1`](https://github.com/krlmlr/duckdb/commit/d44180bf1515eee013785493f7a5a511de18747a)
   - run #1: copied [`89d11a0db`](https://github.com/krlmlr/duckdb/commit/89d11a0dbc70d317142a96be94afb86523c98dd0)
   - run #2: copied [`e41d29d73`](https://github.com/krlmlr/duckdb/commit/e41d29d73e1d157d41abcb9580dc864523e49d15)
+  - run #3: copied [`378edb32b`](https://github.com/krlmlr/duckdb/commit/378edb32bbe13e3c92428dda79676a9538efd647)
 - [#9178](https://github.com/duckdb/duckdb/pull/9178) Internal https://redirect.github.com/duckdb/duckdb/pull/9178: Strong Timestamp Casting
   - `-dag`: [`71aff5595`](https://github.com/krlmlr/duckdb/commit/71aff5595e3e58c2a72e26080aad6529a829f559)
   - run #1: copied [`090a45a7c`](https://github.com/krlmlr/duckdb/commit/090a45a7cca409867d17c88ae197000beb9ec100)
   - run #2: copied [`135fbac11`](https://github.com/krlmlr/duckdb/commit/135fbac11586f2ef9aca6c4d77161d3f32c1a9c5)
+  - run #3: copied [`5e5bbba70`](https://github.com/krlmlr/duckdb/commit/5e5bbba7018c60b6b91d7d51ed4aa55710de779e)
 - [#9226](https://github.com/duckdb/duckdb/pull/9226) Internal https://redirect.github.com/duckdb/duckdb/pull/9226: Timestamp TimeZone Parsing
   - `-dag`: [`27b073d88`](https://github.com/krlmlr/duckdb/commit/27b073d88846916f7b08e78e70633388ac7513ad)
   - run #1: copied [`c0a79bd12`](https://github.com/krlmlr/duckdb/commit/c0a79bd1225808fab6644a5cf78350e53adc3581)
   - run #2: copied [`c5978ad63`](https://github.com/krlmlr/duckdb/commit/c5978ad63e3e2cb7b54b4b69cf1f9126660043a2)
+  - run #3: copied [`f8a1ff689`](https://github.com/krlmlr/duckdb/commit/f8a1ff689b4edc8c7cb90277ab6f512fd57df5a9)
 - [#22598](https://github.com/duckdb/duckdb/pull/22598) Explicitly handle `nan/inf/-inf` in JSON serializer and deserializer
   - `-dag`: [`ea1cd288d`](https://github.com/krlmlr/duckdb/commit/ea1cd288d1540b1c7df544ae5b77bf1443137ee1)
   - run #1: copied [`bc5a1b3f1`](https://github.com/krlmlr/duckdb/commit/bc5a1b3f14af40afb47906ea0c471196c05663a3)
   - run #2: copied [`3e6962d91`](https://github.com/krlmlr/duckdb/commit/3e6962d91e10760d4776b1dce64db816679de351)
+  - run #3: copied [`0d72d2767`](https://github.com/krlmlr/duckdb/commit/0d72d27679f12f62ca69f0cf3b83705ca5a49025)
 - [#22601](https://github.com/duckdb/duckdb/pull/22601) Add support for variables in sqllogictest loops, rewrite parallel CSV test to be a sqllogictest, and add `rejects_line_size_limit` option to CSV reader
   - `-dag`: [`dbf6e2289`](https://github.com/krlmlr/duckdb/commit/dbf6e22894a5958c5ccb40b263518db02e62f1b4)
   - run #1: copied [`7122a3519`](https://github.com/krlmlr/duckdb/commit/7122a3519424a700f511dc4366c8b19b7b6f47d1)
   - run #2: copied [`bc4fecb88`](https://github.com/krlmlr/duckdb/commit/bc4fecb88f2177db69086501d05599801728eca9)
+  - run #3: copied [`08dae8837`](https://github.com/krlmlr/duckdb/commit/08dae88374d220da312f7a89780d90868d847ca3)
 - [#22597](https://github.com/duckdb/duckdb/pull/22597) Binder re-organization and cleanup, change the way we push `ExpressionBinder` for subqueries
   - `-dag`: [`48d7666cf`](https://github.com/krlmlr/duckdb/commit/48d7666cf05fe3f4e4280ebc5486650889c85433)
   - run #1: copied [`fecf5eeaa`](https://github.com/krlmlr/duckdb/commit/fecf5eeaad61dbfc8d4f82fd4f1689f463fdd20e)
   - run #2: copied [`af38029ea`](https://github.com/krlmlr/duckdb/commit/af38029eacb6ddc7cbc8e4da24625a216aa992c4)
+  - run #3: copied [`4afe7bf98`](https://github.com/krlmlr/duckdb/commit/4afe7bf98c3e08eb128b59575ca9b039f00998c2)
 - [#22542](https://github.com/duckdb/duckdb/pull/22542) [Follow-up] Add adaptive transient segment allocation
   - `-dag`: [`605dc5999`](https://github.com/krlmlr/duckdb/commit/605dc5999957e7679675d43310da9add6940d953)
   - run #1: copied [`cb2f9b979`](https://github.com/krlmlr/duckdb/commit/cb2f9b9791b8b82b9a4402c070caf73c09a135cf)
   - run #2: copied [`077e434b6`](https://github.com/krlmlr/duckdb/commit/077e434b6671b51682038e51073871d2d799c121)
+  - run #3: copied [`e2c9f0b35`](https://github.com/krlmlr/duckdb/commit/e2c9f0b3520909a9c2e1d3c356a27ce568d9127f)
 - [#22599](https://github.com/duckdb/duckdb/pull/22599) Speed up arrow test by directly using relations to query
   - `-dag`: [`6154fe855`](https://github.com/krlmlr/duckdb/commit/6154fe85519d018b00e3cd717a3b2d356690b3ff)
   - run #1: copied [`16c54ced4`](https://github.com/krlmlr/duckdb/commit/16c54ced43aaf9ec3fa3af73a13fd94baea0123d)
   - run #2: copied [`049c7c011`](https://github.com/krlmlr/duckdb/commit/049c7c0117cefe2f3b30a17e01c86734e76e9e9f)
+  - run #3: copied [`8d0784a1c`](https://github.com/krlmlr/duckdb/commit/8d0784a1c1b72044dbd5fbe9debd9b3692aed48e)
 - [#22615](https://github.com/duckdb/duckdb/pull/22615) Omit third_party/ and platform binary for EXTENSION_CONFIG_BUILD=true
   - `-dag`: [`cd308a1df`](https://github.com/krlmlr/duckdb/commit/cd308a1df4274ac962093191326cb28394e17a0d)
   - run #1: copied [`b4e045ae5`](https://github.com/krlmlr/duckdb/commit/b4e045ae5ebd26263113329f3b02f804ee7c45ab)
   - run #2: copied [`e278ed9bd`](https://github.com/krlmlr/duckdb/commit/e278ed9bd11b4e471f3a3c2e4d5089ff73c6a009)
+  - run #3: copied [`432207ac5`](https://github.com/krlmlr/duckdb/commit/432207ac56afe0a5a2ea5946d886ae53a74bbaa7)
 - [#22618](https://github.com/duckdb/duckdb/pull/22618) Show skipped test reasons in test runner
   - `-dag`: [`8a103155c`](https://github.com/krlmlr/duckdb/commit/8a103155c8b86ff932968350bddedd827c8048fb)
   - run #1: copied [`014d18658`](https://github.com/krlmlr/duckdb/commit/014d18658f3d7e6f56cb6784ba6db8f88d7c661a)
   - run #2: copied [`49b4df6d7`](https://github.com/krlmlr/duckdb/commit/49b4df6d72c91d23b24e1362a06c57c529f28eae)
+  - run #3: copied [`77be901f9`](https://github.com/krlmlr/duckdb/commit/77be901f94a84b175c34ff58ca922d87546deb4b)
 - [#22617](https://github.com/duckdb/duckdb/pull/22617) Unify remaining TableFilters with ExpressionFilter
   - `-dag`: [`1d29b5398`](https://github.com/krlmlr/duckdb/commit/1d29b5398ad396e1983d6afdc46ace86e3fa0f4e)
   - run #1: copied [`337ed539f`](https://github.com/krlmlr/duckdb/commit/337ed539f5cbb4e1f3a81d4a141622c232dbac17)
   - run #2: copied [`5bec28318`](https://github.com/krlmlr/duckdb/commit/5bec2831873cfb8799af302c17c26f299e406e13)
+  - run #3: copied [`19f7e12f8`](https://github.com/krlmlr/duckdb/commit/19f7e12f83f483d98cd2092a79c2cb0bb97bf0ac)
 - [#22230](https://github.com/duckdb/duckdb/pull/22230) Clustered Aggregation
   - `-dag`: [`75d0c3f14`](https://github.com/krlmlr/duckdb/commit/75d0c3f14846ed873efc874a1ec963c29e6ae8d6)
   - run #1: copied [`dd008e3e0`](https://github.com/krlmlr/duckdb/commit/dd008e3e04169cac2b7cc67b0ffea70a7b1a1b36)
   - run #2: copied [`5dea5c0ca`](https://github.com/krlmlr/duckdb/commit/5dea5c0ca5ef342e801a5ea10a3922d7f3cae0c5)
+  - run #3: copied [`a25dfd91d`](https://github.com/krlmlr/duckdb/commit/a25dfd91d2e465e5efa546475b7c6d37074f9ed9)
 - [#22298](https://github.com/duckdb/duckdb/pull/22298) Prefer filtered build sides for join filter pushdown
   - `-dag`: [`1c9d16355`](https://github.com/krlmlr/duckdb/commit/1c9d1635558a6334d58a1c5b276a1bc9a11a99bc)
   - run #1: copied [`e541845a5`](https://github.com/krlmlr/duckdb/commit/e541845a5103faca312d5a237ae480c6506ac455)
   - run #2: copied [`3e01c5c8d`](https://github.com/krlmlr/duckdb/commit/3e01c5c8d78a223201b1a50b9ce63fa36e0bd6ed)
+  - run #3: copied [`570f143a8`](https://github.com/krlmlr/duckdb/commit/570f143a85056f7ef757487bb3e0b62af6423b42)
 - [#22285](https://github.com/duckdb/duckdb/pull/22285) Enable compressed materialization for grouping sets
   - `-dag`: [`8ed901567`](https://github.com/krlmlr/duckdb/commit/8ed9015678e65aa948bcd2a7fa734c1b7e00508a)
   - run #1: copied [`ea05fae53`](https://github.com/krlmlr/duckdb/commit/ea05fae53a312d440f29cc2386e578762de2e87a)
   - run #2: copied [`61e741710`](https://github.com/krlmlr/duckdb/commit/61e7417103cbaacdc487651d6c9368ea7986c242)
+  - run #3: copied [`ba00e03fc`](https://github.com/krlmlr/duckdb/commit/ba00e03fcfbe009c774f4f8eb64efa10fbcbe141)
 - [#22606](https://github.com/duckdb/duckdb/pull/22606) Skip colref projection pullup over LOGICAL_DISTINCT
   - `-dag`: [`8482ceef8`](https://github.com/krlmlr/duckdb/commit/8482ceef8025888901c8e9f00d0779d29d0f800f)
   - run #1: copied [`cc8cffbaa`](https://github.com/krlmlr/duckdb/commit/cc8cffbaa1b54fc939ea9c8b964950725e37de12)
   - run #2: copied [`f2ffec364`](https://github.com/krlmlr/duckdb/commit/f2ffec3649d3b32c9b5c38c852c76cba7877fa48)
+  - run #3: copied [`568fe86ed`](https://github.com/krlmlr/duckdb/commit/568fe86eded90c8ce9fe00c54e3e2a295519057f)
 - [#22643](https://github.com/duckdb/duckdb/pull/22643) Add member label to PR
   - `-dag`: [`4f205a6fd`](https://github.com/krlmlr/duckdb/commit/4f205a6fdeee7bf141d15a10bee178b67999dba9)
   - run #1: copied [`f5d408394`](https://github.com/krlmlr/duckdb/commit/f5d408394d2ba0a97cddabf90952bdc56616205d)
   - run #2: copied [`964ca1d85`](https://github.com/krlmlr/duckdb/commit/964ca1d85e244190213141edbb51dd96547f8ccc)
+  - run #3: copied [`54914e876`](https://github.com/krlmlr/duckdb/commit/54914e876c4afc6833084877b48e56589fbaee91)
 - [#22620](https://github.com/duckdb/duckdb/pull/22620) Partitioned/Sorted writes
   - `-dag`: [`005a78888`](https://github.com/krlmlr/duckdb/commit/005a78888d3e7b73dbb66b5bb8b9e7aab45a9a64)
   - run #1: copied [`12322c4e6`](https://github.com/krlmlr/duckdb/commit/12322c4e6722228410932100acfccbd0a9d53fbf)
   - run #2: copied [`d7fd72cbe`](https://github.com/krlmlr/duckdb/commit/d7fd72cbe8b4cbedffd6a4d1f47e2eb13be12f0d)
+  - run #3: copied [`79c05221f`](https://github.com/krlmlr/duckdb/commit/79c05221f2900a0b50dc6b7340c924b5e8452708)
 - [#22625](https://github.com/duckdb/duckdb/pull/22625) Add optional reason to 'mode skip' in tests
   - `-dag`: [`c13f39399`](https://github.com/krlmlr/duckdb/commit/c13f39399a4de176d5b8718e0bf4c99988362502)
   - run #1: copied [`999679403`](https://github.com/krlmlr/duckdb/commit/99967940393a2ff8f5d2ed3e683dc235720fee6c)
   - run #2: copied [`e44d875c8`](https://github.com/krlmlr/duckdb/commit/e44d875c8d39c7a9d5586987385a33b2c3bd690f)
+  - run #3: copied [`a280a0629`](https://github.com/krlmlr/duckdb/commit/a280a0629e81a7d1bf8e472eaa492c6d1407c761)
 - [#21831](https://github.com/duckdb/duckdb/pull/21831) Partial aggregate precomputation from row group statistics
   - `-dag`: [`0dfe98b09`](https://github.com/krlmlr/duckdb/commit/0dfe98b0916363d2c995d0bf50b565f0d6732fc3)
   - run #1: copied [`c4ba40123`](https://github.com/krlmlr/duckdb/commit/c4ba40123d9cc4fe9077825b37e2d375cf4cf9a1)
   - run #2: copied [`81d13f915`](https://github.com/krlmlr/duckdb/commit/81d13f9154bfc3a2d5e5c48ade5071df6bff6dcb)
+  - run #3: copied [`c12851fb6`](https://github.com/krlmlr/duckdb/commit/c12851fb63d9b486eabf559eb9a0a573aff00039)
 - [#9197](https://github.com/duckdb/duckdb/pull/9197) Internal https://redirect.github.com/duckdb/duckdb/pull/9197: Timestamp Cleanup
   - `-dag`: [`5e73f4eb7`](https://github.com/krlmlr/duckdb/commit/5e73f4eb7b738f30b3ba54a8533bcd5dd0721b97)
   - run #1: copied [`f11bfeacf`](https://github.com/krlmlr/duckdb/commit/f11bfeacfb64d89d0dce1068bfaa52a47c3f198b)
   - run #2: copied [`c2a1443e1`](https://github.com/krlmlr/duckdb/commit/c2a1443e17066a6ac44a660a030a0a264b9f2a40)
+  - run #3: copied [`8f645b98b`](https://github.com/krlmlr/duckdb/commit/8f645b98bde17218a81e2b7a1d6ee10a7cdd4522)
 - [#22649](https://github.com/duckdb/duckdb/pull/22649) Rework `StringStats` to be more independent from the string stats we use in storage, and introduce `StringStatsType` which signifies if stats are truncated
   - `-dag`: [`1abb603d2`](https://github.com/krlmlr/duckdb/commit/1abb603d2e0f52bf3249abf89b2fb9d86be5f1ee)
   - run #1: copied [`e9a1de9ff`](https://github.com/krlmlr/duckdb/commit/e9a1de9ffeac6625a2d57d7581555062c8ea5a11)
   - run #2: copied [`a5ffce43f`](https://github.com/krlmlr/duckdb/commit/a5ffce43febb60f98c60240b650c8e25f52cc44d)
+  - run #3: copied [`37503aaa5`](https://github.com/krlmlr/duckdb/commit/37503aaa58f90bf0c6aa8cd5bde6ba263af7eec4)
 - [#22665](https://github.com/duckdb/duckdb/pull/22665) Follow-up fixes to StringStatsRework
   - `-dag`: [`2649c7f22`](https://github.com/krlmlr/duckdb/commit/2649c7f22d8b8d7a64f6f77fec1056e400b90fa7)
   - run #1: copied [`7e9b05b60`](https://github.com/krlmlr/duckdb/commit/7e9b05b60309b4228f7c9cefc3e37d71f15c58dc)
   - run #2: copied [`fe554db5c`](https://github.com/krlmlr/duckdb/commit/fe554db5ce243512fefad4a171158a49d46f5105)
+  - run #3: copied [`a4ecd88da`](https://github.com/krlmlr/duckdb/commit/a4ecd88da97a5aee28c74b16f3249df3fd2b78b2)
 - [#22668](https://github.com/duckdb/duckdb/pull/22668) No typo fix PRs please
   - `-dag`: [`4674372b1`](https://github.com/krlmlr/duckdb/commit/4674372b1c2e7b477acb1f4e34cab1d40e2de997)
   - run #1: copied [`7c3ee932b`](https://github.com/krlmlr/duckdb/commit/7c3ee932bbdf1584373fe7a715cfebdd9d7970cd)
   - run #2: copied [`5982b468d`](https://github.com/krlmlr/duckdb/commit/5982b468d34e2da983488d206f5887adc3cab448)
+  - run #3: copied [`00b4f89eb`](https://github.com/krlmlr/duckdb/commit/00b4f89ebab42da123ed0893f496770ee1b7cb9a)
 - [#22664](https://github.com/duckdb/duckdb/pull/22664) Parquet ApplyPendingSkips really skip decode
   - `-dag`: [`95fbea95b`](https://github.com/krlmlr/duckdb/commit/95fbea95bd799fb9e572716ece4072c63ff26aea)
   - run #1: copied [`49640d311`](https://github.com/krlmlr/duckdb/commit/49640d311db3fb4bbeacf271027e60953a3f0de2)
   - run #2: copied [`ce1c6a283`](https://github.com/krlmlr/duckdb/commit/ce1c6a283391fea05bc61cdbd2a230771fcb1e51)
+  - run #3: copied [`d84b1bca0`](https://github.com/krlmlr/duckdb/commit/d84b1bca0ce6b885ccb052b1890a7c481d018f19)
 - [#22211](https://github.com/duckdb/duckdb/pull/22211) Optimize Recursive CTE Performance
   - `-dag`: [`69fa6ab9b`](https://github.com/krlmlr/duckdb/commit/69fa6ab9bc1e68c64b5dcede4ab04b2bc6ad0822)
   - run #1: copied [`249b5733f`](https://github.com/krlmlr/duckdb/commit/249b5733fcd01f65f30e9171260c1d1c9732e09f)
   - run #2: copied [`fdcb6940c`](https://github.com/krlmlr/duckdb/commit/fdcb6940cd96694f03c24f313c0167372ec90b04)
+  - run #3: copied [`6bbcb14dd`](https://github.com/krlmlr/duckdb/commit/6bbcb14dd49e28cbee009bd4df5e3576fdbd33c1)
 - [#22674](https://github.com/duckdb/duckdb/pull/22674) Invalidate transactions when any error is encountered by default
   - `-dag`: [`01ebc78f4`](https://github.com/krlmlr/duckdb/commit/01ebc78f4ee6d6c2a5f6e9202e6141cc69e7a6e2)
   - run #1: copied [`621f069d9`](https://github.com/krlmlr/duckdb/commit/621f069d9579bb485b325658488b781c20280686)
   - run #2: copied [`53cbf20fd`](https://github.com/krlmlr/duckdb/commit/53cbf20fdf70dc0afbec7437a06681edf5403281)
+  - run #3: copied [`149c6d781`](https://github.com/krlmlr/duckdb/commit/149c6d781bbe006a725be5f7bdc79383920c52cc)
 - [#22685](https://github.com/duckdb/duckdb/pull/22685) Remove unused workflow, fix rclone command and bwc test parser
   - `-dag`: [`a01543523`](https://github.com/krlmlr/duckdb/commit/a015435237d71b981a4d31b8f5c8e244e1a99a1b)
   - run #1: copied [`b579836b2`](https://github.com/krlmlr/duckdb/commit/b579836b21e5ea0d231a2d483ac320dffbdc098b)
   - run #2: copied [`602eea8ba`](https://github.com/krlmlr/duckdb/commit/602eea8baa6842c0b4e700c8a6e7fcb76ce48928)
+  - run #3: copied [`805b1d400`](https://github.com/krlmlr/duckdb/commit/805b1d4004750146c560647e246c8f108a5691d0)
 - [#22682](https://github.com/duckdb/duckdb/pull/22682) Flip lambda syntax default: `x -> x + 1` now gives an error by default
   - `-dag`: [`10a497127`](https://github.com/krlmlr/duckdb/commit/10a49712787ab4cb6afc1225e961b8f962f7d94a)
   - run #1: copied [`0ae333c19`](https://github.com/krlmlr/duckdb/commit/0ae333c193aeb03bf6d70e53c5c779a4131ecbaa)
   - run #2: copied [`b831cf196`](https://github.com/krlmlr/duckdb/commit/b831cf196a9aebdc9701e2c69c89362de77981d1)
+  - run #3: copied [`21d751e6c`](https://github.com/krlmlr/duckdb/commit/21d751e6ce41bd29515aa9a8e3a4ce9baa2fd0f4)
 - [#22681](https://github.com/duckdb/duckdb/pull/22681) Parse mode skip/require reasons once and summarize
   - `-dag`: [`91d4ff8d4`](https://github.com/krlmlr/duckdb/commit/91d4ff8d454d7b5bd06265b784b17b3b893f2951)
   - run #1: copied [`e0c4b72fd`](https://github.com/krlmlr/duckdb/commit/e0c4b72fda5e7df215f1bcfe7452a23826ac47e2)
   - run #2: copied [`0683a7a6b`](https://github.com/krlmlr/duckdb/commit/0683a7a6b9ed5662da5dcf0be8799187495ec60b)
+  - run #3: copied [`57d6238f5`](https://github.com/krlmlr/duckdb/commit/57d6238f5c02895a42b9665974974ef66ea32e0a)
 - [#22694](https://github.com/duckdb/duckdb/pull/22694) Postgres Compatibility For SETOF Returning Functions
   - `-dag`: [`dbf503364`](https://github.com/krlmlr/duckdb/commit/dbf503364b066b1327b805e962bb4d5c355113b0)
   - run #1: copied [`ff7493fb6`](https://github.com/krlmlr/duckdb/commit/ff7493fb65c81f0610a1dccf3909166fcc93317c)
   - run #2: copied [`f5507dfef`](https://github.com/krlmlr/duckdb/commit/f5507dfef5d4ecc22dc3d1566c432d7be9ccac79)
+  - run #3: copied [`d7f8a78ae`](https://github.com/krlmlr/duckdb/commit/d7f8a78ae73c15b8010e112b880441d9c25b51b7)
 - [#22456](https://github.com/duckdb/duckdb/pull/22456) `OVERLAY()` string function
   - `-dag`: [`23c5da83a`](https://github.com/krlmlr/duckdb/commit/23c5da83af68f3c1a96766bd22a25225703ae7a7)
   - run #1: copied [`4a7886e80`](https://github.com/krlmlr/duckdb/commit/4a7886e801b92f0cf6e5992f9903ba46fe29d920)
   - run #2: copied [`ac45dae92`](https://github.com/krlmlr/duckdb/commit/ac45dae92d561d447fb1884c0058f0bc0ea07907)
+  - run #3: copied [`04307a996`](https://github.com/krlmlr/duckdb/commit/04307a99642a703f4788f49480b7eac9e604bb12)
 - [#22699](https://github.com/duckdb/duckdb/pull/22699) Bump ducklake extension and remove merged patches
   - `-dag`: [`24b31779b`](https://github.com/krlmlr/duckdb/commit/24b31779b618d1a52a7df34f436b4a75ea6c3886)
   - run #1: copied [`f57a30f09`](https://github.com/krlmlr/duckdb/commit/f57a30f090ed548bffe070fc21e812772014db55)
   - run #2: copied [`ef3c9661d`](https://github.com/krlmlr/duckdb/commit/ef3c9661d741aa7518c73b216c9122b26c45fa57)
+  - run #3: copied [`dbf05db4c`](https://github.com/krlmlr/duckdb/commit/dbf05db4c700899748a5bfb58fccaf7fc6683e02)
 - [#22696](https://github.com/duckdb/duckdb/pull/22696) Add make targets to run test configs easily
   - `-dag`: [`ec3003b0f`](https://github.com/krlmlr/duckdb/commit/ec3003b0f174a96f236a91fd0273fb1d0a099ae7)
   - run #1: copied [`fb23b07e1`](https://github.com/krlmlr/duckdb/commit/fb23b07e13952de5fe5fd9e1b82946c2e7cab316)
   - run #2: copied [`489d8c9db`](https://github.com/krlmlr/duckdb/commit/489d8c9dbe858be153225bbb1b61741e0b92eb9b)
+  - run #3: copied [`338bc3722`](https://github.com/krlmlr/duckdb/commit/338bc372220e2d9a6dc1de8b666a5ed2070d9a97)
 - [#22658](https://github.com/duckdb/duckdb/pull/22658) Fix parquet stats for enum types
   - `-dag`: [`97e12e55e`](https://github.com/krlmlr/duckdb/commit/97e12e55e82b95a67a92dd85d421ac0e1d02e8d1)
   - run #1: copied [`6d32a9ff4`](https://github.com/krlmlr/duckdb/commit/6d32a9ff4915bd73cd43fe2d3f68057c4e7d831f)
   - run #2: copied [`0a88690e9`](https://github.com/krlmlr/duckdb/commit/0a88690e934b2696ac38d7477852f68b44b92923)
+  - run #3: copied [`969fc5fbd`](https://github.com/krlmlr/duckdb/commit/969fc5fbdb8e9ca4871bdd58180e36ef5d5c06a7)
 - [#22707](https://github.com/duckdb/duckdb/pull/22707) Make members of `BetweenExpression` private
   - `-dag`: [`a94e2038a`](https://github.com/krlmlr/duckdb/commit/a94e2038a69ca4a2a57b0b0c20ff8ed804baadb5)
   - run #1: copied [`2f1931a54`](https://github.com/krlmlr/duckdb/commit/2f1931a5436c14dacea94762cc82f9fa82abeeef)
   - run #2: copied [`79d02128e`](https://github.com/krlmlr/duckdb/commit/79d02128ed7d99936b43ac79dd5debc72f5162eb)
+  - run #3: copied [`58655a34f`](https://github.com/krlmlr/duckdb/commit/58655a34f657fb743ec5fb19b5c0b9fd3b2e80f7)
 - [#22706](https://github.com/duckdb/duckdb/pull/22706) Remove checked_array_iterator from third_party/fmt
   - `-dag`: [`af6cfd84a`](https://github.com/krlmlr/duckdb/commit/af6cfd84ad854fb1be338f59d43322249f62e1ea)
   - run #1: copied [`4f85d9de5`](https://github.com/krlmlr/duckdb/commit/4f85d9de5d1658e2e25368312181813b439e7e45)
   - run #2: copied [`5fd2b9540`](https://github.com/krlmlr/duckdb/commit/5fd2b9540a7aef7dbce1604a1589e79d904036aa)
+  - run #3: copied [`55ca1e9e9`](https://github.com/krlmlr/duckdb/commit/55ca1e9e955281e423ff178b63bdc42586a736bf)
 - [#22692](https://github.com/duckdb/duckdb/pull/22692) Rework / Extend `StringStats` in DuckDB Storage Layer
   - `-dag`: [`e6a2d010d`](https://github.com/krlmlr/duckdb/commit/e6a2d010dadbfcf5e5a8b40e78b4a9bae333fee1)
   - run #1: copied [`4e2ba65e7`](https://github.com/krlmlr/duckdb/commit/4e2ba65e7e1235934d0618f28c8cd195157fd46b)
   - run #2: copied [`bf592327c`](https://github.com/krlmlr/duckdb/commit/bf592327c8591281ab6f2d1ea95f2e87ed03b786)
+  - run #3: copied [`07a169f46`](https://github.com/krlmlr/duckdb/commit/07a169f4611ce9f17c87e52179eef53b08fbee93)
 - [#22705](https://github.com/duckdb/duckdb/pull/22705) Improve IsValid decision for parquet metadata cache
   - `-dag`: [`e8f80cc99`](https://github.com/krlmlr/duckdb/commit/e8f80cc99e97fc147c204888415479d0cfa8034c)
   - run #1: copied [`8e9781895`](https://github.com/krlmlr/duckdb/commit/8e97818954267c603ce7f61ac3d48e16037a49c8)
   - run #2: copied [`5d3fa89d5`](https://github.com/krlmlr/duckdb/commit/5d3fa89d518aaeb74f0e7b2bd23cff3e71ed40aa)
+  - run #3: copied [`f0b01b314`](https://github.com/krlmlr/duckdb/commit/f0b01b31496ab581edced35b51fd8903ff19d4bb)
 - [#22626](https://github.com/duckdb/duckdb/pull/22626) Rework expression rewriter to make it bottom-up and iterative
   - `-dag`: [`9bdea8032`](https://github.com/krlmlr/duckdb/commit/9bdea80320b4eebaae0796b15df28300914901e4)
   - run #1: copied [`4ef5a589e`](https://github.com/krlmlr/duckdb/commit/4ef5a589e3ef26df1d0bf009d5768f9716e7c9f0)
   - run #2: copied [`232fa450d`](https://github.com/krlmlr/duckdb/commit/232fa450d739f372d5eb6cb19d12b19cc5d49f49)
+  - run #3: copied [`4a5cd36f8`](https://github.com/krlmlr/duckdb/commit/4a5cd36f87c291db8b993643eaa9d82489e6158d)
 - [#7613](https://github.com/duckdb/duckdb/pull/7613) Internal https://redirect.github.com/duckdb/duckdb/pull/7613: IEJoin MARK Joins
   - `-dag`: [`51705fb75`](https://github.com/krlmlr/duckdb/commit/51705fb758b6a1713c980e2c9507cbd36c534d42)
   - run #1: copied [`ea891dd31`](https://github.com/krlmlr/duckdb/commit/ea891dd3177f454f75d7683708cc35bcf0833e61)
   - run #2: copied [`c1edb1fdb`](https://github.com/krlmlr/duckdb/commit/c1edb1fdbf073c653e3bcab3631f41a528d64336)
+  - run #3: copied [`147fbd3b8`](https://github.com/krlmlr/duckdb/commit/147fbd3b812303672a910d31fd16a557dfcab6c6)
 - [#22572](https://github.com/duckdb/duckdb/pull/22572) Push partial aggregates below joins
   - `-dag`: [`57a56cd03`](https://github.com/krlmlr/duckdb/commit/57a56cd039c5fe3e1c359e158bda347ced3ad040)
   - run #1: copied [`e83779940`](https://github.com/krlmlr/duckdb/commit/e8377994061bc13b3d2b232f7d30b34e077b09c0)
   - run #2: copied [`30c973422`](https://github.com/krlmlr/duckdb/commit/30c97342212b416d9ebe108f1537a801b9dc2240)
+  - run #3: copied [`696c87d1b`](https://github.com/krlmlr/duckdb/commit/696c87d1bb4ef93505136e241702812fede8d88a)
 - [#22702](https://github.com/duckdb/duckdb/pull/22702) Compact UpdateInfo allocation to reduce transaction memory 
   - `-dag`: [`3906d426a`](https://github.com/krlmlr/duckdb/commit/3906d426a08fb28038fa1ba058a44c99aeacda4e)
   - run #1: copied [`94e837823`](https://github.com/krlmlr/duckdb/commit/94e837823b2f143c51bc62534f03afdde46619f2)
   - run #2: copied [`046ab01f7`](https://github.com/krlmlr/duckdb/commit/046ab01f777034215705511f78ab15ee701b6b30)
+  - run #3: copied [`3cfad8dbc`](https://github.com/krlmlr/duckdb/commit/3cfad8dbc223ed963904c89cb09f6c7305a35532)
 - [#22721](https://github.com/duckdb/duckdb/pull/22721) Clean-up Compression methods: Move a lot of duplicated code to `CompressionState` / `StandardCompressionState`, and generalize `StatsWriter`
   - `-dag`: [`685bcc386`](https://github.com/krlmlr/duckdb/commit/685bcc386c82ccbc2ae1968ff427f1f2028bf6da)
   - run #1: copied [`47152d4fc`](https://github.com/krlmlr/duckdb/commit/47152d4fc0ed181e4573186469b5090ea6f8ff93)
   - run #2: copied [`d2ee6eaae`](https://github.com/krlmlr/duckdb/commit/d2ee6eaae2ddd71694f0bddf7c7c87e7fa828da3)
+  - run #3: copied [`85d23dc3e`](https://github.com/krlmlr/duckdb/commit/85d23dc3ebc724fe80f6e41e74e8d06e65fd2b13)
 - [#22725](https://github.com/duckdb/duckdb/pull/22725) Fix adaptive segment allocation resetting after checkpoint
   - `-dag`: [`cc4b96af8`](https://github.com/krlmlr/duckdb/commit/cc4b96af8af2989523d31a884cacb788f85dc516)
   - run #1: copied [`32fd8c358`](https://github.com/krlmlr/duckdb/commit/32fd8c35893a04466b1841c3fa85a964a95473d7)
   - run #2: copied [`57d726bb6`](https://github.com/krlmlr/duckdb/commit/57d726bb63ba3fc0ac454f32cde74c25bbe30007)
+  - run #3: copied [`7822edece`](https://github.com/krlmlr/duckdb/commit/7822edecebc70b6fa80946d83546d12a27cfae24)
 - [#22680](https://github.com/duckdb/duckdb/pull/22680) Fix/eviction queue purge correctness
   - `-dag`: [`90a4dfbf4`](https://github.com/krlmlr/duckdb/commit/90a4dfbf48efac5685950143c85d7d4faee016f3)
   - run #1: copied [`565b70c69`](https://github.com/krlmlr/duckdb/commit/565b70c692e92cb1afcc8973d7fde7f48de78b59)
   - run #2: copied [`2cf3da659`](https://github.com/krlmlr/duckdb/commit/2cf3da6593188e0e235ba0c9f7036fa9cd91715d)
+  - run #3: copied [`b0674f962`](https://github.com/krlmlr/duckdb/commit/b0674f962b28d3b0f5f6fc9a3faf87cf2d0632ab)
 - [#22525](https://github.com/duckdb/duckdb/pull/22525) Optimizer: Rewrite contains [large list] to a hash join
   - `-dag`: [`de7e9f591`](https://github.com/krlmlr/duckdb/commit/de7e9f591d67b8e9782b2fa9d3cd400cee40bb33)
   - run #1: copied [`0bc03a224`](https://github.com/krlmlr/duckdb/commit/0bc03a2241ec31bfae32003da84917e98a20d49f)
   - run #2: copied [`d61735b4a`](https://github.com/krlmlr/duckdb/commit/d61735b4af83e72bfeec3a7929c3f322a20ecdf6)
+  - run #3: copied [`31286d372`](https://github.com/krlmlr/duckdb/commit/31286d3722892beccca6680304f7518ddc51f280)
 - [#22739](https://github.com/duckdb/duckdb/pull/22739) Bump delta
   - `-dag`: [`88457f5b2`](https://github.com/krlmlr/duckdb/commit/88457f5b262c95f8a930242c1d02f33f1097d2b5)
   - run #1: copied [`940a1db58`](https://github.com/krlmlr/duckdb/commit/940a1db58bbe3cf7ddb8341e1cdec633dbc6fa61)
   - run #2: copied [`f8d14771e`](https://github.com/krlmlr/duckdb/commit/f8d14771e71627aea5d760cebcd3aa1fe8ba5634)
+  - run #3: copied [`3a885e95e`](https://github.com/krlmlr/duckdb/commit/3a885e95ee05510334cdef559ea42326e5de0ae1)
 - [#22695](https://github.com/duckdb/duckdb/pull/22695) Vector API: Remove `idx_t count` from many functions, and pass in `const Vector &` where possible
   - `-dag`: [`d19b58e45`](https://github.com/krlmlr/duckdb/commit/d19b58e45cbf6b9e8f3ed098090c5a0800eb7d46)
   - run #1: copied [`eae0cccf5`](https://github.com/krlmlr/duckdb/commit/eae0cccf5014952e4703914d90f2b41705f92bd9)
   - run #2: copied [`7252aa4f9`](https://github.com/krlmlr/duckdb/commit/7252aa4f96cf4b74d4f6a7248548562abe220968)
+  - run #3: copied [`3fc45d5b0`](https://github.com/krlmlr/duckdb/commit/3fc45d5b0d5dd766fd287e0685287b4b85cb9de5)
 - [#22684](https://github.com/duckdb/duckdb/pull/22684) Fix numeric stats serde
   - `-dag`: [`5a5ca5a19`](https://github.com/krlmlr/duckdb/commit/5a5ca5a1930de0f43a41b287c00956a2a6cda03d)
   - run #1: copied [`8a1097cde`](https://github.com/krlmlr/duckdb/commit/8a1097cde97e9ad2f07e60bc0b5e8bd6d2274f05)
   - run #2: copied [`5a5b6fe54`](https://github.com/krlmlr/duckdb/commit/5a5b6fe54e08bbb4f55f4ff85cc42821d8832301)
+  - run #3: copied [`611f097a2`](https://github.com/krlmlr/duckdb/commit/611f097a23f8a3c77d278cd87b3255ecba06a8a5)
 - [#22678](https://github.com/duckdb/duckdb/pull/22678) Be careful at midnight
   - `-dag`: [`d1b26dd1e`](https://github.com/krlmlr/duckdb/commit/d1b26dd1e8aa4c72b487ff31975fc61acf119c9d)
   - run #1: copied [`b8c2802e0`](https://github.com/krlmlr/duckdb/commit/b8c2802e035a4ea4c0bb3e9024fb0df5548f688f)
   - run #2: copied [`92f4a2026`](https://github.com/krlmlr/duckdb/commit/92f4a202666fbea064a39ab9ea3f594d0bcc57c1)
+  - run #3: copied [`c7a966ec3`](https://github.com/krlmlr/duckdb/commit/c7a966ec38470353c3b3a2f9091708aeac9ec345)
 - [#22747](https://github.com/duckdb/duckdb/pull/22747) Close FD on fcntl error
   - `-dag`: [`77ebbb4fc`](https://github.com/krlmlr/duckdb/commit/77ebbb4fcd17ab21bfdf13ec25fb0d9eb5f08e11)
   - run #1: copied [`26dab9064`](https://github.com/krlmlr/duckdb/commit/26dab90641735e262cce2d7ea2e29ee6fd0fd0f1)
   - run #2: copied [`b561e3a5d`](https://github.com/krlmlr/duckdb/commit/b561e3a5d49750d14fc3f0d28b040ab5e83ec062)
+  - run #3: copied [`fcd2c56bf`](https://github.com/krlmlr/duckdb/commit/fcd2c56bff002344bc852f358f5ce2e5c0c242c5)
 - [#22732](https://github.com/duckdb/duckdb/pull/22732) Add `CONNECT` / `DISCONNECT` statement scaffolding
   - `-dag`: [`b3e922ac9`](https://github.com/krlmlr/duckdb/commit/b3e922ac9254a23e2de0b40a8117e72d38086005)
   - run #1: copied [`ca04713a7`](https://github.com/krlmlr/duckdb/commit/ca04713a71855d31ea150067299964cfa9bbc822)
   - run #2: copied [`5be25e206`](https://github.com/krlmlr/duckdb/commit/5be25e206d2f5634b034ef081e9387f9ebc9e60a)
+  - run #3: copied [`a6cc63948`](https://github.com/krlmlr/duckdb/commit/a6cc6394898ed48031083341567691c489eed5de)
 - [#22333](https://github.com/duckdb/duckdb/pull/22333) Column-level metadata loading and serialization
   - `-dag`: [`7c8a20a22`](https://github.com/krlmlr/duckdb/commit/7c8a20a22774b612cb74015c6579725f5c6894af)
   - run #1: copied [`112227ba9`](https://github.com/krlmlr/duckdb/commit/112227ba93c119c26f7b5f2efe0715c080f140a3)
   - run #2: copied [`a194881eb`](https://github.com/krlmlr/duckdb/commit/a194881eb880876674a40bd7be4ecd952e4e610e)
+  - run #3: copied [`d9b2e52ad`](https://github.com/krlmlr/duckdb/commit/d9b2e52adcd60387460fa4148902ffa133b6a21a)
 - [#22755](https://github.com/duckdb/duckdb/pull/22755) `CompressedMaterialization` casts
   - `-dag`: [`921f368f7`](https://github.com/krlmlr/duckdb/commit/921f368f7d1f803d444dfa48db9cdd4259765c61)
   - run #1: copied [`788497848`](https://github.com/krlmlr/duckdb/commit/78849784839cc771bfab0cdadc4a56b69f39a829)
   - run #2: copied [`434f7550d`](https://github.com/krlmlr/duckdb/commit/434f7550d5c49e1b0b4497faf71c61aaa7f05ab2)
+  - run #3: copied [`a3fa66eb3`](https://github.com/krlmlr/duckdb/commit/a3fa66eb36dc4b1659f6c8ca285ec4adae14ce24)
 - [#22746](https://github.com/duckdb/duckdb/pull/22746) Break early when getting cgroupv1 CPU entry
   - `-dag`: [`136f63a07`](https://github.com/krlmlr/duckdb/commit/136f63a079c59bb1b1a5b4b3bee61376488fcfa5)
   - run #1: copied [`58b40f892`](https://github.com/krlmlr/duckdb/commit/58b40f892353262b4c48398f9835b04a2eb83416)
   - run #2: copied [`7a992c44d`](https://github.com/krlmlr/duckdb/commit/7a992c44d86b06a56b4cbfd4701f1e8a631b2947)
+  - run #3: copied [`804ad9ef4`](https://github.com/krlmlr/duckdb/commit/804ad9ef4d9c014d0a037a5dec47696438bbe562)
 - [#22756](https://github.com/duckdb/duckdb/pull/22756) Auto generate transformer (Part 2/N)
   - `-dag`: [`a78dbc52b`](https://github.com/krlmlr/duckdb/commit/a78dbc52b30ba6ab4f0f97fef72d44acb0786062)
   - run #1: copied [`1dc91c63c`](https://github.com/krlmlr/duckdb/commit/1dc91c63c8d0d4fc61c0e2959df46b9b1f39abd4)
   - run #2: copied [`bfa7691bc`](https://github.com/krlmlr/duckdb/commit/bfa7691bc7637405f694a1ed582437c1476bcb6f)
+  - run #3: copied [`1c26efad0`](https://github.com/krlmlr/duckdb/commit/1c26efad03affa32786cbe7b0c70b098c8b7b51b)
 - [#22760](https://github.com/duckdb/duckdb/pull/22760) Column Segment Clean-up
   - `-dag`: [`ecd00326a`](https://github.com/krlmlr/duckdb/commit/ecd00326aa86d9842ab72e878b96b7a7e471ee44)
   - run #1: copied [`d6788916f`](https://github.com/krlmlr/duckdb/commit/d6788916f03c9df4bd091151c7943f726b75f0c3)
   - run #2: copied [`36e8013e8`](https://github.com/krlmlr/duckdb/commit/36e8013e8774579302606ed15177dca5debcdd23)
+  - run #3: copied [`adb806370`](https://github.com/krlmlr/duckdb/commit/adb80637025a13176aca54dfcf3d84437c893536)
 - [#22650](https://github.com/duckdb/duckdb/pull/22650) Add codeql jobs for c++, python and actions to NightlyTests.yml
   - `-dag`: [`d7ee2cbb2`](https://github.com/krlmlr/duckdb/commit/d7ee2cbb28b256e1fe9a552bf3e2c2e07c4aeea5)
   - run #1: copied [`c174db88e`](https://github.com/krlmlr/duckdb/commit/c174db88ea5b9e294f14bafde8e67e2ea71d9e3e)
   - run #2: copied [`53d6120b0`](https://github.com/krlmlr/duckdb/commit/53d6120b0b6584949499e8c4c355dbbb0513d388)
+  - run #3: copied [`ec988fd61`](https://github.com/krlmlr/duckdb/commit/ec988fd61d64fc1c80c35597696da92f832afded)
 - [#22770](https://github.com/duckdb/duckdb/pull/22770) Follow-up fix: use CheckExecuteCount instead of getting count of non-const member
   - `-dag`: [`30100629a`](https://github.com/krlmlr/duckdb/commit/30100629a3774cca52d512cc916376d2fc839f24)
   - run #1: copied [`4309e465d`](https://github.com/krlmlr/duckdb/commit/4309e465d0bafb7c4a138e8bae769661d8353f8e)
   - run #2: copied [`fca18c0ee`](https://github.com/krlmlr/duckdb/commit/fca18c0eeb7b546c2fdd487d769eed18520973c4)
+  - run #3: copied [`f1b4f5f75`](https://github.com/krlmlr/duckdb/commit/f1b4f5f750504ac30e1e2d68a36ec7e121dcf367)
 - [#22645](https://github.com/duckdb/duckdb/pull/22645) Fix tablefilter unification issues
   - `-dag`: [`22362dded`](https://github.com/krlmlr/duckdb/commit/22362ddeddf7dc1ea9df45e7acc69b97f6cff5c6)
   - run #1: copied [`c368f97b3`](https://github.com/krlmlr/duckdb/commit/c368f97b371665cfdb063bb1d8e66c464da764d6)
   - run #2: copied [`bebe5f9fa`](https://github.com/krlmlr/duckdb/commit/bebe5f9fa647fcc6bea211c641f8693c04356493)
+  - run #3: copied [`e3d5b9a45`](https://github.com/krlmlr/duckdb/commit/e3d5b9a4584ffeaa5364a4a2da3a4d716cb33fe2)
 - [#22765](https://github.com/duckdb/duckdb/pull/22765) Refactor / rework how metrics are gathered and emitted in the `QueryProfiler`
   - `-dag`: [`15c2bad97`](https://github.com/krlmlr/duckdb/commit/15c2bad97054de1b049610cdf615ab5d7a216ff9)
   - run #1: copied [`a33adbc8b`](https://github.com/krlmlr/duckdb/commit/a33adbc8b16fe4777829ca486b789c74d20b83aa)
   - run #2: copied [`70285077e`](https://github.com/krlmlr/duckdb/commit/70285077e4b9ab9ce1eee945526a47cde32e1deb)
+  - run #3: copied [`f1e7fbd02`](https://github.com/krlmlr/duckdb/commit/f1e7fbd025a93112b051207711a14e1c6779f9ea)
 - [#22780](https://github.com/duckdb/duckdb/pull/22780) Print one-line test summary after log group
   - `-dag`: [`a492343f1`](https://github.com/krlmlr/duckdb/commit/a492343f1a9b67b1f02ed5d55f530f62fd996a3c)
   - run #1: copied [`af5501d5a`](https://github.com/krlmlr/duckdb/commit/af5501d5a236cbe4858aa5583ccfd43ad71a4dc1)
   - run #2: copied [`dd3457f2e`](https://github.com/krlmlr/duckdb/commit/dd3457f2e38c65fd78e9729724cc7a78e7b985c2)
+  - run #3: copied [`a60525eb1`](https://github.com/krlmlr/duckdb/commit/a60525eb1302eb712b1ade0532edbf69cfca4bf8)
 - [#22781](https://github.com/duckdb/duckdb/pull/22781) Keep log group open on detected regression
   - `-dag`: [`e92014fce`](https://github.com/krlmlr/duckdb/commit/e92014fce312d82bac52867f998d43b393344ab7)
   - run #1: copied [`3b9591999`](https://github.com/krlmlr/duckdb/commit/3b9591999db29623393d3f901c29c60b4ddadbef)
   - run #2: copied [`9ef705b39`](https://github.com/krlmlr/duckdb/commit/9ef705b39ca8fac48cfa9fda65c00f7a7f9a8f6a)
+  - run #3: copied [`906208592`](https://github.com/krlmlr/duckdb/commit/906208592cb2ee5a6dfc07dad1e57792d3344cf0)
 - [#22777](https://github.com/duckdb/duckdb/pull/22777) Bump spatial extension and remove applied patches
   - `-dag`: [`b1a7eb4f7`](https://github.com/krlmlr/duckdb/commit/b1a7eb4f76f96898d84970a3f8452c879970f0d8)
   - run #1: copied [`d4c770e58`](https://github.com/krlmlr/duckdb/commit/d4c770e581ffbedbfd1ad00459576ff14849954e)
   - run #2: copied [`5946c9ca2`](https://github.com/krlmlr/duckdb/commit/5946c9ca2589e1ce827f74e7feb2663b26ff0101)
+  - run #3: copied [`6193644f4`](https://github.com/krlmlr/duckdb/commit/6193644f45544b49af2c7f74d832bb2eb48e4233)
 - [#22786](https://github.com/duckdb/duckdb/pull/22786) Support qualified drop schema and drop index with reserved keywords
   - `-dag`: [`9e2647b74`](https://github.com/krlmlr/duckdb/commit/9e2647b74552d8cd149788542791fbfc75f3bad2)
   - run #1: copied [`05aaca766`](https://github.com/krlmlr/duckdb/commit/05aaca766d7371e54a99074a750f3b5774f58813)
   - run #2: copied [`1e1c19adf`](https://github.com/krlmlr/duckdb/commit/1e1c19adfed0751ecd2d3c65a932f086a7ab21e6)
+  - run #3: copied [`b0c6bbfa9`](https://github.com/krlmlr/duckdb/commit/b0c6bbfa915ccc4e08e26137b81b70e9fa515e21)
 - [#22785](https://github.com/duckdb/duckdb/pull/22785) Retry clangd error 'ValueError: Invalid header end'
   - `-dag`: [`ffe35cb10`](https://github.com/krlmlr/duckdb/commit/ffe35cb10960abf8230938c2ad4f1597b784c1ee)
   - run #1: copied [`00a61c92f`](https://github.com/krlmlr/duckdb/commit/00a61c92fea6184f19c1d15e35e380320fba28ae)
   - run #2: copied [`cb3599e21`](https://github.com/krlmlr/duckdb/commit/cb3599e217a8aa01f5caa2be5577d41fb7461a1c)
+  - run #3: copied [`c60a76a46`](https://github.com/krlmlr/duckdb/commit/c60a76a462b95a55bc8b885cbfcfceeab6df80b0)
 - [#22783](https://github.com/duckdb/duckdb/pull/22783) Make CTE inlining of correlated CTEs more stable
   - `-dag`: [`8b3d92ba1`](https://github.com/krlmlr/duckdb/commit/8b3d92ba15111796f3d7858f87780959d836fbb5)
   - run #1: copied [`38e447eea`](https://github.com/krlmlr/duckdb/commit/38e447eea05d7b25e666651fb8bf703ad0762f1e)
   - run #2: copied [`4cb420cca`](https://github.com/krlmlr/duckdb/commit/4cb420cca66b40dd796d661f936fd4b576e2a686)
+  - run #3: copied [`089f08912`](https://github.com/krlmlr/duckdb/commit/089f08912e9bfd946f5069040db65707c973a0a9)
 
 - **[checkpoint] Run #15 back-merge** [#22751](https://github.com/duckdb/duckdb/pull/22751) "Merge `v1.5-variegata` into main"
   - `-dag`: [`706584f1b`](https://github.com/krlmlr/duckdb/commit/706584f1bb0ccbb153da4ea564850980a7e05bd2)
   - run #1: copied (merge) [`2f336aa3f`](https://github.com/krlmlr/duckdb/commit/2f336aa3fdc8771c322760ac9f8a8699c1c4032a)
   - run #2: copied (merge) [`000081bb0`](https://github.com/krlmlr/duckdb/commit/000081bb0608a303253246bf15b5728b53c26853)
+  - run #3: copied (merge) [`e38c03377`](https://github.com/krlmlr/duckdb/commit/e38c0337784a5c4f2801f8202093e2b70d495c75)
 
 ### Run #16 segment
 - [#22787](https://github.com/duckdb/duckdb/pull/22787) [Dev] Fix behavior for the `force_full_download` open-file-info option, with the new workings of the ExternalFileCache
   - `-dag`: [`3d8129ec0`](https://github.com/krlmlr/duckdb/commit/3d8129ec021460af8b33be45d21224fc74111d80)
   - run #1: copied [`3f5c80142`](https://github.com/krlmlr/duckdb/commit/3f5c80142377c7a6ec79681a453031e7efacd708)
   - run #2: copied [`fbd765c16`](https://github.com/krlmlr/duckdb/commit/fbd765c1670c64dd8dc26aa6ec15df4b67ef9d91)
+  - run #3: copied [`f359ba786`](https://github.com/krlmlr/duckdb/commit/f359ba78612e1a758351d56df327c0379b17653f)
 - [#22763](https://github.com/duckdb/duckdb/pull/22763) Upgrade to windows-2025-vs2026 explicitly
   - `-dag`: [`5dd4196b9`](https://github.com/krlmlr/duckdb/commit/5dd4196b9b8d588009ba034af088cfe88d7bf40a)
   - run #1: copied [`f2dd4e3d6`](https://github.com/krlmlr/duckdb/commit/f2dd4e3d6182360f0f4869468eb99b7aef32304f)
   - run #2: copied [`528746fd9`](https://github.com/krlmlr/duckdb/commit/528746fd99282d0ed201fbe083628182bdc479c1)
+  - run #3: copied [`696b3be1e`](https://github.com/krlmlr/duckdb/commit/696b3be1e8b038e2f9212dac028b84a71ca7e473)
 - [#22789](https://github.com/duckdb/duckdb/pull/22789) Add compressed probing hash join
   - `-dag`: [`52012de7d`](https://github.com/krlmlr/duckdb/commit/52012de7d987fce1c8d26746a475acaf48c50df2)
   - run #1: copied [`176a6c192`](https://github.com/krlmlr/duckdb/commit/176a6c1921baeb81bf161869bdebfb83e0bcf324)
   - run #2: copied [`719066fe5`](https://github.com/krlmlr/duckdb/commit/719066fe54e7d39d8df9633f3d3ddc509de9a9f4)
+  - run #3: copied [`409746b4d`](https://github.com/krlmlr/duckdb/commit/409746b4d7226b58ca7e7a282f9049ce1c3f1fda)
 - [#22801](https://github.com/duckdb/duckdb/pull/22801) Remove redundant part lock guard for sort_key_payload_state
   - `-dag`: [`deab234bd`](https://github.com/krlmlr/duckdb/commit/deab234bd0ca22f8efea7937b86f909d688726e5)
   - run #1: copied [`f562c6ff1`](https://github.com/krlmlr/duckdb/commit/f562c6ff1d7f00342f68cfea64338d9392ad4005)
   - run #2: copied [`7bd27d5ab`](https://github.com/krlmlr/duckdb/commit/7bd27d5ab12ed41f6142cf29ecbdcc056f61a699)
+  - run #3: copied [`c90c49184`](https://github.com/krlmlr/duckdb/commit/c90c491849e8710e3132eefe8dc43f39be3a1eeb)
 - [#22498](https://github.com/duckdb/duckdb/pull/22498) Try to INSTALL and LOAD for test auto-load mode == none
   - `-dag`: [`ec5381bd4`](https://github.com/krlmlr/duckdb/commit/ec5381bd4a1987bf0f83e7eb96bcd5eac1255273)
   - run #1: copied [`1de70544c`](https://github.com/krlmlr/duckdb/commit/1de70544c50c0425cc93537fb73ea41bf067a548)
   - run #2: copied [`fec6a1c90`](https://github.com/krlmlr/duckdb/commit/fec6a1c9020bf20ac3a9775e55ca65342c838812)
+  - run #3: copied [`1e3568a82`](https://github.com/krlmlr/duckdb/commit/1e3568a82356af392dd3279115426a44ddd616a6)
 - [#22809](https://github.com/duckdb/duckdb/pull/22809) Use detect-runners action in prepare
   - `-dag`: [`d0df2c21a`](https://github.com/krlmlr/duckdb/commit/d0df2c21a1c6a4c361b78e2745134d36e47f06e4)
   - run #1: copied [`1eeecdffe`](https://github.com/krlmlr/duckdb/commit/1eeecdffe065f07fb757d53ee282287551a9c442)
   - run #2: copied [`066633424`](https://github.com/krlmlr/duckdb/commit/066633424dded12325b6ba74e65e2b3d645dc9c2)
+  - run #3: copied [`bfb1428ad`](https://github.com/krlmlr/duckdb/commit/bfb1428adf30c59a344872d2866c35930d1f4778)
 - [#22754](https://github.com/duckdb/duckdb/pull/22754) Unify storage version and serialization version
   - `-dag`: [`7ed0c466a`](https://github.com/krlmlr/duckdb/commit/7ed0c466a06de55bf4299dfea241493682467f08)
   - run #1: copied [`55bfbb4ce`](https://github.com/krlmlr/duckdb/commit/55bfbb4cea27f89b741f45b841a85a9bb2912beb)
   - run #2: copied [`8678549bb`](https://github.com/krlmlr/duckdb/commit/8678549bbbb29e56676daa10a964f52ba35fce35)
+  - run #3: copied [`7e4366d36`](https://github.com/krlmlr/duckdb/commit/7e4366d36b8b3918bbebfecf81f451b3726c2252)
 - [#22689](https://github.com/duckdb/duckdb/pull/22689) Run more core extensions with sanitizers in CI
   - `-dag`: [`2ceef9db7`](https://github.com/krlmlr/duckdb/commit/2ceef9db7fe9d6fad41a15467359ebf4f85bbf2c)
   - run #1: copied [`0295404d3`](https://github.com/krlmlr/duckdb/commit/0295404d31a76dd61c46ef362700c6989a96e940)
   - run #2: copied [`afeb905b2`](https://github.com/krlmlr/duckdb/commit/afeb905b246b3d06183b8d424780b85bb05390af)
+  - run #3: copied [`8a34e9069`](https://github.com/krlmlr/duckdb/commit/8a34e9069fd8fd0ce49b35a92fb0ee12dd7ab107)
 - [#20983](https://github.com/duckdb/duckdb/pull/20983) Support long paths on Windows
   - `-dag`: [`f2632011c`](https://github.com/krlmlr/duckdb/commit/f2632011c501a388f18c0fe7403b09c6148b6ad6)
   - run #1: copied [`645556e81`](https://github.com/krlmlr/duckdb/commit/645556e811022c15b372d6cf99d916cfba1b6b31)
   - run #2: copied [`0dcd5aa6d`](https://github.com/krlmlr/duckdb/commit/0dcd5aa6dab57e00e301af249ea92417c56cfb16)
+  - run #3: copied [`a43fac0b5`](https://github.com/krlmlr/duckdb/commit/a43fac0b5a14c01a3143a2b408b0150bf1c704e3)
 - [#22813](https://github.com/duckdb/duckdb/pull/22813) Optimize TryAddDictionaryGroups
   - `-dag`: [`0bdcbf34c`](https://github.com/krlmlr/duckdb/commit/0bdcbf34c14f45cca5525ba1918dc9d45521b4cb)
   - run #1: copied [`2cc3eafb2`](https://github.com/krlmlr/duckdb/commit/2cc3eafb296a83da161cd65485d3100e3cfd486e)
   - run #2: copied [`22a6d82aa`](https://github.com/krlmlr/duckdb/commit/22a6d82aa6559d127bdaf5dc9930d75a95776f4a)
+  - run #3: copied [`903afe819`](https://github.com/krlmlr/duckdb/commit/903afe819b49efd5116aa5d5d17aa17731147e2d)
 - [#22831](https://github.com/duckdb/duckdb/pull/22831) Fix NULL format option on json copy
   - `-dag`: [`4640996da`](https://github.com/krlmlr/duckdb/commit/4640996da9acff9118a092cc06dfa1e6959ddd98)
   - run #1: copied [`301e51f57`](https://github.com/krlmlr/duckdb/commit/301e51f571f62ebfc0f446c7b1fb4095ded08f79)
   - run #2: copied [`181ae8b2a`](https://github.com/krlmlr/duckdb/commit/181ae8b2ac65e572aae17e859464d29cdbb21547)
+  - run #3: copied [`502ffdf9f`](https://github.com/krlmlr/duckdb/commit/502ffdf9fcc8acf33d1cb1e32c8e54a24e884f6e)
 - [#22812](https://github.com/duckdb/duckdb/pull/22812) Fix some issues found on the (nightly) main CI run
   - `-dag`: [`4e4f43b5d`](https://github.com/krlmlr/duckdb/commit/4e4f43b5dd548177499589cef429d2acf76cdb13)
   - run #1: copied [`13d354ceb`](https://github.com/krlmlr/duckdb/commit/13d354ceb86a3d5c35fe6c7fa05ba4d58c3f2b95)
   - run #2: copied [`61a66f65a`](https://github.com/krlmlr/duckdb/commit/61a66f65ab551f06b701683cf083eadfe096b78f)
+  - run #3: copied [`ec2ca2071`](https://github.com/krlmlr/duckdb/commit/ec2ca207193533c103d78aeb9be16cf07623a71f)
 - [#22807](https://github.com/duckdb/duckdb/pull/22807) adjust CI build filter from 500:1 -> 50:1 lines emitted
   - `-dag`: [`bf5881474`](https://github.com/krlmlr/duckdb/commit/bf5881474c84beb390dfc88c6fdedd713b66c24d)
   - run #1: copied [`41df87ec1`](https://github.com/krlmlr/duckdb/commit/41df87ec14516ab03161d29ed638ed81698cf00e)
   - run #2: copied [`ea1f745b7`](https://github.com/krlmlr/duckdb/commit/ea1f745b7bd174c595c4aac15c737a780b985add)
+  - run #3: copied [`ef3574084`](https://github.com/krlmlr/duckdb/commit/ef357408435969a7302b3e527183000b971cb7ba)
 - [#22805](https://github.com/duckdb/duckdb/pull/22805) Throw error if last token is unterminated string or quoted identifier
   - `-dag`: [`0bdfdc39e`](https://github.com/krlmlr/duckdb/commit/0bdfdc39e845cdb539f62c65fb50e406c573c50d)
   - run #1: copied [`03ff0a2ba`](https://github.com/krlmlr/duckdb/commit/03ff0a2ba85476dfbb4ef7f39bbc749d238f4170)
   - run #2: copied [`ffbcc56e9`](https://github.com/krlmlr/duckdb/commit/ffbcc56e95bcb802d0c13d69e6c4f4ca45194402)
+  - run #3: copied [`065207361`](https://github.com/krlmlr/duckdb/commit/0652073618aa27f861c56a6198e8ba5b2035e248)
 - [#22803](https://github.com/duckdb/duckdb/pull/22803) Don't allow identifiers to start with numbers
   - `-dag`: [`a9053bd67`](https://github.com/krlmlr/duckdb/commit/a9053bd676ae32db2f081c6c451209a8340297de)
   - run #1: copied [`5e06228b6`](https://github.com/krlmlr/duckdb/commit/5e06228b6566438e13eb99250983d35709315bfd)
   - run #2: copied [`1774fdce8`](https://github.com/krlmlr/duckdb/commit/1774fdce811b5f2b2216c2d371fbea61dd1598c3)
+  - run #3: copied [`f5561f914`](https://github.com/krlmlr/duckdb/commit/f5561f9144eb9ffcf387592dab2a49afba6e49a2)
 - [#22821](https://github.com/duckdb/duckdb/pull/22821) Auto generate transformer (Part 3)
   - `-dag`: [`ad260fabd`](https://github.com/krlmlr/duckdb/commit/ad260fabdd8b1702e049c14eab46cb48288cb7c0)
   - run #1: copied [`767c771de`](https://github.com/krlmlr/duckdb/commit/767c771de572091236ea26aaca03d88f81bc12c7)
   - run #2: copied [`1a053cf8e`](https://github.com/krlmlr/duckdb/commit/1a053cf8e22af8b6b05aa1d2c817c56deb3f163f)
+  - run #3: copied [`07c5d0df4`](https://github.com/krlmlr/duckdb/commit/07c5d0df436560089e9b64f29f67f2bc4ae0f98f)
 - [#22814](https://github.com/duckdb/duckdb/pull/22814) [Dev] Fix the case where `PhysicalCopyToFile` has no child operators
   - `-dag`: [`80574cdbc`](https://github.com/krlmlr/duckdb/commit/80574cdbcfa1cbc71e01264372edb6d280147134)
   - run #1: copied [`b33c72ded`](https://github.com/krlmlr/duckdb/commit/b33c72deda9054e6dc70274fdc812a3a6f2a9c5b)
   - run #2: copied [`1b7bf296b`](https://github.com/krlmlr/duckdb/commit/1b7bf296ba8f2325e6c1d9c1bdd7c1f53668d4e9)
+  - run #3: copied [`f60384bb8`](https://github.com/krlmlr/duckdb/commit/f60384bb8c0e3c34e1dac0a8696eb350d6ab2c01)
 - [#22778](https://github.com/duckdb/duckdb/pull/22778) Parallelize  pragma_storage_info, and move block scanning to the physical execution
   - `-dag`: [`69524a9c9`](https://github.com/krlmlr/duckdb/commit/69524a9c90684284f81a8f0918f4e24f4b1b9362)
   - run #1: copied [`7d0347e98`](https://github.com/krlmlr/duckdb/commit/7d0347e98ee817033885b5966972a0f300aebb78)
   - run #2: copied [`48c1ede6f`](https://github.com/krlmlr/duckdb/commit/48c1ede6fa36c11dd4d2e3ef47e42136de94afb8)
+  - run #3: copied [`7b4e467ae`](https://github.com/krlmlr/duckdb/commit/7b4e467ae55d8b86f03eb70573fe84c4d6265382)
 - [#22480](https://github.com/duckdb/duckdb/pull/22480) Explicitly set an extension schema
   - `-dag`: [`528408cb6`](https://github.com/krlmlr/duckdb/commit/528408cb6654067d59119b27dbd834852d536f49)
   - run #1: copied [`3d242a1d3`](https://github.com/krlmlr/duckdb/commit/3d242a1d342ea9b4749a41f9679dd8a92c152f7a)
   - run #2: copied [`e276dc037`](https://github.com/krlmlr/duckdb/commit/e276dc037a3e9d81fcb1724f8b71cffecd66cc93)
+  - run #3: copied [`34d236ee0`](https://github.com/krlmlr/duckdb/commit/34d236ee0e29dfe00a677a570fedd7e6f5d39298)
 - [#22834](https://github.com/duckdb/duckdb/pull/22834) Allow collation for VARCHAR alias column types (e.g. CHAR, BPCHAR, STRING, TEXT)
   - `-dag`: [`176db5850`](https://github.com/krlmlr/duckdb/commit/176db585062cf369f4e91517e21b8b1f35cbf655)
   - run #1: copied [`ba198adfa`](https://github.com/krlmlr/duckdb/commit/ba198adfa454457489ff8f566b7c15116cb9c9d6)
   - run #2: copied [`0ecaf5c2e`](https://github.com/krlmlr/duckdb/commit/0ecaf5c2e8e9853049b320c516207ba81d7704bb)
+  - run #3: copied [`e90ef5a31`](https://github.com/krlmlr/duckdb/commit/e90ef5a313b6354e48be0558e72948e19df2d336)
 - [#22799](https://github.com/duckdb/duckdb/pull/22799) Refactor the Metrics Layer
   - `-dag`: [`fad594902`](https://github.com/krlmlr/duckdb/commit/fad594902fe59f5da9190b8f1d58b7f60b83db43)
   - run #1: copied [`9b63cc65b`](https://github.com/krlmlr/duckdb/commit/9b63cc65b716816154ae48d2b99096000e1a2159)
   - run #2: copied [`920c01eff`](https://github.com/krlmlr/duckdb/commit/920c01eff7e520e69f79e1157256eee7cd443729)
+  - run #3: copied [`867e65faa`](https://github.com/krlmlr/duckdb/commit/867e65faad41157e5b6b498daf1e7ec991f47ecd)
 - [#22724](https://github.com/duckdb/duckdb/pull/22724) Initial implementation of `variant_keys` processing function
   - `-dag`: [`a62f9da98`](https://github.com/krlmlr/duckdb/commit/a62f9da9867166befa86cd4d38076587a9cc47b2)
   - run #1: copied [`4da130f72`](https://github.com/krlmlr/duckdb/commit/4da130f72cc1fd012b7daa8524fdd07065a54c19)
   - run #2: copied [`c0910f57a`](https://github.com/krlmlr/duckdb/commit/c0910f57afbb28d7a885614f1118818482d3f9c7)
+  - run #3: copied [`4723abc8c`](https://github.com/krlmlr/duckdb/commit/4723abc8c5c4860a48e349dd1b4b88c37d90dbfa)
 - [#22497](https://github.com/duckdb/duckdb/pull/22497) Parquet Prefetch Strategy
   - `-dag`: [`7acea80fe`](https://github.com/krlmlr/duckdb/commit/7acea80fe4624c1e6045ac7847331d77a5cfa91a)
   - run #1: copied [`88f235a6c`](https://github.com/krlmlr/duckdb/commit/88f235a6c6bdae3e1d42ae57cb5e3af9ae5af748)
   - run #2: copied [`254d20eaf`](https://github.com/krlmlr/duckdb/commit/254d20eaf880fc7e0c9057da421f2e90bec64a51)
+  - run #3: copied [`a7e95256f`](https://github.com/krlmlr/duckdb/commit/a7e95256fe67319039bb8e867ff86d5d6c12412a)
 - [#22840](https://github.com/duckdb/duckdb/pull/22840) Make `GetSQLValueFunction` pluggable through a planner extension
   - `-dag`: [`1cf653281`](https://github.com/krlmlr/duckdb/commit/1cf653281d0534d512b3032363da1e44f2a9d61a)
   - run #1: copied [`16e0e9e97`](https://github.com/krlmlr/duckdb/commit/16e0e9e979a5d21ad9b95921dd28dffb6ddb77ba)
   - run #2: copied [`1d0555c9e`](https://github.com/krlmlr/duckdb/commit/1d0555c9e7b8fe73cd8c39eb3ecb7a00e5d5f50e)
+  - run #3: copied [`054c8890d`](https://github.com/krlmlr/duckdb/commit/054c8890dd62584cbb78ff662df53ed2c6df9d9c)
 - [#22870](https://github.com/duckdb/duckdb/pull/22870) Add copy argument validation
   - `-dag`: [`8fa9475d8`](https://github.com/krlmlr/duckdb/commit/8fa9475d8609409beba6a13f83601f69a6f591e2)
   - run #1: copied [`d2d2c95a5`](https://github.com/krlmlr/duckdb/commit/d2d2c95a55e6443dcd2e3f739d1687bda369874d)
   - run #2: copied [`fd96a44db`](https://github.com/krlmlr/duckdb/commit/fd96a44db8153de7e67d5ea6e50053832f7adc7d)
+  - run #3: copied [`3b15a343d`](https://github.com/krlmlr/duckdb/commit/3b15a343d77cc307ff430fa7f6bbab63dfb1c76b)
 - [#22735](https://github.com/duckdb/duckdb/pull/22735) Remove unused delta files and link to duckdb-delta repository
   - `-dag`: [`8d9d1ef9f`](https://github.com/krlmlr/duckdb/commit/8d9d1ef9f75cf84624810215995fe23a6eed336d)
   - run #1: copied [`e34ab537a`](https://github.com/krlmlr/duckdb/commit/e34ab537a036c02a0904440cb41aedd3135ac967)
   - run #2: copied [`d848716b1`](https://github.com/krlmlr/duckdb/commit/d848716b1c568d9e0dcf35033d701cccea22b4d2)
+  - run #3: copied [`af110c09d`](https://github.com/krlmlr/duckdb/commit/af110c09d6f280f484d946132a0f0682cb4107b4)
 - [#22842](https://github.com/duckdb/duckdb/pull/22842) Add quack to issue template
   - `-dag`: [`6f16483b5`](https://github.com/krlmlr/duckdb/commit/6f16483b586e17417cf79144f0ba0f1caad9c5e1)
   - run #1: copied [`c76ed6eea`](https://github.com/krlmlr/duckdb/commit/c76ed6eea90785d087092989abb72bfe782b785f)
   - run #2: copied [`b068745a6`](https://github.com/krlmlr/duckdb/commit/b068745a657d0df221441fb3cbd24d91aba91523)
+  - run #3: copied [`1878243eb`](https://github.com/krlmlr/duckdb/commit/1878243eb184eac30b56fbf619e4205e224525f0)
 - [#22873](https://github.com/duckdb/duckdb/pull/22873) Fix JSON create functions for VARIANT input
   - `-dag`: [`f749b1946`](https://github.com/krlmlr/duckdb/commit/f749b19469fc43a8d2c2681dccf7b082f951622c)
   - run #1: copied [`763dd69f4`](https://github.com/krlmlr/duckdb/commit/763dd69f4f30029ced57b436df1cda59fb5f5f5b)
   - run #2: copied [`46997ac72`](https://github.com/krlmlr/duckdb/commit/46997ac7241dd54c62438f08bcefbf215dc772df)
+  - run #3: copied [`1cf72e5b9`](https://github.com/krlmlr/duckdb/commit/1cf72e5b9e128d991b8b994a10e1f2417231e9ad)
 - [#22811](https://github.com/duckdb/duckdb/pull/22811) Fix jemalloc packaging for JDBC/ODBC
   - `-dag`: [`6d1b79efa`](https://github.com/krlmlr/duckdb/commit/6d1b79efa39a3d9ab579d8d18bbff920762e3409)
   - run #1: copied [`029277639`](https://github.com/krlmlr/duckdb/commit/029277639a98be4ef8f265712df610b485f0f09a)
   - run #2: copied [`8aae9a3c2`](https://github.com/krlmlr/duckdb/commit/8aae9a3c2eaff2607900b42edb504db1dab804e3)
+  - run #3: copied [`13e3b7bb4`](https://github.com/krlmlr/duckdb/commit/13e3b7bb4ca67aab1f9e4b3941a9c21824377b51)
 - [#22772](https://github.com/duckdb/duckdb/pull/22772) Remove unused third_party/snowball
   - `-dag`: [`11049e599`](https://github.com/krlmlr/duckdb/commit/11049e599f409d3525b0a4a57f9664e35c8515e6)
   - run #1: copied [`2c90a75b9`](https://github.com/krlmlr/duckdb/commit/2c90a75b928392696ccb3bc84dececf193659683)
   - run #2: copied [`babd41f17`](https://github.com/krlmlr/duckdb/commit/babd41f17208410835ab9f287efae2f25f56b017)
+  - run #3: copied [`fff905712`](https://github.com/krlmlr/duckdb/commit/fff9057128c7c448ae475cd81f7d07734563ed47)
 - [#22833](https://github.com/duckdb/duckdb/pull/22833) Bump HTTPFS
   - `-dag`: [`fa9274e5a`](https://github.com/krlmlr/duckdb/commit/fa9274e5af5617af8192a339bbc836615a37fc76)
   - run #1: copied [`197c51d0e`](https://github.com/krlmlr/duckdb/commit/197c51d0e2a68af91509f8e962bfe504c9eb65e2)
   - run #2: copied [`17f9f9be6`](https://github.com/krlmlr/duckdb/commit/17f9f9be6407d6a334d9c01da5609e7c790778ca)
+  - run #3: copied [`1d4945f4a`](https://github.com/krlmlr/duckdb/commit/1d4945f4a345091a4ec8b2be3a7eda4acaa3caeb)
 - [#22875](https://github.com/duckdb/duckdb/pull/22875) Bump default storage to `v2.0.0`
   - `-dag`: [`cdb9706d5`](https://github.com/krlmlr/duckdb/commit/cdb9706d503a3896f7b30de22803e8d34631f573)
   - run #1: copied [`0e4bfc44a`](https://github.com/krlmlr/duckdb/commit/0e4bfc44af94c516585c2f60c113bf9f8c3d1680)
   - run #2: copied [`33134dbd4`](https://github.com/krlmlr/duckdb/commit/33134dbd4b5c31e08c91271628b9c97d7ad77c66)
+  - run #3: copied [`434d2cb11`](https://github.com/krlmlr/duckdb/commit/434d2cb11e0fd50f64a56186d5d8189a66e338be)
 - [#22459](https://github.com/duckdb/duckdb/pull/22459) Fix MERGE condition binding for row alias comparisons
   - `-dag`: [`17ab74cfb`](https://github.com/krlmlr/duckdb/commit/17ab74cfb51646a8c8d56a80ab46c8adad3b9575)
   - run #1: copied [`8489c32d3`](https://github.com/krlmlr/duckdb/commit/8489c32d38de03c32f6e28ba39d4d3a0be4698fd)
   - run #2: copied [`ebdc5d900`](https://github.com/krlmlr/duckdb/commit/ebdc5d900c2b1d4432dfc3c4a0e70cceba351f1f)
+  - run #3: copied [`ced448980`](https://github.com/krlmlr/duckdb/commit/ced448980a82719a625b16c1d3c879ca0f3e2ba8)
 - [#22877](https://github.com/duckdb/duckdb/pull/22877) Re-enable all explicitly disabled tests on musl
   - `-dag`: [`12334927c`](https://github.com/krlmlr/duckdb/commit/12334927ca619ad73fa18bf54942a56b922d0a68)
   - run #1: copied [`a3d3f547f`](https://github.com/krlmlr/duckdb/commit/a3d3f547ff050cd162a7c20816933e188b9102d9)
   - run #2: copied [`e6d85588d`](https://github.com/krlmlr/duckdb/commit/e6d85588d043e25cdc54ecbcb15a8ee83629f7d7)
+  - run #3: copied [`fc0d6ca43`](https://github.com/krlmlr/duckdb/commit/fc0d6ca43138f5a2997da1314779758fbe53ddee)
 - [#22802](https://github.com/duckdb/duckdb/pull/22802) Add support for large integer values for CSV
   - `-dag`: [`d2448dead`](https://github.com/krlmlr/duckdb/commit/d2448deadb4981852c81c4b9d3e2aea05195ea24)
   - run #1: copied [`17cd2cd97`](https://github.com/krlmlr/duckdb/commit/17cd2cd9729f38da1db3439c86ea57baa830fd3d)
   - run #2: copied [`732793f4d`](https://github.com/krlmlr/duckdb/commit/732793f4d309823e62e6ab358153c4f031b6c2c1)
+  - run #3: copied [`61745d3e4`](https://github.com/krlmlr/duckdb/commit/61745d3e46e8df33e73ba233589d151206b25b6d)
 - [#22839](https://github.com/duckdb/duckdb/pull/22839) Reject MERGE clauses that follow an unconditional clause of the same condition
   - `-dag`: [`ec695f2a0`](https://github.com/krlmlr/duckdb/commit/ec695f2a006dfd6e992d1209e4da1be92f301c44)
   - run #1: copied [`f599b614e`](https://github.com/krlmlr/duckdb/commit/f599b614e842f856c60e45ceca6bbb6349148524)
   - run #2: copied [`ac5a57ce2`](https://github.com/krlmlr/duckdb/commit/ac5a57ce2eeee635a9e0ad86b84aee3c79a23e39)
+  - run #3: copied [`606a0c86c`](https://github.com/krlmlr/duckdb/commit/606a0c86cd102775daea7b93e514e0b174a7a289)
 - [#22876](https://github.com/duckdb/duckdb/pull/22876) Remove build_extensions and no longer used script
   - `-dag`: [`42a2545c7`](https://github.com/krlmlr/duckdb/commit/42a2545c7a811f348ba27d8c0c57c435cac37e89)
   - run #1: copied [`23ab2c413`](https://github.com/krlmlr/duckdb/commit/23ab2c413077366aa3345fcc3fa901ca5dec186c)
   - run #2: copied [`285d81e2e`](https://github.com/krlmlr/duckdb/commit/285d81e2efd29c08983bff059dbf62097fce3521)
+  - run #3: copied [`9b7789e73`](https://github.com/krlmlr/duckdb/commit/9b7789e732e79bc5d2de9ece7c0bc13f39de0452)
 - [#22880](https://github.com/duckdb/duckdb/pull/22880) Auto generate util functions (`Copy`, `Equals`, `Hash`, `Iterate`) for ParsedExpressions
   - `-dag`: [`c6a8d7ba1`](https://github.com/krlmlr/duckdb/commit/c6a8d7ba19d605daf85a2b9a4e78ce472f590976)
   - run #1: copied [`428a2c0d3`](https://github.com/krlmlr/duckdb/commit/428a2c0d3ebcb4d8fc75d4f73237e31273305aa5)
   - run #2: copied [`d5dc8b22d`](https://github.com/krlmlr/duckdb/commit/d5dc8b22d66ce07f76daa156ff33438ff8b5cce3)
+  - run #3: copied [`01f34f541`](https://github.com/krlmlr/duckdb/commit/01f34f541f0875bfa2cad4b72ef3c48408b85943)
 - [#22881](https://github.com/duckdb/duckdb/pull/22881) `COMMENT ON` aliased view column
   - `-dag`: [`c19ff4b7e`](https://github.com/krlmlr/duckdb/commit/c19ff4b7e64603b6226a05661c4f814bdc54bc83)
   - run #1: copied [`84bb6404b`](https://github.com/krlmlr/duckdb/commit/84bb6404be976811ec560f2393c48f5c6035b1ac)
   - run #2: copied [`c20c4e974`](https://github.com/krlmlr/duckdb/commit/c20c4e9749e837e2a9118d6671b0b1b10156d70d)
+  - run #3: copied [`2db2cbc12`](https://github.com/krlmlr/duckdb/commit/2db2cbc1257fceb671f4014e0c08ab1cce6addff)
 - [#22886](https://github.com/duckdb/duckdb/pull/22886) Fix Parquet TIMETZ metadata
   - `-dag`: [`d734157fc`](https://github.com/krlmlr/duckdb/commit/d734157fc1a9bb5a753354555407528f97ae5d4f)
   - run #1: copied [`a579ca902`](https://github.com/krlmlr/duckdb/commit/a579ca902ff42e1d3d54bc8354f7eba40829fc74)
   - run #2: copied [`82973fd24`](https://github.com/krlmlr/duckdb/commit/82973fd24afa8e645cf3d54e67f316200e3f0776)
+  - run #3: copied [`6228a6102`](https://github.com/krlmlr/duckdb/commit/6228a6102335a98706ddade51d0cb70f0df68dc8)
 - [#22888](https://github.com/duckdb/duckdb/pull/22888) Support empty string casts to BIT
   - `-dag`: [`fbd24b224`](https://github.com/krlmlr/duckdb/commit/fbd24b22483a9da9ab2c31a2ac3e822b1e9062b0)
   - run #1: copied [`453ba67d3`](https://github.com/krlmlr/duckdb/commit/453ba67d3aa3afc44cb04407008e87b25c14ef9c)
   - run #2: copied [`bc49e5d30`](https://github.com/krlmlr/duckdb/commit/bc49e5d304439cc189259ad00b837cbe5ed06161)
+  - run #3: copied [`d7140b23b`](https://github.com/krlmlr/duckdb/commit/d7140b23bbc2c62f95091801ccf7e626b2d579d2)
 - [#22854](https://github.com/duckdb/duckdb/pull/22854) Test runner: allow to run without changing HOME
   - `-dag`: [`b90a58126`](https://github.com/krlmlr/duckdb/commit/b90a5812646d858d11e5323ccea81b9ee35df950)
   - run #1: copied [`6e5b1ebce`](https://github.com/krlmlr/duckdb/commit/6e5b1ebce03972954efaac03dea07d2cb85ba031)
   - run #2: copied [`625b7ad7c`](https://github.com/krlmlr/duckdb/commit/625b7ad7c7979bea2c58fc0031991099dd476672)
+  - run #3: copied [`ec8ffca1d`](https://github.com/krlmlr/duckdb/commit/ec8ffca1dcac1a2467d23487d3b1a0fd17dcb6c3)
 - [#22832](https://github.com/duckdb/duckdb/pull/22832) Fix miscount of pinned row handles and allocator row blocks
   - `-dag`: [`4e38b3a9d`](https://github.com/krlmlr/duckdb/commit/4e38b3a9d7499e1b9348852052d82bbcd857abde)
   - run #1: copied [`8da66a0d2`](https://github.com/krlmlr/duckdb/commit/8da66a0d27d7486913797d7c81755b494e0d49c8)
   - run #2: copied [`e8de06b33`](https://github.com/krlmlr/duckdb/commit/e8de06b33576c2ac56334053ba5c6ad72c545662)
+  - run #3: copied [`b766b8e04`](https://github.com/krlmlr/duckdb/commit/b766b8e04911cf81b90b29c70ae1643840601f43)
 - [#22874](https://github.com/duckdb/duckdb/pull/22874) Fix decimal to floating point rounding
   - `-dag`: [`8e4d6cb69`](https://github.com/krlmlr/duckdb/commit/8e4d6cb69e01fc9d62df20285f328f1f0b2f81b3)
   - run #1: copied [`8bff47f4e`](https://github.com/krlmlr/duckdb/commit/8bff47f4e6379680e419a0c92fd9e1ac173771b4)
   - run #2: copied [`4e88d4bdd`](https://github.com/krlmlr/duckdb/commit/4e88d4bdd3aa6387fd7785fd8dc86be50d3cb43d)
+  - run #3: copied [`7e75d5a0e`](https://github.com/krlmlr/duckdb/commit/7e75d5a0eb1e763be019a7035e94e7d04a9f4648)
 - [#22885](https://github.com/duckdb/duckdb/pull/22885) Fix out-of-bounds write in decode ignore mode
   - `-dag`: [`6f64dd69d`](https://github.com/krlmlr/duckdb/commit/6f64dd69d903fe815c1a958a21834f34bc836cdd)
   - run #1: copied [`22bf3459b`](https://github.com/krlmlr/duckdb/commit/22bf3459b688552c83ffe0f48158bca630b191a1)
   - run #2: copied [`5326ebf94`](https://github.com/krlmlr/duckdb/commit/5326ebf941d89b4a8eb80c3bfddc5252e423555a)
+  - run #3: copied [`c663bb817`](https://github.com/krlmlr/duckdb/commit/c663bb817576949503175babc96fd8c1745ad9b8)
 - [#22895](https://github.com/duckdb/duckdb/pull/22895) Fix forward declaration: unqiue_ptr has constexpr dtor after 23
   - `-dag`: [`847d1d404`](https://github.com/krlmlr/duckdb/commit/847d1d40440927cf2f38478396a9eb61bfbfbdcd)
   - run #1: copied [`9fb60c463`](https://github.com/krlmlr/duckdb/commit/9fb60c463757a37eab583d26b5292542ba7b1f7c)
   - run #2: copied [`363c14aab`](https://github.com/krlmlr/duckdb/commit/363c14aab8da062d57175aafe2e6711f8a34454f)
+  - run #3: copied [`d183441c3`](https://github.com/krlmlr/duckdb/commit/d183441c343abb4032c1585f8628848e398319b9)
 - [#22671](https://github.com/duckdb/duckdb/pull/22671) pb/few-groups-aggr-opt-followup
   - `-dag`: [`bb056c45e`](https://github.com/krlmlr/duckdb/commit/bb056c45e245b11ab8b0e752032fac1a48f9610e)
   - run #1: copied [`c9277a7fa`](https://github.com/krlmlr/duckdb/commit/c9277a7fa0b3ad76bca6dc7b053faf7249b1e423)
   - run #2: copied [`278e98708`](https://github.com/krlmlr/duckdb/commit/278e98708dac4e61c09b1bf944e0a17b7719822a)
+  - run #3: copied [`7cacf4e71`](https://github.com/krlmlr/duckdb/commit/7cacf4e7146ef6eb3b5808ff39995dd49bd3e3ee)
 - [#22753](https://github.com/duckdb/duckdb/pull/22753) Make pow IEEE 754 compliant
   - `-dag`: [`26f62dd24`](https://github.com/krlmlr/duckdb/commit/26f62dd24f29f3412143cac89dcf34e78890f92b)
   - run #1: copied [`542dad291`](https://github.com/krlmlr/duckdb/commit/542dad2918acc7122dfb6354d3a6392c69f94bbf)
   - run #2: copied [`3f761272e`](https://github.com/krlmlr/duckdb/commit/3f761272e2187371aa8a8a9cf2fa0ebee13c6ddf)
+  - run #3: copied [`7b7d53767`](https://github.com/krlmlr/duckdb/commit/7b7d537673bcd88d84e5294f02b8605a8df384c5)
 - [#22759](https://github.com/duckdb/duckdb/pull/22759) Add AFTER INSERT trigger with REFERENCING NEW TABLE AS support
   - `-dag`: [`3d63ec925`](https://github.com/krlmlr/duckdb/commit/3d63ec925d522e713276bd8861b687a1cdfbc2af)
   - run #1: copied [`cf73e6ef0`](https://github.com/krlmlr/duckdb/commit/cf73e6ef0a2ff2486a9fb1ab61f2b45522ccd832)
   - run #2: copied [`2c6102c2d`](https://github.com/krlmlr/duckdb/commit/2c6102c2dc38af09aca8c69d09e0a798de0be30e)
+  - run #3: copied [`3c55e9423`](https://github.com/krlmlr/duckdb/commit/3c55e94236c68196735d7848541ae047d52199c4)
 - [#22903](https://github.com/duckdb/duckdb/pull/22903) Bump vss extension and remove applied patches
   - `-dag`: [`f7b15048b`](https://github.com/krlmlr/duckdb/commit/f7b15048bfe97688bb5e1916505ebf7bf21172f1)
   - run #1: copied [`64cc555bf`](https://github.com/krlmlr/duckdb/commit/64cc555bfdd3f8aa553fa05b3391d8ae5f3a9d44)
   - run #2: copied [`9fc308d25`](https://github.com/krlmlr/duckdb/commit/9fc308d25c34787918f34e84b493258372b02f90)
+  - run #3: copied [`9305ba027`](https://github.com/krlmlr/duckdb/commit/9305ba027e4560a00ba364974d552de3ada4989f)
 - [#22904](https://github.com/duckdb/duckdb/pull/22904) Add test stabilization reruns to run_tests
   - `-dag`: [`55d08eb99`](https://github.com/krlmlr/duckdb/commit/55d08eb9990ce7a04fcb036fd4563001fb40e974)
   - run #1: copied [`6e955f38f`](https://github.com/krlmlr/duckdb/commit/6e955f38f16bd637ea1a489d0866e15c34737629)
   - run #2: copied [`26d62afcd`](https://github.com/krlmlr/duckdb/commit/26d62afcd0389db472d22d6a6d55dade6089c7be)
+  - run #3: copied [`9e8f33407`](https://github.com/krlmlr/duckdb/commit/9e8f334074e78dc11d1bcd04d39288cc7ad40150)
 - [#22908](https://github.com/duckdb/duckdb/pull/22908) Add threadsan config and update test loop counts
   - `-dag`: [`40699eff6`](https://github.com/krlmlr/duckdb/commit/40699eff66955e34a943df9623ecb40bde135b93)
   - run #1: copied [`009c22d99`](https://github.com/krlmlr/duckdb/commit/009c22d99bccf67625845c679c6030958edc2200)
   - run #2: copied [`ef0a8a591`](https://github.com/krlmlr/duckdb/commit/ef0a8a591f7a945cd0f743afe679908316a36da1)
+  - run #3: copied [`a107d01a9`](https://github.com/krlmlr/duckdb/commit/a107d01a91d55498e23daa3ce56023afb32080ce)
 - [#22891](https://github.com/duckdb/duckdb/pull/22891) Allow substring with only `for` or `from`
   - `-dag`: [`8817cb37c`](https://github.com/krlmlr/duckdb/commit/8817cb37c6299bad4ff19aa3e59afed296b9ad73)
   - run #1: copied [`a06d64e10`](https://github.com/krlmlr/duckdb/commit/a06d64e10c1fe476995eac12a32a66fec5779fb6)
   - run #2: copied [`54d870b29`](https://github.com/krlmlr/duckdb/commit/54d870b2908ca62b2c56b4541288f7773bf2804a)
+  - run #3: copied [`5447da644`](https://github.com/krlmlr/duckdb/commit/5447da644a9ffbaeefdbb8c44efb1891f23feb52)
 - [#22900](https://github.com/duckdb/duckdb/pull/22900) Mark json_deserialize_sql as fallible
   - `-dag`: [`430edc5e0`](https://github.com/krlmlr/duckdb/commit/430edc5e0f615ca316324b7204828495ee6f5449)
   - run #1: copied [`44ce8b11a`](https://github.com/krlmlr/duckdb/commit/44ce8b11a7c7b6b56fa70800073fdd282a245491)
   - run #2: copied [`21725001d`](https://github.com/krlmlr/duckdb/commit/21725001d18dc9c23e308c0a6ecf7bf540e03c3a)
+  - run #3: copied [`558944f42`](https://github.com/krlmlr/duckdb/commit/558944f429b926fb94d05a3d92c7380d19e425ad)
 - [#22887](https://github.com/duckdb/duckdb/pull/22887) Pass INPUT_TYPE and STATE_TYPE to fix windows compilation
   - `-dag`: [`493e3d9e8`](https://github.com/krlmlr/duckdb/commit/493e3d9e83db6b3b78a6927d1d27f851ae8d3684)
   - run #1: copied [`80e960073`](https://github.com/krlmlr/duckdb/commit/80e96007393d1f16b71c16136f0bbc2d9b34fb4e)
   - run #2: copied [`3a01dc3fe`](https://github.com/krlmlr/duckdb/commit/3a01dc3fed514251c7d07caf7aca33fcae6ab236)
+  - run #3: copied [`7a3bdf8cf`](https://github.com/krlmlr/duckdb/commit/7a3bdf8cf6196bd6dd52acc446763d7317170c72)
 - [#22901](https://github.com/duckdb/duckdb/pull/22901) Make `CaseExpression` members private and move behind getters
   - `-dag`: [`0ff6bbacf`](https://github.com/krlmlr/duckdb/commit/0ff6bbacf7b7cae9a865769cca985ab8c1e9e13e)
   - run #1: copied [`70dd603fc`](https://github.com/krlmlr/duckdb/commit/70dd603fc8506af20269f6d53e310827733f248e)
   - run #2: copied [`5e2c4ded9`](https://github.com/krlmlr/duckdb/commit/5e2c4ded91db1d851bad64277f1816b09103ae73)
+  - run #3: copied [`1441ef6c1`](https://github.com/krlmlr/duckdb/commit/1441ef6c1611c60a5b885b961906103c46558fde)
 - [#22910](https://github.com/duckdb/duckdb/pull/22910) Use atomic for CatalogEntry->parent to fix data race
   - `-dag`: [`cfb9bd784`](https://github.com/krlmlr/duckdb/commit/cfb9bd78459a500d991688d3c5c51d1fef3c01a7)
   - run #1: copied [`91e3537a8`](https://github.com/krlmlr/duckdb/commit/91e3537a857f7e0e3957c991228d81cba006f474)
   - run #2: copied [`5acb9fee3`](https://github.com/krlmlr/duckdb/commit/5acb9fee3eafef5f8f758ac899e8f5fa666be4ac)
+  - run #3: copied [`b6f073383`](https://github.com/krlmlr/duckdb/commit/b6f0733834c43f64a536a49d44efa9a903148b70)
 - [#22912](https://github.com/duckdb/duckdb/pull/22912) Add AFTER DELETE trigger with REFERENCING OLD TABLE AS support
   - `-dag`: [`aa5362733`](https://github.com/krlmlr/duckdb/commit/aa53627331a41b939c5d04778cbf10f8d1a04d37)
   - run #1: copied [`e797835bb`](https://github.com/krlmlr/duckdb/commit/e797835bb75ad647e38f1a049cfc42f0271dae2d)
   - run #2: copied [`58f0068e5`](https://github.com/krlmlr/duckdb/commit/58f0068e57afe937768fef7119f58c75f730beb1)
+  - run #3: copied [`7af68ad92`](https://github.com/krlmlr/duckdb/commit/7af68ad92e89e2bf40999e574fd741ae8a9d19f6)
 - [#22902](https://github.com/duckdb/duckdb/pull/22902) remove some stray-but-consequential duckdb.h includes
   - `-dag`: [`ffda5b2ba`](https://github.com/krlmlr/duckdb/commit/ffda5b2bac3cc109325f6b869f193f635d14f875)
   - run #1: copied [`f30bf033a`](https://github.com/krlmlr/duckdb/commit/f30bf033a0e67d440ac433b2c590f6c9cd420cfe)
   - run #2: copied [`598b615cf`](https://github.com/krlmlr/duckdb/commit/598b615cfce98bd406cb409bda5fc0a164d5190b)
+  - run #3: copied [`f72e5c577`](https://github.com/krlmlr/duckdb/commit/f72e5c577356525465cc072368c6076be0559e0e)
 - [#22917](https://github.com/duckdb/duckdb/pull/22917) Make `CastExpression` / `CollateExpression` members private
   - `-dag`: [`5a0a3e135`](https://github.com/krlmlr/duckdb/commit/5a0a3e1354ba00e684dea0393c06ac8db21d1d40)
   - run #1: copied [`c180c55ef`](https://github.com/krlmlr/duckdb/commit/c180c55efabb180c4320c845680eb998e50b85d9)
   - run #2: copied [`b5c986c7a`](https://github.com/krlmlr/duckdb/commit/b5c986c7a56c05f939c6e8415cfe6aa4b6a35505)
+  - run #3: copied [`2abbabc1e`](https://github.com/krlmlr/duckdb/commit/2abbabc1ea1f68c4bb447a850c72844d60485335)
 - [#9307](https://github.com/duckdb/duckdb/pull/9307) Internal https://redirect.github.com/duckdb/duckdb/pull/9307: Window Batching
   - `-dag`: [`04ffbbd8b`](https://github.com/krlmlr/duckdb/commit/04ffbbd8b6d2ff0f1d2c32785e4d89acc91103f7)
   - run #1: copied [`5d1befdc1`](https://github.com/krlmlr/duckdb/commit/5d1befdc19d504a61789539484e7285b46b645e5)
   - run #2: copied [`aef30c442`](https://github.com/krlmlr/duckdb/commit/aef30c4424dafc2b2a9f851268030349bf7a8514)
+  - run #3: copied [`8040eaace`](https://github.com/krlmlr/duckdb/commit/8040eaace25d3a8d98966d196cf6b4051653c39a)
 - [#22916](https://github.com/duckdb/duckdb/pull/22916) Change paths-ignore to paths in CI workflows
   - `-dag`: [`695b0ef1e`](https://github.com/krlmlr/duckdb/commit/695b0ef1e8c3a3d00afd55e3063e4c7e81a00a0f)
   - run #1: copied [`08c9b90d8`](https://github.com/krlmlr/duckdb/commit/08c9b90d8f5c6594ad8f7bf19dd327d222d90fe2)
   - run #2: copied [`e850a1397`](https://github.com/krlmlr/duckdb/commit/e850a139746123d840bd1309f35b399e8e0e7643)
+  - run #3: copied [`8d4197778`](https://github.com/krlmlr/duckdb/commit/8d419777863b7025093288a199f6ad686f072c4c)
 - [#22909](https://github.com/duckdb/duckdb/pull/22909) Update Labs URL
   - `-dag`: [`a0975d599`](https://github.com/krlmlr/duckdb/commit/a0975d599de39a7913740c2f725ba2257ae1f7a3)
   - run #1: copied [`5b1b916dd`](https://github.com/krlmlr/duckdb/commit/5b1b916ddf4602e34836d96e10e9a0ebf36ab904)
   - run #2: copied [`e88b0de13`](https://github.com/krlmlr/duckdb/commit/e88b0de135274347cb6827a796de1da49f5d97b8)
+  - run #3: copied [`96ff8d16b`](https://github.com/krlmlr/duckdb/commit/96ff8d16bef296900163e7f8e3685268d19af080)
 - [#8953](https://github.com/duckdb/duckdb/pull/8953) Internal https://redirect.github.com/duckdb/duckdb/pull/8953: Uncorrelated STRUCT Sizes
   - `-dag`: [`28264823d`](https://github.com/krlmlr/duckdb/commit/28264823ddefd6a85a76ef6af3b9179cf140a64b)
   - run #1: copied [`b3433e63c`](https://github.com/krlmlr/duckdb/commit/b3433e63c7dce64841ecdd450cd426b4fae360a8)
   - run #2: copied [`8a2911b80`](https://github.com/krlmlr/duckdb/commit/8a2911b80b55f80523f5c82788df050c414aa8d5)
+  - run #3: copied [`3874809e3`](https://github.com/krlmlr/duckdb/commit/3874809e315fec1931b80ff6c4506f6488e44dd9)
 - [#22913](https://github.com/duckdb/duckdb/pull/22913) Retry cost runner
   - `-dag`: [`75a38b0d6`](https://github.com/krlmlr/duckdb/commit/75a38b0d6d470a7e0cad91ec809280cbfc481d48)
   - run #1: copied [`7ab35c1c5`](https://github.com/krlmlr/duckdb/commit/7ab35c1c5aee9cc208e016e0c63705476efddcfa)
   - run #2: copied [`7bd3eeb04`](https://github.com/krlmlr/duckdb/commit/7bd3eeb04bc75cb13808eb9e745a5f2106248d79)
+  - run #3: copied [`79683f56d`](https://github.com/krlmlr/duckdb/commit/79683f56d73616170d0fffc843bc283e042633ab)
 - [#22914](https://github.com/duckdb/duckdb/pull/22914) Add the `RemotePushdownOptimizer` - a pre-bind optimizer that analyzes a parse tree and pushes down SQL directly into remote catalogs
   - `-dag`: [`ce4cbc842`](https://github.com/krlmlr/duckdb/commit/ce4cbc84257ff2f54768124b573757835f458eee)
   - run #1: copied [`bcf20992c`](https://github.com/krlmlr/duckdb/commit/bcf20992c5d0f6e5a5c4a002af43ea0a95365009)
   - run #2: copied [`d7c0f7d9e`](https://github.com/krlmlr/duckdb/commit/d7c0f7d9efb1cda264e7ca2171a04e7e16de99d3)
+  - run #3: copied [`cd4689c97`](https://github.com/krlmlr/duckdb/commit/cd4689c97554b460e74fb74f88dec91b673e5a4c)
 - [#22925](https://github.com/duckdb/duckdb/pull/22925) Remove default ignore error messages in test runner
   - `-dag`: [`81dece95a`](https://github.com/krlmlr/duckdb/commit/81dece95a2e03d1c51b6598abbf25d881e5fa4e2)
   - run #1: copied [`988328f20`](https://github.com/krlmlr/duckdb/commit/988328f20b589e4eca567d93da3ffe98129a16f0)
   - run #2: copied [`c61f60086`](https://github.com/krlmlr/duckdb/commit/c61f60086a75b68bee0ef44c6c4313a249135847)
+  - run #3: copied [`e4a9930fb`](https://github.com/krlmlr/duckdb/commit/e4a9930fbee78bb40851871560f43f06638c334a)
 - [#22927](https://github.com/duckdb/duckdb/pull/22927) Add support for includes and variables in sqllogic test files
   - `-dag`: [`baf526e31`](https://github.com/krlmlr/duckdb/commit/baf526e3165b4ea66fc816928a3287b14641194f)
   - run #1: copied [`a91e6e582`](https://github.com/krlmlr/duckdb/commit/a91e6e582bbd0694740706e31b63b53344eb9a8b)
   - run #2: copied [`e12c7205f`](https://github.com/krlmlr/duckdb/commit/e12c7205fda16c78b1f6793dcf5654be74f10d09)
+  - run #3: copied [`c95455820`](https://github.com/krlmlr/duckdb/commit/c95455820aaa5ee6c7dd0be6d3a88a2f27bc9d49)
 - [#21784](https://github.com/duckdb/duckdb/pull/21784) Improve qualified types support in grammar
   - `-dag`: [`c88d198d9`](https://github.com/krlmlr/duckdb/commit/c88d198d9a044c9e7cd0e058f952a5add6733a7e)
   - run #1: copied [`d5270d764`](https://github.com/krlmlr/duckdb/commit/d5270d764af3521cdc479095c38f62d0c88768e2)
   - run #2: copied [`6796f94ca`](https://github.com/krlmlr/duckdb/commit/6796f94ca0fd341b0c9ff2eefd4f53bfba85c5d9)
+  - run #3: copied [`41c095a0d`](https://github.com/krlmlr/duckdb/commit/41c095a0d8788b43248060476a59fd63827b4f15)
 - [#22931](https://github.com/duckdb/duckdb/pull/22931) Make `ColumnRefExpression`, `ConjunctionExpression`, `OperatorExpression`, `ParameterExpression`, `PositionalReferenceExpression`, `StarExpression` members private
   - `-dag`: [`b897c6588`](https://github.com/krlmlr/duckdb/commit/b897c658832e63368157ff5d1d6ee3e2ad7567c5)
   - run #1: copied [`8c4d7d449`](https://github.com/krlmlr/duckdb/commit/8c4d7d449d2580331b3248fd896b3d497f5f430c)
   - run #2: copied [`6cca906ca`](https://github.com/krlmlr/duckdb/commit/6cca906ca985ba3c846af9240cb79f43e4823c5a)
+  - run #3: copied [`dcfa14216`](https://github.com/krlmlr/duckdb/commit/dcfa142161185ad5739c2d19d7de26d828f23bd5)
 - [#22934](https://github.com/duckdb/duckdb/pull/22934) Split __comparison function into dedicated functions
   - `-dag`: [`3d2af626d`](https://github.com/krlmlr/duckdb/commit/3d2af626d39facf7c9222235df2986cd5ed7af9f)
   - run #1: copied [`441e8a7eb`](https://github.com/krlmlr/duckdb/commit/441e8a7ebb6d342a8350c84d0032ef6a0efcaed7)
   - run #2: copied [`0bf9e1358`](https://github.com/krlmlr/duckdb/commit/0bf9e1358f8302f15bf65654771127953515d4c7)
+  - run #3: copied [`d9330c84f`](https://github.com/krlmlr/duckdb/commit/d9330c84f381724cc156f21a23cd5b0a6bb1d355)
 - [#9053](https://github.com/duckdb/duckdb/pull/9053) Internal https://redirect.github.com/duckdb/duckdb/pull/9053: Unbound DECIMAL Literals
   - `-dag`: [`c5f6fa0f1`](https://github.com/krlmlr/duckdb/commit/c5f6fa0f1cef142a09bc4c716cf7a6d2a9b0e741)
   - run #1: copied [`2b7a52157`](https://github.com/krlmlr/duckdb/commit/2b7a52157a47d846c177e184b30d9a934dedc20a)
   - run #2: copied [`1f3c42360`](https://github.com/krlmlr/duckdb/commit/1f3c42360c890055d65040d5dca9aebd7ad0d78e)
+  - run #3: copied [`5795efdbc`](https://github.com/krlmlr/duckdb/commit/5795efdbcd18bdcf9acc203a74479ea8058e799a)
 - [#22926](https://github.com/duckdb/duckdb/pull/22926) Add constant and dictionary optimization to select path in execute function
   - `-dag`: [`09572cb03`](https://github.com/krlmlr/duckdb/commit/09572cb03d11d3f62ae0f3ce5d7e88e8c0d6e20f)
   - run #1: copied [`3f4f7bd27`](https://github.com/krlmlr/duckdb/commit/3f4f7bd27c63953bfb0f0795e1b9ada4a9f72dd6)
   - run #2: copied [`9080ac429`](https://github.com/krlmlr/duckdb/commit/9080ac4298e075106dbb5edbacecdfd9090e12d8)
+  - run #3: copied [`57de00ef4`](https://github.com/krlmlr/duckdb/commit/57de00ef44338aa5ac4ff9edd83be6960c285e7b)
 - [#22932](https://github.com/duckdb/duckdb/pull/22932) Auto generate transformer part 4
   - `-dag`: [`a4b9037b1`](https://github.com/krlmlr/duckdb/commit/a4b9037b11e09eb9bcdc3d0a4fe0de348fdd337c)
   - run #1: copied [`f9f3f6cc6`](https://github.com/krlmlr/duckdb/commit/f9f3f6cc699bd7d7528e91913d4746c9cfa696a8)
   - run #2: copied [`19535bf56`](https://github.com/krlmlr/duckdb/commit/19535bf56f6390c4d5fa64ae3afd621c18f29155)
+  - run #3: copied [`e05f5fa52`](https://github.com/krlmlr/duckdb/commit/e05f5fa52df905135e0d022134c0874c163ad521)
 - [#22563](https://github.com/duckdb/duckdb/pull/22563) Add workflow to mirror open issues labeled PR submitted for more than 10 days
   - `-dag`: [`f2c9697a4`](https://github.com/krlmlr/duckdb/commit/f2c9697a4daf4cc5825b70cb7e670d0b4a2804ba)
   - run #1: copied [`53991c3a9`](https://github.com/krlmlr/duckdb/commit/53991c3a9dcec0856db078e81c48ead98d40d7aa)
   - run #2: copied [`4c9dad419`](https://github.com/krlmlr/duckdb/commit/4c9dad4193afe80d1020e0e4f323e776d55de603)
+  - run #3: copied [`db2ef3747`](https://github.com/krlmlr/duckdb/commit/db2ef374721439ba99740b677294fe8f5d80dde7)
 - [#22936](https://github.com/duckdb/duckdb/pull/22936) Move enable_optimizer to a generic setting
   - `-dag`: [`1c80efce7`](https://github.com/krlmlr/duckdb/commit/1c80efce7256a06608f602b2d0872e73d94306bc)
   - run #1: copied [`7161f04c7`](https://github.com/krlmlr/duckdb/commit/7161f04c737a12a85223e11092e7c713bd3dbcff)
   - run #2: copied [`5a855a2fd`](https://github.com/krlmlr/duckdb/commit/5a855a2fd356a4f0a9f89bf934278688ec9acf10)
+  - run #3: copied [`51fbeecf7`](https://github.com/krlmlr/duckdb/commit/51fbeecf7b0f60c695fb816a6f06f8fe1489ec71)
 - [#22933](https://github.com/duckdb/duckdb/pull/22933) Support `EXCEPT` syntax
   - `-dag`: [`4e9b3cad1`](https://github.com/krlmlr/duckdb/commit/4e9b3cad18a3841aab8d4ecd6413d04d30d961f3)
   - run #1: copied [`7b7c3e3a4`](https://github.com/krlmlr/duckdb/commit/7b7c3e3a42b5b2b59732153d386772e3ac484112)
   - run #2: copied [`6894bf926`](https://github.com/krlmlr/duckdb/commit/6894bf9269af823950db0e979af872f5d05ee769)
+  - run #3: copied [`c0f596737`](https://github.com/krlmlr/duckdb/commit/c0f59673721fe1f210eda7b603423e02b3cc5316)
 - [#22942](https://github.com/duckdb/duckdb/pull/22942) Make `FunctionExpression`, `LambdaExpression`, `LambdaRefExpression`, `SubqueryExpression`, `WindowExpression` members private
   - `-dag`: [`cc88edb7e`](https://github.com/krlmlr/duckdb/commit/cc88edb7e67d45060fca0c273a0cfc492cf61e98)
   - run #1: copied [`31cd6a113`](https://github.com/krlmlr/duckdb/commit/31cd6a11399aaecb8d79d3e279e60ed65bae5d10)
   - run #2: copied [`5d05566d8`](https://github.com/krlmlr/duckdb/commit/5d05566d845543d1cee3999c31e2e6a04a35cba1)
+  - run #3: copied [`07405932e`](https://github.com/krlmlr/duckdb/commit/07405932e2e76a2d538b50f64875a16e605fb560)
 - [#22943](https://github.com/duckdb/duckdb/pull/22943) Test Runner: Allow for variable expansion also in "set variable", and allow for grabbing variables from any connection
   - `-dag`: [`79c8817a5`](https://github.com/krlmlr/duckdb/commit/79c8817a582f9f5bb98dd7368ab30d8b0bce60a9)
   - run #1: copied [`0c9bdc23b`](https://github.com/krlmlr/duckdb/commit/0c9bdc23bc6bf75d9503b59260ef52bb9f2075fe)
   - run #2: copied [`67ae6527d`](https://github.com/krlmlr/duckdb/commit/67ae6527ddbade89ca358bfa83b975539a3a753d)
+  - run #3: copied [`c7c284838`](https://github.com/krlmlr/duckdb/commit/c7c28483801907f6d9a8bad2e0afbc1eb6763fbe)
 - [#22945](https://github.com/duckdb/duckdb/pull/22945) Bump SQLite
   - `-dag`: [`96af8a0f6`](https://github.com/krlmlr/duckdb/commit/96af8a0f643e0546e2cfa3dc31052bfc1ee86847)
   - run #1: copied [`851469589`](https://github.com/krlmlr/duckdb/commit/8514695891a93213f22c880457eb29896a35f7f7)
   - run #2: copied [`1f605d182`](https://github.com/krlmlr/duckdb/commit/1f605d1826403d237dc0dbb4f9cef70c3edb0599)
+  - run #3: copied [`5319030c7`](https://github.com/krlmlr/duckdb/commit/5319030c761dc61480e9bdd012d05e1292d73c46)
 - [#22929](https://github.com/duckdb/duckdb/pull/22929) `LEFT` Join Reordering
   - `-dag`: [`407506e6c`](https://github.com/krlmlr/duckdb/commit/407506e6c96afbfd087716b64cc1af83ec8237ae)
   - run #1: copied [`0d391ce56`](https://github.com/krlmlr/duckdb/commit/0d391ce56d349db6372860294fb93304db94648b)
   - run #2: copied [`fce2d4e8d`](https://github.com/krlmlr/duckdb/commit/fce2d4e8de17dbd98fd4c783b4be810123cd90fd)
+  - run #3: copied [`0d5f27f00`](https://github.com/krlmlr/duckdb/commit/0d5f27f00cb091c36ca29ce2a94a281c96667058)
 - [#22878](https://github.com/duckdb/duckdb/pull/22878) Implement `CONNECT <attached_db_name>` and `DISCONNECT`, and opt-in in `quack`
   - `-dag`: [`1e7c07fac`](https://github.com/krlmlr/duckdb/commit/1e7c07facc1315772cd5cd477c3f240768ed5e81)
   - run #1: copied [`b6b8f3e90`](https://github.com/krlmlr/duckdb/commit/b6b8f3e903b9a018efcf5821086e589949539239)
   - run #2: copied [`5573f30fd`](https://github.com/krlmlr/duckdb/commit/5573f30fd1d3e063a83c1b06b783f17bc057ed31)
+  - run #3: copied [`cba5f758c`](https://github.com/krlmlr/duckdb/commit/cba5f758ccf615c219ea936e0ceff74398d6f9ee)
 - [#22935](https://github.com/duckdb/duckdb/pull/22935) Verify CLI major version is non-zero on main
   - `-dag`: [`fcf3fae7d`](https://github.com/krlmlr/duckdb/commit/fcf3fae7d4df7b6d4d54f33f2a823e2489f8e7bb)
   - run #1: copied [`d3a10c38f`](https://github.com/krlmlr/duckdb/commit/d3a10c38fe5577da5006f25ef8ee5b000441aec8)
   - run #2: copied [`c0235c05f`](https://github.com/krlmlr/duckdb/commit/c0235c05fcfab2fb9cda9026f63fecff39c9d23c)
+  - run #3: copied [`6978d58e4`](https://github.com/krlmlr/duckdb/commit/6978d58e41e3862ad2894fd67fb05711bd10261e)
 - [#22944](https://github.com/duckdb/duckdb/pull/22944) Fix hang in PartitionedCopyState with regression test
   - `-dag`: [`c5dff1197`](https://github.com/krlmlr/duckdb/commit/c5dff1197d1c627046d2cdb7bc2fc129a8178651)
   - run #1: copied [`31f4a5590`](https://github.com/krlmlr/duckdb/commit/31f4a5590713f60a9efd22aea56a0b4fd30b7421)
   - run #2: copied [`120cddfc0`](https://github.com/krlmlr/duckdb/commit/120cddfc0a3ea4d844eb1db8a7caa0615cce4b72)
+  - run #3: copied [`33d1d6c29`](https://github.com/krlmlr/duckdb/commit/33d1d6c29725a5844a6f4ae5063874f94a10fc16)
 - [#22843](https://github.com/duckdb/duckdb/pull/22843) Fix small-build dictionary emission activation gate
   - `-dag`: [`df2066e53`](https://github.com/krlmlr/duckdb/commit/df2066e535f1452b19526ab4faf757fc7007bb86)
   - run #1: copied [`1fdc3ea7b`](https://github.com/krlmlr/duckdb/commit/1fdc3ea7bd993adcbcfbff847f2b90a7c2cc0f4f)
   - run #2: copied [`010becac2`](https://github.com/krlmlr/duckdb/commit/010becac2c6b5d771f7efc41f84019b34efaa6ef)
+  - run #3: copied [`a11cd2637`](https://github.com/krlmlr/duckdb/commit/a11cd2637760e17e990da291404f405e82f54199)
 - [#22954](https://github.com/duckdb/duckdb/pull/22954) Fix SetVectorType for VectorStructBuffer
   - `-dag`: [`c252dfa64`](https://github.com/krlmlr/duckdb/commit/c252dfa646b03c6acd59a9cb4dd1aefb17c023e2)
   - run #1: copied [`5594cfc20`](https://github.com/krlmlr/duckdb/commit/5594cfc2067f7704575a28e11d8be4571485d195)
   - run #2: copied [`d4b1d5e27`](https://github.com/krlmlr/duckdb/commit/d4b1d5e27562855b28104edf604a0e3d84e1ee0b)
+  - run #3: copied [`10c079ce0`](https://github.com/krlmlr/duckdb/commit/10c079ce0b80505714391cde2cbb9476f50f3f57)
 - [#22964](https://github.com/duckdb/duckdb/pull/22964) Make `BoundAggregateExpression`, `BoundCaseExpression`, `BoundCastExpression`, `BoundColumnRefExpression` members private
   - `-dag`: [`0b0efc5a5`](https://github.com/krlmlr/duckdb/commit/0b0efc5a5061b45aefdec49d1a9a6680ee626583)
   - run #1: copied [`5c00ddaa4`](https://github.com/krlmlr/duckdb/commit/5c00ddaa4691cd5affd053bdbdfada2779a3fc80)
   - run #2: copied [`a440ade2c`](https://github.com/krlmlr/duckdb/commit/a440ade2c4746e513afa080551ac226ee079deed)
+  - run #3: copied [`2e9ae48fa`](https://github.com/krlmlr/duckdb/commit/2e9ae48fae9381ff957e0719fa73d8b9eacd03fc)
 - [#22979](https://github.com/duckdb/duckdb/pull/22979)  Require parallel access for shared handle in external file cache
   - `-dag`: [`f6afb9446`](https://github.com/krlmlr/duckdb/commit/f6afb9446ef7e803fbbff3978d15cd3a52941c34)
   - run #1: copied [`60834e28d`](https://github.com/krlmlr/duckdb/commit/60834e28df0c2f886014a3a612ea97c13ab0399c)
   - run #2: copied [`1669808c8`](https://github.com/krlmlr/duckdb/commit/1669808c820c25ea67793adf13535c9ab3cc13d5)
+  - run #3: copied [`703db0534`](https://github.com/krlmlr/duckdb/commit/703db05345813cec5939278c9c81545b3b78e3dc)
 - [#22784](https://github.com/duckdb/duckdb/pull/22784) Add default de/serialization for cte_map
   - `-dag`: [`833e4e3f4`](https://github.com/krlmlr/duckdb/commit/833e4e3f4b0f02f3cc506d824fbc00ba60ae8837)
   - run #1: copied [`aa3f224ee`](https://github.com/krlmlr/duckdb/commit/aa3f224eec8eb89ed24a156d770fc3c720dab793)
   - run #2: copied [`7fee93764`](https://github.com/krlmlr/duckdb/commit/7fee937643d2700e78302fa0cdbfc5b174d90e77)
+  - run #3: copied [`544eda5b5`](https://github.com/krlmlr/duckdb/commit/544eda5b5ac95df861b0513170d9dbf688fc38f3)
 - [#22983](https://github.com/duckdb/duckdb/pull/22983) Fix OSX release error: 'fmt/format.h' file not found
   - `-dag`: [`e7b92ac98`](https://github.com/krlmlr/duckdb/commit/e7b92ac98a908f5ac3750c8942dde11cd34057de)
   - run #1: copied [`98d6ca480`](https://github.com/krlmlr/duckdb/commit/98d6ca480b0019eee2cb34e0aa98da06e46c9a65)
   - run #2: copied [`a42c848df`](https://github.com/krlmlr/duckdb/commit/a42c848dfab3bfe1b112c9509f365fe826b40b57)
+  - run #3: copied [`aab51fe3b`](https://github.com/krlmlr/duckdb/commit/aab51fe3b134bc5c8af18df3f722fd5333cffec6)
 - [#22984](https://github.com/duckdb/duckdb/pull/22984) Auto generate transformer part 5
   - `-dag`: [`8649b467f`](https://github.com/krlmlr/duckdb/commit/8649b467f37fd324c6b2e580fb1aeb61df3bfcc2)
   - run #1: copied [`f1246d0c2`](https://github.com/krlmlr/duckdb/commit/f1246d0c2771b72cee45de0a19293c46ae138749)
   - run #2: copied [`e665a0989`](https://github.com/krlmlr/duckdb/commit/e665a0989e110da5d9cb38c63729bba5d233bbbb)
+  - run #3: copied [`95c33c14f`](https://github.com/krlmlr/duckdb/commit/95c33c14fec1b2465861daafbf84d4c549a12c5a)
 - [#22982](https://github.com/duckdb/duckdb/pull/22982) Use lint-ci action in duckdb main pipeline
   - `-dag`: [`df824ac5a`](https://github.com/krlmlr/duckdb/commit/df824ac5aca1a9eaedf0769dce19f253f2db0e13)
   - run #1: copied [`ee3e531cf`](https://github.com/krlmlr/duckdb/commit/ee3e531cfb4f6a55c081901993ea3df709310588)
   - run #2: copied [`280ac7139`](https://github.com/krlmlr/duckdb/commit/280ac7139336ceb3101d3d26cea5127e400a47d9)
+  - run #3: copied [`63516e1b1`](https://github.com/krlmlr/duckdb/commit/63516e1b11d89b1633236a9fad71ae4eef188f05)
 - [#22977](https://github.com/duckdb/duckdb/pull/22977) Retry all errors in plan cost runner
   - `-dag`: [`926ef4e82`](https://github.com/krlmlr/duckdb/commit/926ef4e82d8ec05fc5c4334911c42d4a905b2182)
   - run #1: copied [`015ddfe72`](https://github.com/krlmlr/duckdb/commit/015ddfe7267c28c4b8310f6532bafd04250976bb)
   - run #2: copied [`28ba716b9`](https://github.com/krlmlr/duckdb/commit/28ba716b95c932f756a554831ed247a73227b6d6)
+  - run #3: copied [`9fb78edaf`](https://github.com/krlmlr/duckdb/commit/9fb78edafbe820c963cd3480d94bc8825f529496)
 - [#22981](https://github.com/duckdb/duckdb/pull/22981) Allow `OPERATOR` to be qualified
   - `-dag`: [`3a1c541f5`](https://github.com/krlmlr/duckdb/commit/3a1c541f5a4caec1b0d8c5fb0ca904fd0a55050a)
   - run #1: copied [`171aa0cd1`](https://github.com/krlmlr/duckdb/commit/171aa0cd1f2a7a9bb552dad07c52ae83e69f9734)
   - run #2: copied [`9cf537e06`](https://github.com/krlmlr/duckdb/commit/9cf537e06535592ce24e0ca7ab16b5c4556c8e95)
+  - run #3: copied [`4ba5ed245`](https://github.com/krlmlr/duckdb/commit/4ba5ed245ea26763d3b602f93b98320a58eb2813)
 - [#22987](https://github.com/duckdb/duckdb/pull/22987) Harden create sort key encode/decode
   - `-dag`: [`1ac9f6ef2`](https://github.com/krlmlr/duckdb/commit/1ac9f6ef263fdb9891e793a603e053adcf718a55)
   - run #1: copied [`9693867e7`](https://github.com/krlmlr/duckdb/commit/9693867e75aba2144c372ae38d83ac6048934267)
   - run #2: copied [`ef23e8305`](https://github.com/krlmlr/duckdb/commit/ef23e8305c8a6f37c77b00af2cb7e4202c263339)
+  - run #3: copied [`d9c77f67e`](https://github.com/krlmlr/duckdb/commit/d9c77f67e70cb4442e5d5a22144aa1891bac0fe8)
 - [#22958](https://github.com/duckdb/duckdb/pull/22958) testing: add new fuzz harness to be consumed by OSS-Fuzz
   - `-dag`: [`024d40680`](https://github.com/krlmlr/duckdb/commit/024d4068020ed6f903c528db49cf2a38dd2ab504)
   - run #1: copied [`5aa0faf1c`](https://github.com/krlmlr/duckdb/commit/5aa0faf1cc1a244835b88a80978918abd24c7610)
   - run #2: copied [`a4e27da46`](https://github.com/krlmlr/duckdb/commit/a4e27da461c862c516027e14c5a6319cdb9c5297)
+  - run #3: copied [`a923c68f2`](https://github.com/krlmlr/duckdb/commit/a923c68f2f4199b43f1944478730701a9e37271b)
 - [#20828](https://github.com/duckdb/duckdb/pull/20828) Make compression availability checks complete
   - `-dag`: [`fb43b695d`](https://github.com/krlmlr/duckdb/commit/fb43b695d3eab8f8575a476551c42ad77d150dc8)
   - run #1: copied [`788c462eb`](https://github.com/krlmlr/duckdb/commit/788c462eb2f1040ae71efb371be4813cb194a2ec)
   - run #2: copied [`ea5aac77e`](https://github.com/krlmlr/duckdb/commit/ea5aac77e45f1d5f5a1a4c6cc6627ac5bdf2424a)
+  - run #3: copied [`ad792bf8c`](https://github.com/krlmlr/duckdb/commit/ad792bf8ce5950c4c792157d6c6a436bc8b0ce3d)
 - [#22985](https://github.com/duckdb/duckdb/pull/22985) Move `BoundConjunctionExpression`, `BoundConstantExpression`, `BoundExpandedExpression`, `BoundFunctionExpression`, `BoundLambdaExpression`, `BoundLambdaRefExpression`, `BoundOperatorExpression` members to private and use accessors
   - `-dag`: [`782956af9`](https://github.com/krlmlr/duckdb/commit/782956af9f3b3592a5c5d2d045573c04a8a371d4)
   - run #1: copied [`537e9ec76`](https://github.com/krlmlr/duckdb/commit/537e9ec76710ac4916dc032ed0e1ea22afeced5c)
   - run #2: copied [`7e3e08d87`](https://github.com/krlmlr/duckdb/commit/7e3e08d87983dee6f3dc576cdb49daeafba0b59f)
+  - run #3: copied [`a07bcb068`](https://github.com/krlmlr/duckdb/commit/a07bcb06872cb016f4a212086ae2ff18179e1515)
 - [#22989](https://github.com/duckdb/duckdb/pull/22989) change sqllogictest branch
   - `-dag`: [`575646971`](https://github.com/krlmlr/duckdb/commit/5756469714371a81333120924a76339377460098)
   - run #1: copied [`6445e2e35`](https://github.com/krlmlr/duckdb/commit/6445e2e35fb0b96b19d0afe1845d60749b45c801)
   - run #2: copied [`add564ee4`](https://github.com/krlmlr/duckdb/commit/add564ee436e34391132714443b4b28cba6a4b52)
+  - run #3: copied [`280975bc5`](https://github.com/krlmlr/duckdb/commit/280975bc5f55ec10e207ad667ec65dc8e9db6b94)
 - [#22961](https://github.com/duckdb/duckdb/pull/22961) Fix external file cache disablement
   - `-dag`: [`0635e5b16`](https://github.com/krlmlr/duckdb/commit/0635e5b1691339510b2845e66e8b57b759929154)
   - run #1: copied [`95c144dfa`](https://github.com/krlmlr/duckdb/commit/95c144dfa62d5cc29e8686e30afd027b0fa70bee)
   - run #2: copied [`de358f8b4`](https://github.com/krlmlr/duckdb/commit/de358f8b401d9d63e6b6ce9d625bc7e6cf17faf7)
+  - run #3: copied [`d3a308e81`](https://github.com/krlmlr/duckdb/commit/d3a308e81b0d702e2d5575e8bc556bc99ad35bd7)
 - [#22999](https://github.com/duckdb/duckdb/pull/22999) Move MergeStatement into `MergeQueryNode`
   - `-dag`: [`bc043f7f0`](https://github.com/krlmlr/duckdb/commit/bc043f7f0d565a1fb255263d4b69268cb236c312)
   - run #1: copied [`798e57f91`](https://github.com/krlmlr/duckdb/commit/798e57f9194f5065c0d58a0f68387232ee9a461a)
   - run #2: copied [`42ed2832e`](https://github.com/krlmlr/duckdb/commit/42ed2832e17803946a1cd165312d1a7a823a0e47)
+  - run #3: copied [`2a2c65446`](https://github.com/krlmlr/duckdb/commit/2a2c654462f8057450ad6b67fc3c8f0e5a194e33)
 - [#22996](https://github.com/duckdb/duckdb/pull/22996) use StringUtil char helpers in geometry WKT parsers
   - `-dag`: [`737b14200`](https://github.com/krlmlr/duckdb/commit/737b14200e2956a4c8d47acaf43286f2ad41881c)
   - run #1: copied [`5c07a3634`](https://github.com/krlmlr/duckdb/commit/5c07a36346a81971ba4d125822fbfabca5d22e7a)
   - run #2: copied [`e27e91833`](https://github.com/krlmlr/duckdb/commit/e27e9183395084ef09d4ef925630d19ec460e1c5)
+  - run #3: copied [`3fc5864cb`](https://github.com/krlmlr/duckdb/commit/3fc5864cb5c32d1a20923bde9a71484544072f38)
 - [#22950](https://github.com/duckdb/duckdb/pull/22950) `CONNECT`: CLI prompt, implement for `postgres` and add `Supports(RemoteCapability::<X>)`
   - `-dag`: [`75443dbd7`](https://github.com/krlmlr/duckdb/commit/75443dbd7b57fb7ce11b8785e71c04b6f763daf0)
   - run #1: copied [`cd592b09d`](https://github.com/krlmlr/duckdb/commit/cd592b09d3fbf12b44e1f8b64f5fc2e8db70aac4)
   - run #2: copied [`69549c48f`](https://github.com/krlmlr/duckdb/commit/69549c48ff925b4ef57cf4b0d1f3301dc3fbba1e)
+  - run #3: copied [`c85a0df72`](https://github.com/krlmlr/duckdb/commit/c85a0df727d8f1dccef7817ee0d9c17ab332260e)
 - [#22988](https://github.com/duckdb/duckdb/pull/22988) Add support for `MMAP` and `DIRECT_IO` I/O modes
   - `-dag`: [`cbfb3c46c`](https://github.com/krlmlr/duckdb/commit/cbfb3c46cdb895ea56140f5678caca530d70a60c)
   - run #1: copied [`cf4a61347`](https://github.com/krlmlr/duckdb/commit/cf4a61347bb93f873673e00e6f4159da30ac0a18)
   - run #2: copied [`0c398da54`](https://github.com/krlmlr/duckdb/commit/0c398da54d99cf2dc46676d8478b729edaa3de44)
+  - run #3: copied [`406bffb68`](https://github.com/krlmlr/duckdb/commit/406bffb68217a3c8e9d44839c7c67e2b0f2cf83d)
 - [#22998](https://github.com/duckdb/duckdb/pull/22998) Support multiple triggers per table event
   - `-dag`: [`840f56273`](https://github.com/krlmlr/duckdb/commit/840f562739ac9ace7cfd19f552ac6e5f50b8df2c)
   - run #1: copied [`5de8b3d1f`](https://github.com/krlmlr/duckdb/commit/5de8b3d1f76a08cca7709a8ce56eb421b5124d22)
   - run #2: copied [`ee9f2f36d`](https://github.com/krlmlr/duckdb/commit/ee9f2f36de309fcfdc3f0ef705c9ebdaf928307a)
+  - run #3: copied [`c7aea1e06`](https://github.com/krlmlr/duckdb/commit/c7aea1e06e9509aedb26f7e78fefecce5cc79461)
 - [#23004](https://github.com/duckdb/duckdb/pull/23004) Improve test runner
   - `-dag`: [`e91dcd3c1`](https://github.com/krlmlr/duckdb/commit/e91dcd3c12ac75769a2a36ff42f47c953eac96a5)
   - run #1: copied [`f97df40ac`](https://github.com/krlmlr/duckdb/commit/f97df40ac61aecab49bab2ed77c6de2b0f90db9f)
   - run #2: copied [`54c784644`](https://github.com/krlmlr/duckdb/commit/54c78464416c04a6ba3642995e4ed257a76f0771)
+  - run #3: copied [`5ad552269`](https://github.com/krlmlr/duckdb/commit/5ad552269a98d0d88559387f1cbcf4123a40a41b)
 - [#22822](https://github.com/duckdb/duckdb/pull/22822) Allow gaps in rowids
   - `-dag`: [`9723b6655`](https://github.com/krlmlr/duckdb/commit/9723b6655c3537c53b7271881e00212bc7f4be52)
   - run #1: copied [`59ba5e142`](https://github.com/krlmlr/duckdb/commit/59ba5e142f8450d22470b6191480c68d4be8480e)
   - run #2: copied [`634843de5`](https://github.com/krlmlr/duckdb/commit/634843de5a4e7a8f3e71178ff7a831c11fc31294)
+  - run #3: copied [`33993e501`](https://github.com/krlmlr/duckdb/commit/33993e5010b0afa1637afee9f992748ccbdd6958)
 - [#23001](https://github.com/duckdb/duckdb/pull/23001) Let AsyncExecutionTask always notify blocked pipeline when a task throws
   - `-dag`: [`f08aaa1d9`](https://github.com/krlmlr/duckdb/commit/f08aaa1d975fb49bf87d25adecfb4f8d83893c32)
   - run #1: copied [`63d1787c9`](https://github.com/krlmlr/duckdb/commit/63d1787c96f81594ee49abe3243f627b390e585e)
   - run #2: copied [`2376527a9`](https://github.com/krlmlr/duckdb/commit/2376527a9cb496d0a0e08414c76301ff8164c3a8)
+  - run #3: copied [`a03060c87`](https://github.com/krlmlr/duckdb/commit/a03060c873977fb809355289173b251eea505281)
 - [#23003](https://github.com/duckdb/duckdb/pull/23003) Parquet Prefetch - CostModel for defining column gaps
   - `-dag`: [`237ada195`](https://github.com/krlmlr/duckdb/commit/237ada195b151e369a24baee34a8ad35e420e622)
   - run #1: copied [`7fcd51037`](https://github.com/krlmlr/duckdb/commit/7fcd51037863a01f41f1a2e8fc22e948f6a16064)
   - run #2: copied [`53b9e009e`](https://github.com/krlmlr/duckdb/commit/53b9e009e57c230ab6f528ed3c9a363c4021043a)
+  - run #3: copied [`228861e54`](https://github.com/krlmlr/duckdb/commit/228861e54a4d993fc3a92cf4499c0c06f8d7981a)
 - [#22978](https://github.com/duckdb/duckdb/pull/22978) Add setting to allows to get compile time STANDARD_VECTOR_SIZE from SQL
   - `-dag`: [`b7313cabb`](https://github.com/krlmlr/duckdb/commit/b7313cabba4602b4c3f254a7c18ac03ab7469140)
   - run #1: copied [`31868cc51`](https://github.com/krlmlr/duckdb/commit/31868cc51b55ebd21b58fb0d9b55198c6eea32fc)
   - run #2: copied [`1c66678b1`](https://github.com/krlmlr/duckdb/commit/1c66678b138e6da9bae501ea4680c3fc20cdb651)
+  - run #3: copied [`f697548b2`](https://github.com/krlmlr/duckdb/commit/f697548b26f5564a47545d409a9b5a1235eba73c)
 - [#23007](https://github.com/duckdb/duckdb/pull/23007) Make casts extensible for CASE expression
   - `-dag`: [`010e7e42a`](https://github.com/krlmlr/duckdb/commit/010e7e42a03c1c21a821590732b047e713b009e6)
   - run #1: copied [`734924f9f`](https://github.com/krlmlr/duckdb/commit/734924f9ff4f8b57c87a63627da1614394825488)
   - run #2: copied [`410809721`](https://github.com/krlmlr/duckdb/commit/410809721b83a3aabf613152671787254f4c62b3)
+  - run #3: copied [`b5f44877c`](https://github.com/krlmlr/duckdb/commit/b5f44877c4b0d73e9e371716b76d2ba5554a7ebd)
 - [#22907](https://github.com/duckdb/duckdb/pull/22907) [Dev] Bump iceberg+avro extensions
   - `-dag`: [`1f970a150`](https://github.com/krlmlr/duckdb/commit/1f970a1505cfe1d8a058e5b288db8d9917dbffa5)
   - run #1: copied [`97be282c1`](https://github.com/krlmlr/duckdb/commit/97be282c1b4bb09909811cc02926508017cd56c4)
   - run #2: copied [`cc0d79d9b`](https://github.com/krlmlr/duckdb/commit/cc0d79d9b331eb9a894c94b4e614f087a20777db)
+  - run #3: copied [`cad7cb2d1`](https://github.com/krlmlr/duckdb/commit/cad7cb2d1fbec1ea53f168402938b2635222b568)
 - [#23006](https://github.com/duckdb/duckdb/pull/23006) Move `BoundParameterExpression`, `BoundReferenceExpression`, `BoundSubqueryExpression`, `BoundUnnestExpression`, `BoundWindowExpression` members to private and use accessors
   - `-dag`: [`f99fbb6ce`](https://github.com/krlmlr/duckdb/commit/f99fbb6ce83427ab7816470f397ffb15d0f222e3)
   - run #1: copied [`1ff42bbe5`](https://github.com/krlmlr/duckdb/commit/1ff42bbe59157d522acacb841b78e0aa33b81d5e)
   - run #2: copied [`4c2a130ac`](https://github.com/krlmlr/duckdb/commit/4c2a130acc7b8e192e5ce5295f629b57f05ee326)
+  - run #3: copied [`0ef56c706`](https://github.com/krlmlr/duckdb/commit/0ef56c70633100f40e9133a6c3074e78c9b3fa11)
 - [#22771](https://github.com/duckdb/duckdb/pull/22771) MultiFileReader allow_empty
   - `-dag`: [`c7c45a13a`](https://github.com/krlmlr/duckdb/commit/c7c45a13a053568878f57648b5f6f89a42396d26)
   - run #1: copied [`92f27f527`](https://github.com/krlmlr/duckdb/commit/92f27f527037e6840c89495ef4d0eb7982854672)
   - run #2: copied [`0384e4606`](https://github.com/krlmlr/duckdb/commit/0384e4606222dc11161b573fc6395b56c028bd21)
+  - run #3: copied [`7d04da822`](https://github.com/krlmlr/duckdb/commit/7d04da822def104a5860a537cb64fba4fc2326e6)
 - [#22960](https://github.com/duckdb/duckdb/pull/22960) use StringUtil::CharacterIsDigit in Bignum::VarcharFormatting
   - `-dag`: [`9db9c555f`](https://github.com/krlmlr/duckdb/commit/9db9c555f4336fe69ca2b2385e371cabd72f0f5d)
   - run #1: copied [`fd1a9eb4b`](https://github.com/krlmlr/duckdb/commit/fd1a9eb4bcae0d77e0554ca3b3c5903e06993a6b)
   - run #2: copied [`1da5612b3`](https://github.com/krlmlr/duckdb/commit/1da5612b34493a22ffd1a38f6763cd6f71056976)
+  - run #3: copied [`f69dcd50f`](https://github.com/krlmlr/duckdb/commit/f69dcd50f4a154cb058a78cfc2e2f1b892cdc4e3)
 - [#23012](https://github.com/duckdb/duckdb/pull/23012) Remote Pushdown Optimizer: for now skip pushdown on remote functions
   - `-dag`: [`2ebebda07`](https://github.com/krlmlr/duckdb/commit/2ebebda07494f46da5b2062b21b7b3b49456cdce)
   - run #1: copied [`da0c1d6e3`](https://github.com/krlmlr/duckdb/commit/da0c1d6e3d7950cc8bf3bc37c3a51536b76b8304)
   - run #2: copied [`20509e517`](https://github.com/krlmlr/duckdb/commit/20509e51782de239773fdaca072ecf7c85c76cd2)
+  - run #3: copied [`4e831f3b6`](https://github.com/krlmlr/duckdb/commit/4e831f3b609b4c5a93e6164018512d9740689e09)
 - [#23013](https://github.com/duckdb/duckdb/pull/23013) Fix iceberg
   - `-dag`: [`f3c1eabcd`](https://github.com/krlmlr/duckdb/commit/f3c1eabcdcadf26bffca412ee422c5190e1bfb8f)
   - run #1: copied [`49f54f969`](https://github.com/krlmlr/duckdb/commit/49f54f96975cdfdc50b1f4c40c8340876c4581e3)
   - run #2: copied [`9859bfce3`](https://github.com/krlmlr/duckdb/commit/9859bfce346a2515f9abe34f7a8e1dba469657e0)
+  - run #3: copied [`ffd111e5b`](https://github.com/krlmlr/duckdb/commit/ffd111e5b4888e7c07f5ec1a94959bf392015dc8)
 - [#22808](https://github.com/duckdb/duckdb/pull/22808) Fix fuzzer issues
   - `-dag`: [`094ceceb9`](https://github.com/krlmlr/duckdb/commit/094ceceb920fd00ade70e1dec26f0e375f0db511)
   - run #1: copied [`efc8974b8`](https://github.com/krlmlr/duckdb/commit/efc8974b88a21ef4833895693cc66f5e518adf69)
   - run #2: copied [`66544bef9`](https://github.com/krlmlr/duckdb/commit/66544bef9b8ff033cdcbbfb95de56a1397e72fc8)
+  - run #3: copied [`e343ebd30`](https://github.com/krlmlr/duckdb/commit/e343ebd3077939a8da921008e468998ff60d8fce)
 - [#21871](https://github.com/duckdb/duckdb/pull/21871) Fix skewness() returning garbage instead of NULL for zero-variance input
   - `-dag`: [`95eb94478`](https://github.com/krlmlr/duckdb/commit/95eb944780aec150156aaf4108140ba31da5a4bd)
   - run #1: copied [`02436d1a8`](https://github.com/krlmlr/duckdb/commit/02436d1a85dae5be90405d2cf5e2f2b90ad6be67)
   - run #2: copied [`09ed463be`](https://github.com/krlmlr/duckdb/commit/09ed463be85598accc2302e563e81e622c5274f3)
+  - run #3: copied [`b78f42fa7`](https://github.com/krlmlr/duckdb/commit/b78f42fa71a39c933d79bdab66f4884a1612158d)
 - [#22923](https://github.com/duckdb/duckdb/pull/22923) Fix BIT comparison ordering for unequal lengths
   - `-dag`: [`4823a3e45`](https://github.com/krlmlr/duckdb/commit/4823a3e456ed818744431a08393463bed639d416)
   - run #1: copied [`781808b5d`](https://github.com/krlmlr/duckdb/commit/781808b5d8c3782098305822824052e723a4945d)
   - run #2: copied [`29e338ce0`](https://github.com/krlmlr/duckdb/commit/29e338ce0061a808aebe1bc6d01eef9c8c5210a9)
+  - run #3: copied [`6eea74ae6`](https://github.com/krlmlr/duckdb/commit/6eea74ae61dae4850176c174d033dc07d3901380)
 - [#23011](https://github.com/duckdb/duckdb/pull/23011) Remove LimitPercentModifier, inline into LimitModifier
   - `-dag`: [`755614a27`](https://github.com/krlmlr/duckdb/commit/755614a27320cd99b38d386b0723bddab2b46045)
   - run #1: copied [`5e053bf8d`](https://github.com/krlmlr/duckdb/commit/5e053bf8d67c46f52ff7e847055c921ef71f51f9)
   - run #2: copied [`8988b6f0b`](https://github.com/krlmlr/duckdb/commit/8988b6f0b7887b70f92a9f27ced2f9e0f6b4c55c)
+  - run #3: copied [`145880660`](https://github.com/krlmlr/duckdb/commit/14588066012705b5496bb61e7a68e506a3170c0c)
 - [#23018](https://github.com/duckdb/duckdb/pull/23018) Change scope of max execution time
   - `-dag`: [`fbc46b8d0`](https://github.com/krlmlr/duckdb/commit/fbc46b8d0c70bcf27b5dbb95197f91996cc3cf01)
   - run #1: copied [`523a2f331`](https://github.com/krlmlr/duckdb/commit/523a2f331b9dc9074e8291ea170e26578166b9d7)
   - run #2: copied [`9e191f43b`](https://github.com/krlmlr/duckdb/commit/9e191f43b20b9c1e87476f5d4338afe9177f2db3)
+  - run #3: copied [`2cf3e0d8e`](https://github.com/krlmlr/duckdb/commit/2cf3e0d8e6620d08095e60407cf6b95360dcd332)
 - [#23009](https://github.com/duckdb/duckdb/pull/23009) Join filter mirroring
   - `-dag`: [`1344497e6`](https://github.com/krlmlr/duckdb/commit/1344497e6698c24f1fbc1a071be681f0a579a51d)
   - run #1: copied [`9d5a7c973`](https://github.com/krlmlr/duckdb/commit/9d5a7c973d8dc52bdf1b4072946e4f94aab2e48c)
   - run #2: copied [`97627df99`](https://github.com/krlmlr/duckdb/commit/97627df99d69dfca60e91ddea36921c4d3442843)
+  - run #3: copied [`04333c7b9`](https://github.com/krlmlr/duckdb/commit/04333c7b9534be2fcc936871ce613837a1cbdb10)
 - [#23016](https://github.com/duckdb/duckdb/pull/23016) Deprecate `DataChunk::SetCardinality`, add `DataChunk::CheckCardinality`, and make `DataChunk::count` an `optional_idx`
   - `-dag`: [`20d1a6c96`](https://github.com/krlmlr/duckdb/commit/20d1a6c96e506dae2b29a6a33b68427f23833414)
   - run #1: copied [`583385890`](https://github.com/krlmlr/duckdb/commit/58338589070e4795cb51a8cc432c790028092045)
   - run #2: copied [`e4d97daca`](https://github.com/krlmlr/duckdb/commit/e4d97daca9c9e98e7783b41a60b36571dc6b298a)
+  - run #3: copied [`27e2f7711`](https://github.com/krlmlr/duckdb/commit/27e2f77110dde8ee52562705a8691aef6d6d0ef6)
 - [#23017](https://github.com/duckdb/duckdb/pull/23017) Allow `SQLNULL` as a type in query results and tables
   - `-dag`: [`52318ab21`](https://github.com/krlmlr/duckdb/commit/52318ab21840d814675c43d95ba4f4a746fea4cc)
   - run #1: copied [`d472e48b4`](https://github.com/krlmlr/duckdb/commit/d472e48b4ee5115a22c0c1892f3da4eff1b02519)
   - run #2: copied [`e6835836d`](https://github.com/krlmlr/duckdb/commit/e6835836dbe608e1476ea40edcfe1ce7e8e1f243)
+  - run #3: copied [`6629d7ca1`](https://github.com/krlmlr/duckdb/commit/6629d7ca1ceba5ece6939fdda70d5ef79c6a69f1)
 - [#22922](https://github.com/duckdb/duckdb/pull/22922) Parse short timestamp times with UTC suffixes
   - `-dag`: [`6e74d9f12`](https://github.com/krlmlr/duckdb/commit/6e74d9f1245491f0e47fec2af1668c2e883183ee)
   - run #1: copied [`ac532bd96`](https://github.com/krlmlr/duckdb/commit/ac532bd965a2e7292cb379b6b442330b44ce837b)
   - run #2: copied [`1e65be63a`](https://github.com/krlmlr/duckdb/commit/1e65be63a6396b9829d51ece824ca438ce59ea06)
+  - run #3: copied [`d470b0a41`](https://github.com/krlmlr/duckdb/commit/d470b0a417750170dc30609dd8e01e8d80347859)
 - [#22993](https://github.com/duckdb/duckdb/pull/22993) support `partition_by` for JSON writes
   - `-dag`: [`576a0d24e`](https://github.com/krlmlr/duckdb/commit/576a0d24e0dcb30a442f463e537364fa155a709f)
   - run #1: copied [`f1cc9a9fd`](https://github.com/krlmlr/duckdb/commit/f1cc9a9fd0b1d8f28fb2fdd0eaf47a4f2117ed15)
   - run #2: copied [`99f384092`](https://github.com/krlmlr/duckdb/commit/99f384092d8a72608d9cc36039db13783eba22b6)
+  - run #3: copied [`5ef795b8a`](https://github.com/krlmlr/duckdb/commit/5ef795b8ac00946322a87c5286992824efca709a)
 - [#23015](https://github.com/duckdb/duckdb/pull/23015) Reduce test runner log output
   - `-dag`: [`ca6675f0c`](https://github.com/krlmlr/duckdb/commit/ca6675f0cfe1c3e543456cbee22db805cf85ec11)
   - run #1: copied [`2bfc80523`](https://github.com/krlmlr/duckdb/commit/2bfc805238f28cd57c753f6e0499ad40d4ceaa83)
   - run #2: copied [`0ffb3528f`](https://github.com/krlmlr/duckdb/commit/0ffb3528f6f5bb0d59e1806c401320c508f34996)
+  - run #3: copied [`efae65658`](https://github.com/krlmlr/duckdb/commit/efae65658c4901d7f9d0de8879715ccb9828b4a0)
 - [#23005](https://github.com/duckdb/duckdb/pull/23005) Reapply: Enable jemalloc heap profiling with the libgcc unwinder
   - `-dag`: [`6da3a6945`](https://github.com/krlmlr/duckdb/commit/6da3a6945d10ad19fdccc930b0b7c43cd97809eb)
   - run #1: copied [`747d0071c`](https://github.com/krlmlr/duckdb/commit/747d0071cdee0d1125bbd344d433ce68b81e9915)
   - run #2: copied [`dda7367d4`](https://github.com/krlmlr/duckdb/commit/dda7367d4e2cbbd010027a8ed3ea9f6696812ed7)
+  - run #3: copied [`457d6d025`](https://github.com/krlmlr/duckdb/commit/457d6d025b947c801ae6eadd482993c0d5d1007f)
 - [#23002](https://github.com/duckdb/duckdb/pull/23002) Async Thread Pool / Task Queue
   - `-dag`: [`6a7fa3e02`](https://github.com/krlmlr/duckdb/commit/6a7fa3e023d9f8d73fa8c5898ce9c2466d4add66)
   - run #1: copied [`d9157a674`](https://github.com/krlmlr/duckdb/commit/d9157a674cd55723200d2f663ab542b119f523f0)
   - run #2: copied [`6af4f21ca`](https://github.com/krlmlr/duckdb/commit/6af4f21cac0fe450bdb47fc1317112f3ceae16d0)
+  - run #3: copied [`f8fffaf03`](https://github.com/krlmlr/duckdb/commit/f8fffaf03db30ab88465d5d55311fc18703b0265)
 - [#23025](https://github.com/duckdb/duckdb/pull/23025) AI Policy
   - `-dag`: [`f325aa72e`](https://github.com/krlmlr/duckdb/commit/f325aa72e3f8180f04229f4770ffab59b1f335e1)
   - run #1: copied [`3f2ac2a2d`](https://github.com/krlmlr/duckdb/commit/3f2ac2a2dbad825bd4ff62c9b1ed4b002b828e4e)
   - run #2: copied [`a384a49e5`](https://github.com/krlmlr/duckdb/commit/a384a49e53e7605b402dd5ea9244fb1bb8b82f2f)
+  - run #3: copied [`2765f1852`](https://github.com/krlmlr/duckdb/commit/2765f185249ffca2b56dd3ac820d6ee03e4089a5)
 - [#22646](https://github.com/duckdb/duckdb/pull/22646) Fix file log CSV writer state and header after truncate_duckdb_logs
   - `-dag`: [`d50b8ff0c`](https://github.com/krlmlr/duckdb/commit/d50b8ff0c5d73c92cec33aff0d50adf0bc6ea7b2)
   - run #1: copied [`215c26318`](https://github.com/krlmlr/duckdb/commit/215c2631809466c80b379feefc513e5cdc64b7e1)
   - run #2: copied [`9e57eb047`](https://github.com/krlmlr/duckdb/commit/9e57eb0476038094330e44e79b4aabc04e98ac03)
+  - run #3: copied [`276b4bff8`](https://github.com/krlmlr/duckdb/commit/276b4bff8471f3b71f57cc12891948780b35089e)
 - [#22819](https://github.com/duckdb/duckdb/pull/22819) Add expression stats pruning for arithmetic filters
   - `-dag`: [`74288a19a`](https://github.com/krlmlr/duckdb/commit/74288a19a09050a7681ef182d76748e894345569)
   - run #1: copied [`10c83eddc`](https://github.com/krlmlr/duckdb/commit/10c83eddc378d7bad1a977aaf83d918e4cebd4e7)
   - run #2: copied [`860025dd1`](https://github.com/krlmlr/duckdb/commit/860025dd1ea46e48568652ba1264d3da365a9e7b)
+  - run #3: copied [`24d9ff63f`](https://github.com/krlmlr/duckdb/commit/24d9ff63f80cca80211154b028745cfaed78c527)
 - [#23023](https://github.com/duckdb/duckdb/pull/23023) Bump MySQL
   - `-dag`: [`3b23bc10f`](https://github.com/krlmlr/duckdb/commit/3b23bc10f4c22c3b60214f27cbd5486dbb825d7a)
   - run #1: copied [`e86763b7d`](https://github.com/krlmlr/duckdb/commit/e86763b7dac3bab62c828731fa692875d79fb81e)
   - run #2: copied [`7350e0b35`](https://github.com/krlmlr/duckdb/commit/7350e0b35ba2ab3256cf9fe300eb71ede6291260)
+  - run #3: copied [`a31597988`](https://github.com/krlmlr/duckdb/commit/a315979882caf5ed7c70985e89619819ad7e4f0a)
 - [#23034](https://github.com/duckdb/duckdb/pull/23034) CLI: Add support for `shell_history()` function and `.history` command
   - `-dag`: [`d1c6b8596`](https://github.com/krlmlr/duckdb/commit/d1c6b85967cb261375222d33292976204c435719)
   - run #1: copied [`5e004e884`](https://github.com/krlmlr/duckdb/commit/5e004e884cdcbe4c0f29c1f55782f26b98b1081d)
   - run #2: copied [`73dbbe05d`](https://github.com/krlmlr/duckdb/commit/73dbbe05d2929b3ad46f4fd057ca5f4a6c9c53cd)
+  - run #3: copied [`62de35103`](https://github.com/krlmlr/duckdb/commit/62de351038e080aad98912587b7eea04f6246afb)
 - [#23030](https://github.com/duckdb/duckdb/pull/23030) Fix skewness() test failure and stabilize main CI
   - `-dag`: [`572ff7361`](https://github.com/krlmlr/duckdb/commit/572ff736105e779b8169293736efbe703ed01d7e)
   - run #1: copied [`3529ebf31`](https://github.com/krlmlr/duckdb/commit/3529ebf31ee8e17668ec991d1595bb2d35cf4c74)
   - run #2: copied [`170b3d9e4`](https://github.com/krlmlr/duckdb/commit/170b3d9e4b165f832e550e7649cbfb0573e68b23)
+  - run #3: copied [`f56e282f1`](https://github.com/krlmlr/duckdb/commit/f56e282f12f621b8d2ad8877dcf4a8d1037e2ac1)
 - [#23035](https://github.com/duckdb/duckdb/pull/23035) Tests rely on exact hash function
   - `-dag`: [`23c0d9715`](https://github.com/krlmlr/duckdb/commit/23c0d9715ac950e58b2cefdc0fb87c40fc0a4826)
   - run #1: copied [`49cbb5fd1`](https://github.com/krlmlr/duckdb/commit/49cbb5fd151612ba8b1dd21ed5cadce14700ce94)
   - run #2: copied [`410f78a37`](https://github.com/krlmlr/duckdb/commit/410f78a37cd0484a6096f4e2652830e73aff78d1)
+  - run #3: copied [`8dcc9ee9a`](https://github.com/krlmlr/duckdb/commit/8dcc9ee9a761d3d35e3c5e5ee0835ec9359d5054)
 - [#22757](https://github.com/duckdb/duckdb/pull/22757) Populate is_generated and generation_expression in information_schema.columns
   - `-dag`: [`d8d1abb6f`](https://github.com/krlmlr/duckdb/commit/d8d1abb6ff8b989fd40afb2aff295b784e59c07b)
   - run #1: copied [`6081b37cb`](https://github.com/krlmlr/duckdb/commit/6081b37cb6ae4d72fc266a0dbed6738706d49577)
   - run #2: copied [`95e5263e4`](https://github.com/krlmlr/duckdb/commit/95e5263e4f2412bdb3ac61cf8d8ae2ef2a42d36d)
+  - run #3: copied [`997737133`](https://github.com/krlmlr/duckdb/commit/997737133c90512ab03b2940e715bd59c95d50b1)
 - [#23026](https://github.com/duckdb/duckdb/pull/23026) Use buffer allocator to track memory management - Parquet Prefetch
   - `-dag`: [`3bea6912c`](https://github.com/krlmlr/duckdb/commit/3bea6912c178f8e812f4aba97814938fcd3b3851)
   - run #1: copied [`3e19bd999`](https://github.com/krlmlr/duckdb/commit/3e19bd999b807b481c3d46dbc37206635153de94)
   - run #2: copied [`631801e91`](https://github.com/krlmlr/duckdb/commit/631801e919782c08bd728cbed7caacc16ade7baa)
+  - run #3: copied [`fd54c728e`](https://github.com/krlmlr/duckdb/commit/fd54c728e96917cc9ef2933851bff4c771deb0ac)
 - [#23047](https://github.com/duckdb/duckdb/pull/23047) Isolate .tmp/ to avoid concurrent test temp-spill data corruption
   - `-dag`: [`550125f8c`](https://github.com/krlmlr/duckdb/commit/550125f8c2dfe8b03bf8a05cd815f3d95c815133)
   - run #1: copied [`3ba42ac97`](https://github.com/krlmlr/duckdb/commit/3ba42ac97e1fc17ba7bf049039bd02d68614b3f8)
   - run #2: copied [`36cfa3c43`](https://github.com/krlmlr/duckdb/commit/36cfa3c430df79661c8fcf589644654c535b9610)
+  - run #3: copied [`0b3e69e40`](https://github.com/krlmlr/duckdb/commit/0b3e69e4022fbc8271bd5893d7b2ebd056864ce2)
 - [#23040](https://github.com/duckdb/duckdb/pull/23040) Retry db init/load command atomically in cost plan runner
   - `-dag`: [`0e8e0598b`](https://github.com/krlmlr/duckdb/commit/0e8e0598b5c92a8c707dcb2129d1c78916d501ff)
   - run #1: copied [`0c9bb5f6a`](https://github.com/krlmlr/duckdb/commit/0c9bb5f6a99477a7864c304eb620fc36b76dd5fd)
   - run #2: copied [`1d9bd188e`](https://github.com/krlmlr/duckdb/commit/1d9bd188e6e4ea821415fd1c92215cc13649358e)
+  - run #3: copied [`629e4f5c1`](https://github.com/krlmlr/duckdb/commit/629e4f5c1ec18d1eb3b9f096930feb4c5f561418)
 - [#22941](https://github.com/duckdb/duckdb/pull/22941) Unify named arguments + default arguments for `(Scalar/Aggregate/Window)Functions`
   - `-dag`: [`19d9787ae`](https://github.com/krlmlr/duckdb/commit/19d9787aeb8ac94fa726e07df8963f01f16ab424)
   - run #1: copied [`3955b7649`](https://github.com/krlmlr/duckdb/commit/3955b7649c097ca64044b5d4fe785eb7e9a80eef)
   - run #2: copied [`aab068239`](https://github.com/krlmlr/duckdb/commit/aab06823950872cf878c7815e7dacc0615c81b47)
+  - run #3: copied [`f8e4bd5af`](https://github.com/krlmlr/duckdb/commit/f8e4bd5af2910380053109cf717c50cbf5833c00)
 
 - **[checkpoint] Run #16 back-merge** [#23039](https://github.com/duckdb/duckdb/pull/23039) "Merge `v1.5-variegata` into main"
   - `-dag`: [`6e952d6fd`](https://github.com/krlmlr/duckdb/commit/6e952d6fd9f97f8a2ce61ba166ad20caa599e089)
   - run #1: copied (merge) [`68df30cd4`](https://github.com/krlmlr/duckdb/commit/68df30cd44a5d4cd50e0a1198d267efc19b8cd55)
   - run #2: copied (merge) [`e88f068c7`](https://github.com/krlmlr/duckdb/commit/e88f068c75f1af607fc518f0af7c91c6d383e6ad)
+  - run #3: copied (merge) [`bd813d1ec`](https://github.com/krlmlr/duckdb/commit/bd813d1ec69626393a253e73abe1ae45d34eae02)
 
 ### Tail (no back-merge yet — appended by step 1 'track main'; becomes run #17's segment when the next back-merge lands)
 - [#9434](https://github.com/duckdb/duckdb/pull/9434) Internal https://redirect.github.com/duckdb/duckdb/pull/9434: ENUM IN STRING_LITERAL
   - `-dag`: [`a62b06eba`](https://github.com/krlmlr/duckdb/commit/a62b06eba6f390798fb7961c28fe985a3c66bdc3)
   - run #1: copied [`a25830a0a`](https://github.com/krlmlr/duckdb/commit/a25830a0a7067414d12c593b0d624de50cb518f1)
   - run #2: copied [`11e41645b`](https://github.com/krlmlr/duckdb/commit/11e41645b301fa98023f1fd5d3b407ee4c86299e)
+  - run #3: copied [`eefedc33c`](https://github.com/krlmlr/duckdb/commit/eefedc33c3e1cb3b6373b08e65d080b4037f7fa2)
 - [#22939](https://github.com/duckdb/duckdb/pull/22939) Normalize version number in CMake version config
   - `-dag`: [`70e63e272`](https://github.com/krlmlr/duckdb/commit/70e63e27233c990c97e42999dc5c7f3c3668759d)
   - run #1: copied [`52df66af9`](https://github.com/krlmlr/duckdb/commit/52df66af959b42cb1580687f141dcc4740b81d04)
   - run #2: copied [`962456121`](https://github.com/krlmlr/duckdb/commit/962456121570d0863ec375156e811841ded67311)
+  - run #3: copied [`28f0e4e02`](https://github.com/krlmlr/duckdb/commit/28f0e4e029a9bc933c188aade16f1f47f3ef3021)
 - [#23043](https://github.com/duckdb/duckdb/pull/23043) Rename emscripten action in main
   - `-dag`: [`f719ee0e9`](https://github.com/krlmlr/duckdb/commit/f719ee0e94601c741f9536d66112c442f7f92833)
   - run #1: copied [`4907e4537`](https://github.com/krlmlr/duckdb/commit/4907e4537e5eb7e8551a56bb6e0c109a459c366c)
   - run #2: copied [`2892560d1`](https://github.com/krlmlr/duckdb/commit/2892560d14a4341f9ede3343e4cb28306388e5f3)
+  - run #3: copied [`590710fcb`](https://github.com/krlmlr/duckdb/commit/590710fcb714788165d20336187961b8c9270524)
 - [#22963](https://github.com/duckdb/duckdb/pull/22963) Avoid join filter pushdown below limits
   - `-dag`: [`34aa7cf48`](https://github.com/krlmlr/duckdb/commit/34aa7cf48f1e020092a91d058ac9960aaac2e395)
   - run #1: copied [`7cc1e67f8`](https://github.com/krlmlr/duckdb/commit/7cc1e67f87260df3c314610cf49ad33bad86e9de)
   - run #2: copied [`c7f87cc59`](https://github.com/krlmlr/duckdb/commit/c7f87cc59acb838f16c2e34cdbeafab68ca7b166)
+  - run #3: copied [`327fa9e6b`](https://github.com/krlmlr/duckdb/commit/327fa9e6bfe5d38376e6d4b99ffba25402794965)
 - [#23037](https://github.com/duckdb/duckdb/pull/23037) Delayed Partition Flushing
   - `-dag`: [`e098fd492`](https://github.com/krlmlr/duckdb/commit/e098fd492ed4c2453f32ef8dbb7e1a33ce2487a6)
   - run #1: copied [`940d16dd6`](https://github.com/krlmlr/duckdb/commit/940d16dd68913bc88d7e9372da188c0937bd0413)
   - run #2: copied [`5f7609f97`](https://github.com/krlmlr/duckdb/commit/5f7609f97a454904062af13b11798cb009fe29ee)
+  - run #3: copied [`187fd5337`](https://github.com/krlmlr/duckdb/commit/187fd5337750784802a112e24c11d1d0994e9c56)
 - [#22545](https://github.com/duckdb/duckdb/pull/22545) [minor] Update exception message
   - `-dag`: [`e2be24291`](https://github.com/krlmlr/duckdb/commit/e2be24291a3db7df492600c45298d766a7817694)
   - run #1: copied [`472664f1b`](https://github.com/krlmlr/duckdb/commit/472664f1b2947e965b7562ffe78b8db986125268)
   - run #2: copied [`22b535ccc`](https://github.com/krlmlr/duckdb/commit/22b535ccc75e41557c5dda43eadde1ae404cce52)
+  - run #3: copied [`8051e27d2`](https://github.com/krlmlr/duckdb/commit/8051e27d2470a4c35741eaf1c05206b04695c9dd)
 - [#23038](https://github.com/duckdb/duckdb/pull/23038) Left join cost/cardinality improvements
   - `-dag`: [`7b28a62b9`](https://github.com/krlmlr/duckdb/commit/7b28a62b985e70cf79783ab0a2348f024d1159d1)
   - run #1: copied [`24a326f2b`](https://github.com/krlmlr/duckdb/commit/24a326f2b24ce6b15f6fc3444d720a15833f9063)
   - run #2: copied [`13c53ec91`](https://github.com/krlmlr/duckdb/commit/13c53ec91aa5d74ded385274743a7be1bc23b6dc)
+  - run #3: copied [`7d718ce15`](https://github.com/krlmlr/duckdb/commit/7d718ce152559a5bdd707f67f85a62b3510d5e7f)
 - [#22892](https://github.com/duckdb/duckdb/pull/22892) Fix top-n window elimination dropping value-transforming payloads
   - `-dag`: [`f2785cf01`](https://github.com/krlmlr/duckdb/commit/f2785cf01f2dd1158e28ad4b269d11bdfd848935)
   - run #1: copied [`6dabe8317`](https://github.com/krlmlr/duckdb/commit/6dabe831790ef4352d8b8f31191389ed7e8637ef)
   - run #2: copied [`18fc50521`](https://github.com/krlmlr/duckdb/commit/18fc50521c928d5f496b28a552a17b9519b228e9)
+  - run #3: copied [`378fb0a68`](https://github.com/krlmlr/duckdb/commit/378fb0a68c95c5f76db27cc904c7c7f489cfdff6)
 - [#23062](https://github.com/duckdb/duckdb/pull/23062) Implement file rotation for partitioned copy
   - `-dag`: [`333f64484`](https://github.com/krlmlr/duckdb/commit/333f644840de3780a24644e9fb5e2b9c3df548cb)
   - run #1: copied [`5b2c9528f`](https://github.com/krlmlr/duckdb/commit/5b2c9528f59737aaf33101734ba4f0d04ed7f80b)
   - run #2: copied [`117ba9df1`](https://github.com/krlmlr/duckdb/commit/117ba9df174a448f74bdbf36a7a5cb27b0dcf05f)
+  - run #3: copied [`e7ed853eb`](https://github.com/krlmlr/duckdb/commit/e7ed853eb1ceb93ab5bdfd5b1576729f229baf3a)
 - [#23055](https://github.com/duckdb/duckdb/pull/23055) Add build/*/test/run alias and improve test runner output
   - `-dag`: [`57d2c6fdf`](https://github.com/krlmlr/duckdb/commit/57d2c6fdf9c2710298637d37773eb23ab541e905)
   - run #1: copied [`f733033e3`](https://github.com/krlmlr/duckdb/commit/f733033e34e6bc8c10ac803d3c4cb631f7e4c298)
   - run #2: copied [`32c28ade9`](https://github.com/krlmlr/duckdb/commit/32c28ade9bf6c022aa4a8884e99d04d4d2c958bd)
+  - run #3: copied [`25a94605a`](https://github.com/krlmlr/duckdb/commit/25a94605a7637aa4d9a41fe030c96111d199a368)
 - [#23060](https://github.com/duckdb/duckdb/pull/23060) [Bug] Fix string-heap copy for updates mixing NULL and non-NULL values
   - `-dag`: [`03710a178`](https://github.com/krlmlr/duckdb/commit/03710a1783c1b1201a1b9b1ea2f42c7552267603)
   - run #1: copied [`fc5c7bf0c`](https://github.com/krlmlr/duckdb/commit/fc5c7bf0c38206cce33897491363a9b192f7c70f)
   - run #2: copied [`7b5b55e92`](https://github.com/krlmlr/duckdb/commit/7b5b55e92b27e15f0ee92221f0b1ee390c81a78d)
+  - run #3: copied [`d387332bb`](https://github.com/krlmlr/duckdb/commit/d387332bb1646a7d04242d928bd23d754e6b55b7)
 - [#23061](https://github.com/duckdb/duckdb/pull/23061) Refactor of Parquet Scan for ASYNC I/O
   - `-dag`: [`d030882d4`](https://github.com/krlmlr/duckdb/commit/d030882d42deeb3d12ad110df63831dcf9e53dc9)
   - run #1: copied [`2414197b6`](https://github.com/krlmlr/duckdb/commit/2414197b6ec678ec143aebb858641e7dc02fdfb3)
   - run #2: copied [`deeaef0be`](https://github.com/krlmlr/duckdb/commit/deeaef0beb577ba72ef5c353d9705ffb1f8755b8)
+  - run #3: copied [`fbd466aae`](https://github.com/krlmlr/duckdb/commit/fbd466aae52c03e45c450281a837d0f9d2d50f03)
 - [#23065](https://github.com/duckdb/duckdb/pull/23065) CLI: Make .schema indent by default and add syntax highlighting, and add `--no-indent/--no-format` to revert to the old single-line formatting
   - `-dag`: [`4c6a33c75`](https://github.com/krlmlr/duckdb/commit/4c6a33c7580bb4ab3dd5bc1951f72462b02d2cbf)
   - run #1: copied [`609140cfe`](https://github.com/krlmlr/duckdb/commit/609140cfe977abb4146fbeae6795e4df68c62da4)
   - run #2: copied [`6bf90a297`](https://github.com/krlmlr/duckdb/commit/6bf90a2971cdf14092e9ffe5342ace80a827f26b)
+  - run #3: copied [`94aa1900e`](https://github.com/krlmlr/duckdb/commit/94aa1900ee0baf8d56a46ff0adedf99b612e1b58)
 - [#22879](https://github.com/duckdb/duckdb/pull/22879) Initial implementation of `variant_exists` processing function
   - `-dag`: [`a80e446b1`](https://github.com/krlmlr/duckdb/commit/a80e446b1cf27f558f96e73dba0f07aca5f46ec1)
   - run #1: copied [`97565b101`](https://github.com/krlmlr/duckdb/commit/97565b10194478bff4d0dce74157cc05baa08b9c)
   - run #2: copied [`6f1fdd4ec`](https://github.com/krlmlr/duckdb/commit/6f1fdd4ec7f2b278cb849f63773ab7cf5a8ddf23)
+  - run #3: copied [`d296295c1`](https://github.com/krlmlr/duckdb/commit/d296295c14b7bc1cc8801cf3364b8ba6d7a46112)
 - [#23066](https://github.com/duckdb/duckdb/pull/23066) remove assert in DataTable::RemoveFromIndexes
   - `-dag`: [`c65291f06`](https://github.com/krlmlr/duckdb/commit/c65291f06d4ccfdd8cc3e0d38cc5bc11926fb016)
   - run #1: copied [`aa87d3ee1`](https://github.com/krlmlr/duckdb/commit/aa87d3ee14767d32435f0622c40b30dd920cf966)
   - run #2: copied [`6f8a663e9`](https://github.com/krlmlr/duckdb/commit/6f8a663e9f0ebf49eba1d68972d06a26dd41966e)
+  - run #3: copied [`dbb03581c`](https://github.com/krlmlr/duckdb/commit/dbb03581c4a658ae301e879f3148f2fbad255ce0)
 - [#23068](https://github.com/duckdb/duckdb/pull/23068) Fix race condition in partitioned copy
   - `-dag`: [`37b152de1`](https://github.com/krlmlr/duckdb/commit/37b152de11ed56313286cca66ebf4b5ee1ea5e36)
   - run #1: copied [`6c7f50712`](https://github.com/krlmlr/duckdb/commit/6c7f50712cdd7ea6a72feb7e9ebac27a31b970a3)
   - run #2: copied [`ffb8130e9`](https://github.com/krlmlr/duckdb/commit/ffb8130e95d6d335eab3ebe2d39764d6237b5c49)
+  - run #3: copied [`a7a998c45`](https://github.com/krlmlr/duckdb/commit/a7a998c45a70bd0e2235080c998305247bab35d8)
 - [#23059](https://github.com/duckdb/duckdb/pull/23059) Support named/default arguments for window functions too
   - `-dag`: [`931a7e5c2`](https://github.com/krlmlr/duckdb/commit/931a7e5c25bf6192d637d05f7b9445d805189a54)
   - run #1: copied [`433c2d683`](https://github.com/krlmlr/duckdb/commit/433c2d683f126d2013772e8b9dabf628d3a04b1f)
   - run #2: copied [`80f89056c`](https://github.com/krlmlr/duckdb/commit/80f89056cd6ce615414cb12e61af9dca69ca70d2)
+  - run #3: copied [`2d3b85d59`](https://github.com/krlmlr/duckdb/commit/2d3b85d59fd33cb7d2b304208cd7987f4426967b)
 - [#23070](https://github.com/duckdb/duckdb/pull/23070) Generate transformer part 6
   - `-dag`: [`a56b777c2`](https://github.com/krlmlr/duckdb/commit/a56b777c29eaa41d0cc87c36af00aa5afce0e78a)
   - run #1: copied [`da90668a4`](https://github.com/krlmlr/duckdb/commit/da90668a40fa9da0a42dffe2e0de1f6494d171fc)
   - run #2: copied [`30fcde289`](https://github.com/krlmlr/duckdb/commit/30fcde289b7509752dd24b9213c841be04cd551a)
+  - run #3: copied [`d297267d8`](https://github.com/krlmlr/duckdb/commit/d297267d806807ed2c07ea25a199be37743c40ea)
 - [#23072](https://github.com/duckdb/duckdb/pull/23072) Add aggregate state export verification setting and config file
   - `-dag`: [`e1f9da426`](https://github.com/krlmlr/duckdb/commit/e1f9da426fb43cbcc2246359bedc05ebad892f91)
   - run #1: copied [`78f22bbd5`](https://github.com/krlmlr/duckdb/commit/78f22bbd5ef9b2a2bfbc4d2c18909802d1ee4f92)
   - run #2: copied [`872078560`](https://github.com/krlmlr/duckdb/commit/872078560d426de7448f5f0dae50f1d282aead2f)
+  - run #3: copied [`f98d2ee61`](https://github.com/krlmlr/duckdb/commit/f98d2ee61623e418553c623c86f49f2463715fdd)
 - [#23067](https://github.com/duckdb/duckdb/pull/23067) Remove several unnecessary calls to `SetChildCardinality`
   - `-dag`: [`3cac28706`](https://github.com/krlmlr/duckdb/commit/3cac287067075d7d66c33dd4e2ce042342cd70a8)
   - run #1: copied [`738d0a0ff`](https://github.com/krlmlr/duckdb/commit/738d0a0ff3fb22669a99b5befb82a1a7be291a33)
   - run #2: copied [`c6cc5c2a0`](https://github.com/krlmlr/duckdb/commit/c6cc5c2a0933b860db63bd42268da20157cb91b4)
+  - run #3: copied [`15a253b07`](https://github.com/krlmlr/duckdb/commit/15a253b077df45ce942c1362d662b9e338534807)
 - [#23077](https://github.com/duckdb/duckdb/pull/23077) docs: create `AGENTS.md` and link from `CLAUDE.md`
   - `-dag`: [`b4aa2ad53`](https://github.com/krlmlr/duckdb/commit/b4aa2ad53d4a16da941ed9fc4c2ed19780556b14)
   - run #1: copied [`6a81f2140`](https://github.com/krlmlr/duckdb/commit/6a81f21406ad87488e0aa5ce2758835106897961)
   - run #2: copied [`0b3efe14b`](https://github.com/krlmlr/duckdb/commit/0b3efe14badce2aaec2cff2ab763682cd9dc774c)
+  - run #3: copied [`5ad3765af`](https://github.com/krlmlr/duckdb/commit/5ad3765af53aff4c3e3eb76d7678192f3e4cc238)
 - [#23080](https://github.com/duckdb/duckdb/pull/23080) Aggregate State Export: Add support for aggregates that have a `FunctionData`
   - `-dag`: [`c8e009199`](https://github.com/krlmlr/duckdb/commit/c8e009199fc16426af56698a7305d88e73033e11)
   - run #1: copied [`eaedcf357`](https://github.com/krlmlr/duckdb/commit/eaedcf357f42c6359a4c905744fe6a0bf1f4be26)
   - run #2: copied [`9d6da2ea0`](https://github.com/krlmlr/duckdb/commit/9d6da2ea0fc78fcd35f17b6e88cf40dc281e93b5)
+  - run #3: copied [`ace4c8d81`](https://github.com/krlmlr/duckdb/commit/ace4c8d81c05ea1421ba01101420df2dcf89d328)
 - [#23048](https://github.com/duckdb/duckdb/pull/23048) use StringUtil::CharacterToLower in strptime parser
   - `-dag`: [`63d54d746`](https://github.com/krlmlr/duckdb/commit/63d54d7467396afaac6ef6b42a1e75909c25aa64)
   - run #1: copied [`4ab289610`](https://github.com/krlmlr/duckdb/commit/4ab2896102147fd4f4018c258bc10749db9f6fd8)
   - run #2: copied [`46559b3a1`](https://github.com/krlmlr/duckdb/commit/46559b3a1fd3b550a22639a96717f6a06f5ec19b)
+  - run #3: copied [`76147b158`](https://github.com/krlmlr/duckdb/commit/76147b158f911830568d0e47ed681eff0ea05761)
 - [#23087](https://github.com/duckdb/duckdb/pull/23087) Point to correct paths on parser README.md
   - `-dag`: [`0bc893187`](https://github.com/krlmlr/duckdb/commit/0bc89318773b9c5d6a4896181d542ea2f4088e55)
   - run #1: copied [`ef53ca7b3`](https://github.com/krlmlr/duckdb/commit/ef53ca7b39ddcafa77bc70a8c6bf9290948f25be)
   - run #2: copied [`59f06a11d`](https://github.com/krlmlr/duckdb/commit/59f06a11da54970a0d66916b52d90b5f0f44be3c)
+  - run #3: copied [`8128d449d`](https://github.com/krlmlr/duckdb/commit/8128d449df44fea98036b32b2365c03292179b49)
 - [#21161](https://github.com/duckdb/duckdb/pull/21161) Fix CMake flag for linux_arm64_musl builds
   - `-dag`: [`7802c4134`](https://github.com/krlmlr/duckdb/commit/7802c4134382acbf1e76076a4e03ccd127953962)
   - run #1: copied [`945e9f321`](https://github.com/krlmlr/duckdb/commit/945e9f321f9f838e48aa619f4bcb19a658079794)
   - run #2: copied [`743dbe7a2`](https://github.com/krlmlr/duckdb/commit/743dbe7a2b8f74f931553673e5fb6f28b5ae5a78)
+  - run #3: copied [`34c9d63d4`](https://github.com/krlmlr/duckdb/commit/34c9d63d4e53489bd70a3baf56b0e711913ef0d4)
 - [#23079](https://github.com/duckdb/duckdb/pull/23079) Improve test output and highlight functions in stack trace
   - `-dag`: [`3affca8e3`](https://github.com/krlmlr/duckdb/commit/3affca8e3a945028af5f89befc4b5cf2ae06ea24)
   - run #1: copied [`7854c8de0`](https://github.com/krlmlr/duckdb/commit/7854c8de07ab6af6c6660192ce04fce8003ec671)
   - run #2: copied [`d9ccfd69f`](https://github.com/krlmlr/duckdb/commit/d9ccfd69fe0703a64a01f3b5032ee556bd72630e)
+  - run #3: copied [`6b2582fcc`](https://github.com/krlmlr/duckdb/commit/6b2582fcc63a922d5665a2554e17f8bb38fb155d)
 - [#23083](https://github.com/duckdb/duckdb/pull/23083) Zero-initialize in FIRST/ANY_VALUE
   - `-dag`: [`fd9378e86`](https://github.com/krlmlr/duckdb/commit/fd9378e8640ac00163f0eb679d6285cdcf365eaf)
   - run #1: copied [`e2166d519`](https://github.com/krlmlr/duckdb/commit/e2166d51914fb7f1047ca27a34707ab99d86ddca)
   - run #2: copied [`706834d77`](https://github.com/krlmlr/duckdb/commit/706834d7717941c043158db025d710a923fdf42c)
+  - run #3: copied [`1a7034256`](https://github.com/krlmlr/duckdb/commit/1a70342567139b1d204ddd77574fcfe0155084ab)
 - [#23086](https://github.com/duckdb/duckdb/pull/23086) Fix strict-prototypes warnings
   - `-dag`: [`3568463d9`](https://github.com/krlmlr/duckdb/commit/3568463d9c66fb3aeec645cad2c1813bf7a0c38a)
   - run #1: copied [`9cd5a7406`](https://github.com/krlmlr/duckdb/commit/9cd5a74062338964d0f50be431108b191ff08469)
   - run #2: copied [`843ee1273`](https://github.com/krlmlr/duckdb/commit/843ee1273aad4ddcfbe9262dd74500da5d65f3d6)
+  - run #3: copied [`053e2c731`](https://github.com/krlmlr/duckdb/commit/053e2c731482f5440e2ad95e73aa4573b51f96d4)
 - [#23069](https://github.com/duckdb/duckdb/pull/23069) Add `decimal_division` scalar function
   - `-dag`: [`8f8839392`](https://github.com/krlmlr/duckdb/commit/8f8839392cc2f5431abf4bc4e4dc02f319c8e7a8)
   - run #1: copied [`7f309322e`](https://github.com/krlmlr/duckdb/commit/7f309322e9eb9300e7d49f6e4268711e86f737f5)
   - run #2: copied [`f33434ab7`](https://github.com/krlmlr/duckdb/commit/f33434ab726f96c5d97a31d00fb279415c21f1db)
+  - run #3: copied [`516129476`](https://github.com/krlmlr/duckdb/commit/516129476b8f5680d8a4bd1c9a31cff5c3701bfb)
 - [#23059](https://github.com/duckdb/duckdb/pull/23059) Issue https://redirect.github.com/duckdb/duckdb/pull/23059: Dead WindowExpression Code
   - `-dag`: [`17abdaf5f`](https://github.com/krlmlr/duckdb/commit/17abdaf5fbca256475ee409c0e87de77f72feaa7)
   - run #1: copied [`433c2d683`](https://github.com/krlmlr/duckdb/commit/433c2d683f126d2013772e8b9dabf628d3a04b1f)
   - run #2: copied [`80f89056c`](https://github.com/krlmlr/duckdb/commit/80f89056cd6ce615414cb12e61af9dca69ca70d2)
+  - run #3: copied [`2d3b85d59`](https://github.com/krlmlr/duckdb/commit/2d3b85d59fd33cb7d2b304208cd7987f4426967b)
 - [#23036](https://github.com/duckdb/duckdb/pull/23036) Make HTTP 502 responses retryable
   - `-dag`: [`ea1e6a4a1`](https://github.com/krlmlr/duckdb/commit/ea1e6a4a1f59eacbce1af3c0f425784eb6070027)
   - run #1: copied [`56ab08c0e`](https://github.com/krlmlr/duckdb/commit/56ab08c0eed5499c108854fb226da583e58ae11f)
   - run #2: copied [`36eca8a2f`](https://github.com/krlmlr/duckdb/commit/36eca8a2fd97d91ef623b9672607f9f6cc725e7f)
+  - run #3: copied [`7fb4dfca5`](https://github.com/krlmlr/duckdb/commit/7fb4dfca5eb9c59c50160a16a9d7985ccb0324cd)
 - [#23029](https://github.com/duckdb/duckdb/pull/23029) PEG/2: Restructure top level `Program` definition
   - `-dag`: [`9601a3e80`](https://github.com/krlmlr/duckdb/commit/9601a3e8088319d818ecc0f63939bbc103c01c07)
   - run #1: copied [`a935f79d1`](https://github.com/krlmlr/duckdb/commit/a935f79d14709a302cc884fe0b1a742d3f4d05d5)
   - run #2: copied [`f94d0a2f4`](https://github.com/krlmlr/duckdb/commit/f94d0a2f4408b3ea1cf2d78dc1a850fef6675b87)
+  - run #3: copied [`7c04fec95`](https://github.com/krlmlr/duckdb/commit/7c04fec951fd186350c4af3fd9cd2e1de5ae56ba)
 - [#23098](https://github.com/duckdb/duckdb/pull/23098) Step 1: Remove duplicate-eliminated joins and replace them with materialized CTEs
   - `-dag`: [`652e9cd69`](https://github.com/krlmlr/duckdb/commit/652e9cd69036e9581e4f5672ee711adfbf81e73e)
   - run #1: copied [`388ea3dad`](https://github.com/krlmlr/duckdb/commit/388ea3dad490b517a9c25c74c46a3ec0eca55de3)
   - run #2: copied [`07a5fdb96`](https://github.com/krlmlr/duckdb/commit/07a5fdb964a9e22f15def41f143e30f31ac3fe38)
+  - run #3: copied [`04c8c416c`](https://github.com/krlmlr/duckdb/commit/04c8c416cb11a110cb13de6873a3c6566192e06e)
 - [#23103](https://github.com/duckdb/duckdb/pull/23103) Keep track of the exact row groups that were flushed instead of just assuming the last row group was unflushed
   - `-dag`: [`e367b3870`](https://github.com/krlmlr/duckdb/commit/e367b38708f62c452d0eee0b39e40e9ef6a23061)
   - run #1: copied [`05d5799e3`](https://github.com/krlmlr/duckdb/commit/05d5799e39bcd289cd239443589358abc0f58fa2)
   - run #2: copied [`5671aa14c`](https://github.com/krlmlr/duckdb/commit/5671aa14c344daf1409843a9b050915bbc1b221d)
+  - run #3: copied [`26972855c`](https://github.com/krlmlr/duckdb/commit/26972855c919b0eea82a025dda88d0faf7a0f4b6)
 - [#23106](https://github.com/duckdb/duckdb/pull/23106) Remove templating from type combines
   - `-dag`: [`1442ba47e`](https://github.com/krlmlr/duckdb/commit/1442ba47ea381ffaa7a4ba0442c7ee2e5c6841c3)
   - run #1: copied [`0e0a2c25f`](https://github.com/krlmlr/duckdb/commit/0e0a2c25facd12ef11b6f3e5ee858307cc0c253b)
   - run #2: copied [`fb946c908`](https://github.com/krlmlr/duckdb/commit/fb946c90804ed0d64877d45e97cac6ba1f687d63)
+  - run #3: copied [`2b44d181f`](https://github.com/krlmlr/duckdb/commit/2b44d181f7ba8d826b79450fd425dfa13857a0f9)
 - [#23021](https://github.com/duckdb/duckdb/pull/23021) loop in sleep_ms
   - `-dag`: [`c621923a8`](https://github.com/krlmlr/duckdb/commit/c621923a88b5496a9ea2363f44517aa31d30ce97)
   - run #1: copied [`a08815d78`](https://github.com/krlmlr/duckdb/commit/a08815d78caa7a4b30535c1496479f7b9f3cc7b9)
   - run #2: copied [`259ef7547`](https://github.com/krlmlr/duckdb/commit/259ef75474adec19336ad03a4bada86fd50569e2)
+  - run #3: copied [`b2fab1bf7`](https://github.com/krlmlr/duckdb/commit/b2fab1bf7ecad470adad9744c7f3afe7186680e4)
 - [#23107](https://github.com/duckdb/duckdb/pull/23107) Rework `string_agg` to operate on a `string_t` directly
   - `-dag`: [`a4fcbe988`](https://github.com/krlmlr/duckdb/commit/a4fcbe9889626392a0600ed52d8c9c350bb6a46f)
   - run #1: copied [`c985874da`](https://github.com/krlmlr/duckdb/commit/c985874da984dbb599f3ef4647ab9e0ba6ce96c5)
   - run #2: copied [`de142068a`](https://github.com/krlmlr/duckdb/commit/de142068ad41ef50b65d21f53411b710143e841a)
+  - run #3: copied [`8ae195856`](https://github.com/krlmlr/duckdb/commit/8ae1958560195d0f9461e488ef31c1b4f4a88bb0)
 - [#23101](https://github.com/duckdb/duckdb/pull/23101) Step2: Push DELIM filters into CTE rewrite
   - `-dag`: [`03ee9bddf`](https://github.com/krlmlr/duckdb/commit/03ee9bddfd4c5a1a712853038f0e7654370a87a7)
   - run #1: copied [`10f15a771`](https://github.com/krlmlr/duckdb/commit/10f15a771e7c746573a7740b761d9d02339b9403)
   - run #2: copied [`f9d65696a`](https://github.com/krlmlr/duckdb/commit/f9d65696a7f0cef45fe37b630d54b5cf0ff9265a)
+  - run #3: copied [`990ad9a50`](https://github.com/krlmlr/duckdb/commit/990ad9a50bbe2b330d913e19d436824158dd32af)
 - [#23108](https://github.com/duckdb/duckdb/pull/23108) @smvv's Extension signing
   - `-dag`: [`2c853a727`](https://github.com/krlmlr/duckdb/commit/2c853a727d09f93d3d6a623f800d3b434e4f3569)
   - run #1: copied [`29ed53c1b`](https://github.com/krlmlr/duckdb/commit/29ed53c1b62fc5f2ce3dbfe8e96b576be6ed8599)
   - run #2: copied [`2ec147f8e`](https://github.com/krlmlr/duckdb/commit/2ec147f8e93ee74501a31b8dc62c2302c8368796)
+  - run #3: copied [`1e74f0fac`](https://github.com/krlmlr/duckdb/commit/1e74f0fac9cb1444b4f387639c04a1dc8d9b3801)
 - [#9579](https://github.com/duckdb/duckdb/pull/9579) Internal https://redirect.github.com/duckdb/duckdb/pull/9579: ENUM IN empty
   - `-dag`: [`5b92297dc`](https://github.com/krlmlr/duckdb/commit/5b92297dc53ffe49c755c70d2862b0677ae3766a)
   - run #1: copied [`9f92738d5`](https://github.com/krlmlr/duckdb/commit/9f92738d5454653a690895203a8b35c7e30a8169)
   - run #2: copied [`6992077b2`](https://github.com/krlmlr/duckdb/commit/6992077b257525a029e5870e670eea062eb1483c)
+  - run #3: copied [`f2ad4c225`](https://github.com/krlmlr/duckdb/commit/f2ad4c225101689657506926d94dfdd9a8570187)
 - [#22871](https://github.com/duckdb/duckdb/pull/22871) Fetch co-located rows in batch
   - `-dag`: [`825bf8105`](https://github.com/krlmlr/duckdb/commit/825bf8105cdf44a6fd710899032a10fba4ef4763)
   - run #1: copied [`ffad17b6a`](https://github.com/krlmlr/duckdb/commit/ffad17b6aac77626736c83dae42896f92585ef94)
   - run #2: copied [`309503eff`](https://github.com/krlmlr/duckdb/commit/309503eff3460f8c6a4278496e814747c7147b83)
+  - run #3: copied [`7e295f5c7`](https://github.com/krlmlr/duckdb/commit/7e295f5c7d67bf170f7f021924a160f5c1059673)
 - [#23112](https://github.com/duckdb/duckdb/pull/23112) Aggregates: Make `StateInitialize` zero-initialize by default if no Initialize method is provided
   - `-dag`: [`735f5adf4`](https://github.com/krlmlr/duckdb/commit/735f5adf41acf4eadd693597b33a6e7a5419f395)
   - run #1: copied [`46019a962`](https://github.com/krlmlr/duckdb/commit/46019a9621ab52fe3f21744204e0fc0b05f9426d)
   - run #2: copied [`ae451f62a`](https://github.com/krlmlr/duckdb/commit/ae451f62ae288f2a8de35cb72ec2ffc3bda9b9e5)
+  - run #3: copied [`e8a84fa2a`](https://github.com/krlmlr/duckdb/commit/e8a84fa2ad19bc02580453ac475ff694fc31efb4)
 - [#23052](https://github.com/duckdb/duckdb/pull/23052) Rework pr22857: fix external file cache memleak
   - `-dag`: [`a580a5475`](https://github.com/krlmlr/duckdb/commit/a580a5475e23cf6cc2f4952dd8499349b205f84b)
   - run #1: copied [`18289cfe9`](https://github.com/krlmlr/duckdb/commit/18289cfe908b1b4200be9126e684a9c6cd53cf26)
   - run #2: copied [`82d7e7b5c`](https://github.com/krlmlr/duckdb/commit/82d7e7b5c48bffadf3caf0f83371194082523b26)
+  - run #3: copied [`cc317fba1`](https://github.com/krlmlr/duckdb/commit/cc317fba1990a83d2867b0966a1d1c6b16e50a3e)
 - [#23128](https://github.com/duckdb/duckdb/pull/23128) Fix correlated joinside regression
   - `-dag`: [`6dbc923c7`](https://github.com/krlmlr/duckdb/commit/6dbc923c7f9ae906cb431d36b54c524f219ce26d)
   - run #1: copied [`5f47bf5ae`](https://github.com/krlmlr/duckdb/commit/5f47bf5ae63393320edef96c2d71814e8e7fdc99)
   - run #2: copied [`6e438db06`](https://github.com/krlmlr/duckdb/commit/6e438db065de4a4027a1ebc917cb403a49b8b067)
+  - run #3: copied [`f480f5e92`](https://github.com/krlmlr/duckdb/commit/f480f5e922644985fea47f6c345b4dd8c5c2115c)
 - [#23123](https://github.com/duckdb/duckdb/pull/23123) Add debug verification mode for verifying that functions have the correct NULL flags (verify_functions) - instead of only running this in debug mode
   - `-dag`: [`f983da5cd`](https://github.com/krlmlr/duckdb/commit/f983da5cd08a8084544514f79535cdecbc2c7a08)
   - run #1: copied [`872b8a0f0`](https://github.com/krlmlr/duckdb/commit/872b8a0f039809e3d4a92fef1aa9ed7b2c1acb23)
   - run #2: copied [`d44fb2ea9`](https://github.com/krlmlr/duckdb/commit/d44fb2ea9cc56943523a49485eb6ad6ab3ae2fb0)
+  - run #3: copied [`d71bc8796`](https://github.com/krlmlr/duckdb/commit/d71bc8796c68a7ca2a6a6cb9a307224be324e2fd)
 - [#23133](https://github.com/duckdb/duckdb/pull/23133) Use min/max as a proxy for distinct count if estimates are absent
   - `-dag`: [`2435420f4`](https://github.com/krlmlr/duckdb/commit/2435420f42adf36637950e9ee6bd4355047d2242)
   - run #1: copied [`4444caa5c`](https://github.com/krlmlr/duckdb/commit/4444caa5c02a52754b8955f3aabe54e4837f2159)
   - run #2: copied [`38a5adb18`](https://github.com/krlmlr/duckdb/commit/38a5adb186e96708d0aa640ef8137ffe0034d378)
+  - run #3: copied [`cc1381a6d`](https://github.com/krlmlr/duckdb/commit/cc1381a6db824784f5f6a6b8ed730ea121fbad79)
 - [#23119](https://github.com/duckdb/duckdb/pull/23119) Leonid/before triggers
   - `-dag`: [`d8edabcc6`](https://github.com/krlmlr/duckdb/commit/d8edabcc60f6b425d3a1b316e43838894a889711)
   - run #1: copied [`829f3818f`](https://github.com/krlmlr/duckdb/commit/829f3818f510c77f0111f060398d0f7a4c31c944)
   - run #2: copied [`30c73ea63`](https://github.com/krlmlr/duckdb/commit/30c73ea6363c63f647aec328d2304d447f1dfbe0)
+  - run #3: copied [`07ec7a47f`](https://github.com/krlmlr/duckdb/commit/07ec7a47f530f20bb65ffb59501e32019023d644)
 - [#23138](https://github.com/duckdb/duckdb/pull/23138) [Parquet][Dev] Fix prefetching error on skipped column
   - `-dag`: [`181eeedef`](https://github.com/krlmlr/duckdb/commit/181eeedef76ceecbe7c152f46d0b6c650ec44f09)
   - run #1: copied [`580dc54a6`](https://github.com/krlmlr/duckdb/commit/580dc54a6f47622b2eceb6db1474b67907341ea9)
   - run #2: copied [`66acc98ee`](https://github.com/krlmlr/duckdb/commit/66acc98ee9304554a2e4295581c802c5d269aa99)
+  - run #3: copied [`4abe299b4`](https://github.com/krlmlr/duckdb/commit/4abe299b40b3d0ba81418cd54a60b4ccc2fcff25)
 - [#23135](https://github.com/duckdb/duckdb/pull/23135) Extend `RemotePushdownOptimizer` to be more flexible w.r.t. unsupported remote catalog operations, and integrate with MySQL
   - `-dag`: [`32b6a15a3`](https://github.com/krlmlr/duckdb/commit/32b6a15a31aa4b981195f4650c8104749698d0b3)
   - run #1: copied [`c2ecc450d`](https://github.com/krlmlr/duckdb/commit/c2ecc450d87cb7446902044880b6371b2e8c3ce4)
   - run #2: copied [`cf5f91250`](https://github.com/krlmlr/duckdb/commit/cf5f91250d72263c1f40c665b2d646f3daf15532)
+  - run #3: copied [`391d323c0`](https://github.com/krlmlr/duckdb/commit/391d323c0477fdc9f853039c2ef0277e4834587e)
 - [#23131](https://github.com/duckdb/duckdb/pull/23131) Extract combine rules into functions
   - `-dag`: [`36239efb7`](https://github.com/krlmlr/duckdb/commit/36239efb793877c2125e90aab7c45b834240d7ba)
   - run #1: copied [`7025fb174`](https://github.com/krlmlr/duckdb/commit/7025fb17480a01860be0e6721be1b2d8ab5a27d8)
   - run #2: copied [`a2f04e2da`](https://github.com/krlmlr/duckdb/commit/a2f04e2dabbf24637e52b4d7d3da0a81448bcee7)
+  - run #3: copied [`117ba68a9`](https://github.com/krlmlr/duckdb/commit/117ba68a98d840740c5b091c4de6653f409024b9)
 - [#23134](https://github.com/duckdb/duckdb/pull/23134) Rework aggregate states - make aggregate states use extension type info, and fully deprecate legacy aggregate states
   - `-dag`: [`ebc67a576`](https://github.com/krlmlr/duckdb/commit/ebc67a5768160f8dccefbd3e93b81c809d560f20)
   - run #1: copied [`481aa95ee`](https://github.com/krlmlr/duckdb/commit/481aa95eeb48b7231501a4ed0fa0d750c91c7e26)
   - run #2: copied [`49f429974`](https://github.com/krlmlr/duckdb/commit/49f429974b443be4986995220a64ad022e765a5c)
+  - run #3: copied [`6524970d6`](https://github.com/krlmlr/duckdb/commit/6524970d6bb6fb21b2cd3dc4f3ebbae98af49988)
 - [#23163](https://github.com/duckdb/duckdb/pull/23163) Fix update merge path of varchar
   - `-dag`: [`2c4ea73ff`](https://github.com/krlmlr/duckdb/commit/2c4ea73ff323c79cc1cb8a22dc17c18a6db613e3)
   - run #1: copied [`ea06f1a9d`](https://github.com/krlmlr/duckdb/commit/ea06f1a9de06808fabb0517ea33c38606012915f)
   - run #2: copied [`4063b6343`](https://github.com/krlmlr/duckdb/commit/4063b63438f094d9d28eeba8af0da6dcbb524ec7)
+  - run #3: copied [`fe704f68c`](https://github.com/krlmlr/duckdb/commit/fe704f68cc49597d2f02daaf39eb5efa38981374)
 - [#23157](https://github.com/duckdb/duckdb/pull/23157) Add file_row_group_number virtual column to the Parquet reader
   - `-dag`: [`033bbae0f`](https://github.com/krlmlr/duckdb/commit/033bbae0f56dc23173ff1d67f25a98b8da668f60)
   - run #1: copied [`906b875f6`](https://github.com/krlmlr/duckdb/commit/906b875f60fa327603b65d7ce00b0d3587603636)
   - run #2: copied [`b2a7c87d7`](https://github.com/krlmlr/duckdb/commit/b2a7c87d7b288a5170169b9e6b37e760eeac9b29)
+  - run #3: copied [`591924550`](https://github.com/krlmlr/duckdb/commit/591924550fa5d637784fefb638cf616e40ad290a)
 - [#23166](https://github.com/duckdb/duckdb/pull/23166) BinaryExecutor: unrolled path, also there perform blind store on selection vector
   - `-dag`: [`c4e6ee776`](https://github.com/krlmlr/duckdb/commit/c4e6ee77632236255f78359894b555e02e95903e)
   - run #1: copied [`b5d4fb768`](https://github.com/krlmlr/duckdb/commit/b5d4fb7686e17bbf5ab9be7ad48c2e4c8ebd166e)
   - run #2: copied [`3ea21d08f`](https://github.com/krlmlr/duckdb/commit/3ea21d08ffdc7aaa3ca3ab21842d071754d3ef73)
+  - run #3: copied [`42e264a2b`](https://github.com/krlmlr/duckdb/commit/42e264a2b7f36795777bba0624e6d921912fb2a0)
 - [#23164](https://github.com/duckdb/duckdb/pull/23164) Aggregate States: Allow state layout types to be defined as template members in the actual state, instead of requiring a separate function
   - `-dag`: [`84365e0fe`](https://github.com/krlmlr/duckdb/commit/84365e0fef073bbf1a8d4c4b5e065be3725a6240)
   - run #1: copied [`61d141cc1`](https://github.com/krlmlr/duckdb/commit/61d141cc138f55dea055e0e22b09ebc6debc398b)
   - run #2: copied [`3b12e2f78`](https://github.com/krlmlr/duckdb/commit/3b12e2f78cc41a95eec1a63f5b93cf40a5080279)
+  - run #3: copied [`7861d790f`](https://github.com/krlmlr/duckdb/commit/7861d790f0ae1f69b53ab281a4758b4012ab3675)
 - [#23165](https://github.com/duckdb/duckdb/pull/23165) Fold complement operations when NO_NULLs
   - `-dag`: [`894e88d7b`](https://github.com/krlmlr/duckdb/commit/894e88d7b7ab6e3ad750accba3cf7b5ae0f7abe2)
   - run #1: copied [`e02eaa10b`](https://github.com/krlmlr/duckdb/commit/e02eaa10bc6410ab9e0295fb39e83a3fe5ddc7ec)
   - run #2: copied [`2ab7bc985`](https://github.com/krlmlr/duckdb/commit/2ab7bc985bc273d4b99102b43c97c3f9ef02584a)
+  - run #3: copied [`87804bbbe`](https://github.com/krlmlr/duckdb/commit/87804bbbe6c7cedb156819223d9670a7d1dff409)
 - [#23142](https://github.com/duckdb/duckdb/pull/23142) Parquet Reader with Async I/O
   - `-dag`: [`1bc09ca32`](https://github.com/krlmlr/duckdb/commit/1bc09ca3272619642e880c743e81b49be9b39915)
   - run #1: copied [`69765ac4e`](https://github.com/krlmlr/duckdb/commit/69765ac4e8bca10cf621583ca296f73f935b8f66)
   - run #2: copied [`36e2d71cd`](https://github.com/krlmlr/duckdb/commit/36e2d71cd70888d7071508d9a3c62929ccaeb2bf)
+  - run #3: copied [`466c38e0b`](https://github.com/krlmlr/duckdb/commit/466c38e0b081649e59b7e53e3d2c9f17145aa21d)
 - [#23032](https://github.com/duckdb/duckdb/pull/23032) PEG/3: Peeling statements stacked
   - `-dag`: [`d0dd30846`](https://github.com/krlmlr/duckdb/commit/d0dd3084657dc3b0cfa59835bf94cf29ccec2ff5)
   - run #1: copied [`4eb3b7c4a`](https://github.com/krlmlr/duckdb/commit/4eb3b7c4ae3b64decf160ab6ee35c461d3b322b9)
   - run #2: copied [`f443d8b25`](https://github.com/krlmlr/duckdb/commit/f443d8b255e78b7572007747b56d3cc5dee008ad)
+  - run #3: copied [`9c19f87eb`](https://github.com/krlmlr/duckdb/commit/9c19f87eb32f21324cb9335434ca947ccae70d05)
 - [#23105](https://github.com/duckdb/duckdb/pull/23105) Fix ORDER BY true/false bypassing non-integer literal validation
   - `-dag`: [`369a71130`](https://github.com/krlmlr/duckdb/commit/369a71130e0196954a459f2356eb3a2bf9eaf3d0)
   - run #1: copied [`8df6ec031`](https://github.com/krlmlr/duckdb/commit/8df6ec031370a0004317c17d45a4b49e819e0050)
   - run #2: copied [`b356039c0`](https://github.com/krlmlr/duckdb/commit/b356039c082c1b10e693959be246f5e8de4aa1e6)
+  - run #3: copied [`ce4b4e161`](https://github.com/krlmlr/duckdb/commit/ce4b4e161154d93026ca1f641ff775cba1aac696)
 - [#23168](https://github.com/duckdb/duckdb/pull/23168) Allow aggregate states to be scalars, and clean-up aggregate state (de)serialization code
   - `-dag`: [`4fe9fae9e`](https://github.com/krlmlr/duckdb/commit/4fe9fae9e1b10ca3623d4dc230426802d961959f)
   - run #1: copied [`74e037713`](https://github.com/krlmlr/duckdb/commit/74e0377137bf9ada1399758244d89cef1c4760e0)
   - run #2: copied [`6e7b41a6f`](https://github.com/krlmlr/duckdb/commit/6e7b41a6f0c1a9389eb734d832ee83c5f0404e11)
+  - run #3: copied [`a02ad6fdd`](https://github.com/krlmlr/duckdb/commit/a02ad6fdde2c1a3ed24cce1db1a00aac673820c4)
 - [#23169](https://github.com/duckdb/duckdb/pull/23169) Remove deprecated settings 'enable_http_logging' and 'http_logging_output'
   - `-dag`: [`ff7251588`](https://github.com/krlmlr/duckdb/commit/ff7251588f3ce38910efbc72990079d079aac225)
   - run #1: copied [`d5170c8ba`](https://github.com/krlmlr/duckdb/commit/d5170c8ba5c56d2824ce45f50a236927f8dced89)
   - run #2: copied [`6218fd24c`](https://github.com/krlmlr/duckdb/commit/6218fd24c4c17e5de8526406db289d0a5b2ab0e3)
+  - run #3: copied [`e38b8bb6d`](https://github.com/krlmlr/duckdb/commit/e38b8bb6d56ddbc86247512d0ae127b7cf2d418a)
 - [#23050](https://github.com/duckdb/duckdb/pull/23050) Support scalar-wrapped aggregate macros in window
   - `-dag`: [`c7c84f238`](https://github.com/krlmlr/duckdb/commit/c7c84f23833b4173eec359800cd4c6d3255336b7)
   - run #1: copied [`4869b39e8`](https://github.com/krlmlr/duckdb/commit/4869b39e803b0ddbf6a64aaad575a841ff199666)
   - run #2: copied [`378ec5d70`](https://github.com/krlmlr/duckdb/commit/378ec5d70d48b32115c5ad79e122f9c4e2f92164)
+  - run #3: copied [`b7254ac42`](https://github.com/krlmlr/duckdb/commit/b7254ac422a3216b2b77f616d2cdb01040576420)
 - [#23181](https://github.com/duckdb/duckdb/pull/23181) Bump MySQL and Postgres
   - `-dag`: [`cfc3e4540`](https://github.com/krlmlr/duckdb/commit/cfc3e4540f1844b91f82f6ed254771d76355d7f8)
   - run #1: copied [`8f1bd5c64`](https://github.com/krlmlr/duckdb/commit/8f1bd5c64e9949cc2c7e5f303f3d5355e09f88d3)
   - run #2: copied [`a2d0efd50`](https://github.com/krlmlr/duckdb/commit/a2d0efd507ed2c4645a8b3502625b4545f126855)
+  - run #3: copied [`224400936`](https://github.com/krlmlr/duckdb/commit/2244009366476d34718314bb2564ef4909120d48)
 - [#23186](https://github.com/duckdb/duckdb/pull/23186) Aggregate States: add `OptionalStateType<T>` to aggregate states
   - `-dag`: [`d65266a0e`](https://github.com/krlmlr/duckdb/commit/d65266a0e1df85cdd97a658263f8924ee90e006b)
   - run #1: copied [`d15ac1c6b`](https://github.com/krlmlr/duckdb/commit/d15ac1c6be33fb30110cc9ecc536c42f1c45a9c4)
   - run #2: copied [`c25b1a1b5`](https://github.com/krlmlr/duckdb/commit/c25b1a1b54b0f98d3849771f871fda8d77ca0e6a)
+  - run #3: copied [`d78394d6a`](https://github.com/krlmlr/duckdb/commit/d78394d6aeea8db161513240104bf92c399c66e6)
 - [#23161](https://github.com/duckdb/duckdb/pull/23161) Make `Identifier` a class instead of using string everywhere
   - `-dag`: [`dd1ae06a8`](https://github.com/krlmlr/duckdb/commit/dd1ae06a8f02cf72bcede8c3b0ec98994c3ade3d)
   - run #1: copied [`3174c5a95`](https://github.com/krlmlr/duckdb/commit/3174c5a95f69a0b68e8f7b04d8ac9ae107dbf38e)
   - run #2: copied [`8b16ec4a2`](https://github.com/krlmlr/duckdb/commit/8b16ec4a2fbe8b1a79b0b958c740cc29104763c9)
+  - run #3: copied [`d4af9bd52`](https://github.com/krlmlr/duckdb/commit/d4af9bd523487795644f63cdd27668e76511eb42)
 - [#23196](https://github.com/duckdb/duckdb/pull/23196) Move to tidy-check diff again
   - `-dag`: [`0cf671936`](https://github.com/krlmlr/duckdb/commit/0cf671936737a46cd80150a839d831c94433c2e7)
   - run #1: copied [`a7e37736b`](https://github.com/krlmlr/duckdb/commit/a7e37736b8c999e2cb5c5c206621d1059f6563ab)
   - run #2: copied [`75fe2a2c9`](https://github.com/krlmlr/duckdb/commit/75fe2a2c9b37b9c836cf298cf640ff0b6d1f2f37)
+  - run #3: copied [`04a08039f`](https://github.com/krlmlr/duckdb/commit/04a08039f992ef5a6409485b20f30a970725807d)
 - [#23187](https://github.com/duckdb/duckdb/pull/23187) Step 3: Make duplicate eliminator optimizer logic work for CTE rewrite
   - `-dag`: [`f596a757b`](https://github.com/krlmlr/duckdb/commit/f596a757bda45e1e49cb8ea61c064d8c6ce817f3)
   - run #1: copied [`09a531c86`](https://github.com/krlmlr/duckdb/commit/09a531c8642f9bc05da0377d654e8c96e195158a)
   - run #2: copied [`c5846b539`](https://github.com/krlmlr/duckdb/commit/c5846b5394ab33d3994be115c277785fe5be37e4)
+  - run #3: copied [`9948d5180`](https://github.com/krlmlr/duckdb/commit/9948d51807827ba9ebfcc944699a53105773f4f6)
 - [#23179](https://github.com/duckdb/duckdb/pull/23179) Allow `MERGE INTO` in triggers
   - `-dag`: [`5ca9a7b3a`](https://github.com/krlmlr/duckdb/commit/5ca9a7b3a04d2705ff92be9fcc88ac8b2ecec09b)
   - run #1: copied [`7a2d30988`](https://github.com/krlmlr/duckdb/commit/7a2d30988c0f8834f09c37c656af8f6d26bb83cf)
   - run #2: copied [`7e89efe87`](https://github.com/krlmlr/duckdb/commit/7e89efe8771cf0b5e2678f3846ffdf6d4a375abc)
+  - run #3: copied [`3677993f0`](https://github.com/krlmlr/duckdb/commit/3677993f0ac4dc5f1c266a6e6fc6ae92259209d1)
 - [#23153](https://github.com/duckdb/duckdb/pull/23153) RETURNING support for tables with triggers
   - `-dag`: [`58c976497`](https://github.com/krlmlr/duckdb/commit/58c97649783b2c52a6faee219a53d1f0f0f68da6)
   - run #1: copied [`9b69f2715`](https://github.com/krlmlr/duckdb/commit/9b69f2715a42838bfa209f7f33fd01c7f721e584)
   - run #2: copied [`b9d21fc28`](https://github.com/krlmlr/duckdb/commit/b9d21fc28457db8f6a51775f34f0a5fbe2a204b3)
+  - run #3: copied [`bccd1ac6e`](https://github.com/krlmlr/duckdb/commit/bccd1ac6ea46f993f69cb87c82c0f74aa9317cab)
 - [#23211](https://github.com/duckdb/duckdb/pull/23211) Remove special formatting code for main CMakeLists.txt
   - `-dag`: [`33b9633f2`](https://github.com/krlmlr/duckdb/commit/33b9633f2e67b04303aae47aefa3382dc763fa65)
   - run #1: copied [`ac5a1b6df`](https://github.com/krlmlr/duckdb/commit/ac5a1b6dff5c1ed03ec216a3578c373c7808fa6f)
   - run #2: copied [`b6fdbf74c`](https://github.com/krlmlr/duckdb/commit/b6fdbf74cdde37e0d9f9494b6df5394bc85513f7)
+  - run #3: copied [`c6c353211`](https://github.com/krlmlr/duckdb/commit/c6c35321116673086007db93071b3e9100a622fb)
 - [#23199](https://github.com/duckdb/duckdb/pull/23199) Expand aggregate state export to work with lists (`StateListType`) and sort keys (`StateSortKey`), and add aggregate state export to `list`, `any_value/first/last`, `arg_min/arg_max`
   - `-dag`: [`532cf753f`](https://github.com/krlmlr/duckdb/commit/532cf753f6f4e275908f5c40bc2b16f50e8eae8d)
   - run #1: copied [`0e8924ebb`](https://github.com/krlmlr/duckdb/commit/0e8924ebb07622a11d9fea196a29b23cef4a1b2c)
   - run #2: copied [`9c2a32531`](https://github.com/krlmlr/duckdb/commit/9c2a32531a5e43a5afdcfec91a20e75a6befb708)
+  - run #3: copied [`045f3328e`](https://github.com/krlmlr/duckdb/commit/045f3328ea900911a77b926f0269edc5d75b805f)
 - [#23167](https://github.com/duckdb/duckdb/pull/23167) Initial implementation of `variant_array_length` processing function
   - `-dag`: [`6b7fe1f06`](https://github.com/krlmlr/duckdb/commit/6b7fe1f065480482600535845b3187b4ebb43a58)
   - run #1: copied [`5bfe86f12`](https://github.com/krlmlr/duckdb/commit/5bfe86f1243cb81bf8331bbf17b8ff1c2870c34f)
   - run #2: copied [`f8435f573`](https://github.com/krlmlr/duckdb/commit/f8435f573d31e2af2ed92bd68e9c3d61a0582b4b)
+  - run #3: copied [`5b1b76447`](https://github.com/krlmlr/duckdb/commit/5b1b76447a3c35f865602304280926f24647e95a)
 - [#23218](https://github.com/duckdb/duckdb/pull/23218) Add row group count to parquet RETURN_STATS
   - `-dag`: [`533d37783`](https://github.com/krlmlr/duckdb/commit/533d377830ca223efe4e5fb165db8476f71ff0c4)
   - run #1: copied [`3c345cdfd`](https://github.com/krlmlr/duckdb/commit/3c345cdfd577c85c86e072320000b8b9ee20ff81)
   - run #2: copied [`22fb2dc68`](https://github.com/krlmlr/duckdb/commit/22fb2dc68cc6757253ad22e5845ae8530476d6f4)
+  - run #3: copied [`e3fb034ba`](https://github.com/krlmlr/duckdb/commit/e3fb034bacefbe983429dfc0841bee9c7c856b9f)
 - [#23222](https://github.com/duckdb/duckdb/pull/23222) Unify `ProfilerPrintFormat` and `ExplainFormat` , remove special casing and move towards pluggable tree renderers
   - `-dag`: [`a33080312`](https://github.com/krlmlr/duckdb/commit/a3308031298dd880699bb66a77f2ff02bde3b1c2)
   - run #1: copied [`97da25757`](https://github.com/krlmlr/duckdb/commit/97da257573243b62c3ffb8706e6d53ff5daba88a)
   - run #2: copied [`b19c91031`](https://github.com/krlmlr/duckdb/commit/b19c910315b0221f75f9c24156c5cb3f2fc3f2d0)
+  - run #3: copied [`822347939`](https://github.com/krlmlr/duckdb/commit/822347939c05d9d4e392902cf723a556bd62af50)
 - [#23228](https://github.com/duckdb/duckdb/pull/23228) Rework `quantile` to use `list` infrastructure and add support for `string_agg` / `quantile` to export state
   - `-dag`: [`2a43d9040`](https://github.com/krlmlr/duckdb/commit/2a43d9040485189b35a367be8e008a6189e82e74)
   - run #1: copied [`cc0c20c35`](https://github.com/krlmlr/duckdb/commit/cc0c20c35f99bbaf0b5724e6f8a244524dc629e7)
   - run #2: copied [`26dba95fc`](https://github.com/krlmlr/duckdb/commit/26dba95fc8b0ef1ce308b1cb24ccfc8133cd76a6)
+  - run #3: copied [`3937a62fe`](https://github.com/krlmlr/duckdb/commit/3937a62fed2db3b9de82defe62ffc3bd714349c9)
 - [#23097](https://github.com/duckdb/duckdb/pull/23097) Add `decimal_average` aggregate function
   - `-dag`: [`a3cc4563f`](https://github.com/krlmlr/duckdb/commit/a3cc4563f2de2df87858ec85ce1a8aa87138e23b)
   - run #1: copied [`4c7c02bb0`](https://github.com/krlmlr/duckdb/commit/4c7c02bb0cd138aa1c9adf87071501648f368854)
   - run #2: copied [`398ae0824`](https://github.com/krlmlr/duckdb/commit/398ae0824c7cbb7e9fa6be5d0ec6e101c68532ac)
+  - run #3: copied [`8358d89ff`](https://github.com/krlmlr/duckdb/commit/8358d89ffea963dd3fd53067db709df1e952b4a6)
 - [#23240](https://github.com/duckdb/duckdb/pull/23240) Step 4: Make unnest rewriter recognize CTE-based plans
   - `-dag`: [`20db909ed`](https://github.com/krlmlr/duckdb/commit/20db909edfdb80f52b5c7246cd576635428845c0)
   - run #1: copied [`66f8bf0c1`](https://github.com/krlmlr/duckdb/commit/66f8bf0c1984b33de3a697a98994957dfcf08fd2)
   - run #2: copied [`646bf3414`](https://github.com/krlmlr/duckdb/commit/646bf341440ba2ab5d876f762efe49302a72cf36)
+  - run #3: copied [`9e326493d`](https://github.com/krlmlr/duckdb/commit/9e326493d73dbd0b0962e873134cb3ec6d0bb978)
 - [#23231](https://github.com/duckdb/duckdb/pull/23231) Rework ordered aggregates to use the `list` infrastructure
   - `-dag`: [`3f0e61f52`](https://github.com/krlmlr/duckdb/commit/3f0e61f528aa536bf930f671ab74b403cf07a3c3)
   - run #1: copied [`b10c648b0`](https://github.com/krlmlr/duckdb/commit/b10c648b0f2a8e4cdab6ff7a455563928d0852d9)
   - run #2: copied [`110717389`](https://github.com/krlmlr/duckdb/commit/110717389141a0ebc0a668e4d17c1eee228149c4)
+  - run #3: copied [`381b0ef34`](https://github.com/krlmlr/duckdb/commit/381b0ef347c5d51053a380810454fc2b7c5276fc)
 - [#23173](https://github.com/duckdb/duckdb/pull/23173) Pluggable combine types rules
   - `-dag`: [`7d982a624`](https://github.com/krlmlr/duckdb/commit/7d982a624f90eec0de6e01b624db8f79b83f519d)
   - run #1: copied [`53087fd3b`](https://github.com/krlmlr/duckdb/commit/53087fd3b90360d0a74f5c9164b13843843f965a)
   - run #2: copied [`29c29127a`](https://github.com/krlmlr/duckdb/commit/29c29127a058d2fd9b550c53611ffead27922f83)
+  - run #3: copied [`59cd7cde4`](https://github.com/krlmlr/duckdb/commit/59cd7cde4213d0fd0f1e65c05d052f7007b9f34f)
 - [#23236](https://github.com/duckdb/duckdb/pull/23236) Auto generate `select.gram`
   - `-dag`: [`010f1c43d`](https://github.com/krlmlr/duckdb/commit/010f1c43dde6164cb532c9ef7c52a37f4454fcb1)
   - run #1: copied [`4c8539cc0`](https://github.com/krlmlr/duckdb/commit/4c8539cc09810ca2af20639861468b15ef0e8e56)
   - run #2: copied [`91afb03fc`](https://github.com/krlmlr/duckdb/commit/91afb03fcc43fd78fe5e1d6fa516c45bd652565c)
+  - run #3: copied [`be20aaa99`](https://github.com/krlmlr/duckdb/commit/be20aaa99daac62fff013d0c9c5bf1a1264e1890)
 - [#23247](https://github.com/duckdb/duckdb/pull/23247) Unify quantile `update/combine` callbacks with the list aggregate
   - `-dag`: [`56344ff32`](https://github.com/krlmlr/duckdb/commit/56344ff32c84b1c213d3bf3af85a33e28d8368b8)
   - run #1: copied [`5b9703bb8`](https://github.com/krlmlr/duckdb/commit/5b9703bb892c16e16600579a7ed222f7857f30ae)
   - run #2: copied [`ca5aba06a`](https://github.com/krlmlr/duckdb/commit/ca5aba06a280b84196bc2b200dfdb88ec06dcf68)
+  - run #3: copied [`7f9b8f481`](https://github.com/krlmlr/duckdb/commit/7f9b8f481c2d9fdd54fe3c98cb1efdd9ad3e6443)
 - [#23265](https://github.com/duckdb/duckdb/pull/23265) Add `JSONBench` to the benchmark suite
   - `-dag`: [`7278a36f9`](https://github.com/krlmlr/duckdb/commit/7278a36f9ae5c378b78be65531449e2abbc9a5ba)
   - run #1: copied [`d9c12c8cb`](https://github.com/krlmlr/duckdb/commit/d9c12c8cbd3c17201d7b4d8700e36dae2ec65504)
   - run #2: copied [`443c81480`](https://github.com/krlmlr/duckdb/commit/443c81480bea1a5037f3e04de3842578402b7b53)
+  - run #3: copied [`1cabfba89`](https://github.com/krlmlr/duckdb/commit/1cabfba89ebf4de8866788759ae195e49768317c)
 - [#22251](https://github.com/duckdb/duckdb/pull/22251) Add support for static linking C-API extensions
   - `-dag`: [`5ae0619a0`](https://github.com/krlmlr/duckdb/commit/5ae0619a03b062aa18fef0f860ca16734460a2f2)
   - run #1: copied [`3e3c67057`](https://github.com/krlmlr/duckdb/commit/3e3c670574c100dcdfdb85b63fd142799c00ceed)
   - run #2: copied [`0784f1d70`](https://github.com/krlmlr/duckdb/commit/0784f1d708ec48a4cf7eccfe4489b056aa842cec)
+  - run #3: copied [`3caaf444b`](https://github.com/krlmlr/duckdb/commit/3caaf444be6f6266c63b3654b3c705febfbfd80e)
 - [#23252](https://github.com/duckdb/duckdb/pull/23252) Add `vertex_extract` function to get coordinates out of point-geometries
   - `-dag`: [`24fef6ca2`](https://github.com/krlmlr/duckdb/commit/24fef6ca2b4b973ddd203369aa48fef5e35c179a)
   - run #1: copied [`18e7760b0`](https://github.com/krlmlr/duckdb/commit/18e7760b02faf57c6eecfdd5f82517c90b37b5b1)
   - run #2: copied [`bca405255`](https://github.com/krlmlr/duckdb/commit/bca405255c7df020156730906ccb294ed9dba5c9)
+  - run #3: copied [`849def95e`](https://github.com/krlmlr/duckdb/commit/849def95ea2a94b32f784fe1f8788894e474439c)
 - [#23033](https://github.com/duckdb/duckdb/pull/23033) [Dev] Resolve `DEFAULT`s for INSERT/UPDATE/MERGE_INTO at bind-time rather than plan-time
   - `-dag`: [`520383154`](https://github.com/krlmlr/duckdb/commit/520383154e185d44a2c28605772351269c398441)
   - run #1: copied [`622c9ccb8`](https://github.com/krlmlr/duckdb/commit/622c9ccb8089fa4925b21c46cd0d8cfafd699a13)
   - run #2: copied [`e061fe3e3`](https://github.com/krlmlr/duckdb/commit/e061fe3e3114b3572a481e7c081906c2e102d22e)
+  - run #3: copied [`14ab265fe`](https://github.com/krlmlr/duckdb/commit/14ab265fe13de2b25372236ab493628e299bd517)
 - [#23267](https://github.com/duckdb/duckdb/pull/23267) Consistent ordering for gen files in package_build
   - `-dag`: [`502e36e7a`](https://github.com/krlmlr/duckdb/commit/502e36e7a87da4e64ea0bf88bb795776bb98c974)
   - run #1: copied [`44c630c52`](https://github.com/krlmlr/duckdb/commit/44c630c5274ba4151a88487002a9adc22f7e2ce9)
   - run #2: copied [`6792f7d2e`](https://github.com/krlmlr/duckdb/commit/6792f7d2eb69f8a6c592254d629b43a061464667)
+  - run #3: copied [`149181462`](https://github.com/krlmlr/duckdb/commit/14918146255cae6c6d1cb566da09b5f9844b6d67)
 - [#23237](https://github.com/duckdb/duckdb/pull/23237) Transform type literals into unbound logical types
   - `-dag`: [`27d88bb83`](https://github.com/krlmlr/duckdb/commit/27d88bb83e5fc89accd16fc586f00544f216d6ba)
   - run #1: copied [`557159a7e`](https://github.com/krlmlr/duckdb/commit/557159a7e7d12e510c358d34c9a286e618776d6c)
   - run #2: copied [`16d7a6110`](https://github.com/krlmlr/duckdb/commit/16d7a611074ec51c538b05730af592c799d11fce)
+  - run #3: copied [`034eacca9`](https://github.com/krlmlr/duckdb/commit/034eacca92ac111eedebbd3ec3a8aa074d7d11c2)
 - [#23268](https://github.com/duckdb/duckdb/pull/23268) Remove UnaryAggregateDestructor, and instead fold it into UnaryAggregate
   - `-dag`: [`eee00148c`](https://github.com/krlmlr/duckdb/commit/eee00148ccfa596cd6bd89590df8b9abcf231dcb)
   - run #1: copied [`9b321fc80`](https://github.com/krlmlr/duckdb/commit/9b321fc80d5d9c3796f4646a7394f72fee41d86a)
   - run #2: copied [`02c22208a`](https://github.com/krlmlr/duckdb/commit/02c22208ab70bf1dad301a9e386376e709eea5bb)
+  - run #3: copied [`1a594a6fd`](https://github.com/krlmlr/duckdb/commit/1a594a6fd4374f68f6d41bbf88222636b74fb109)
 - [#23272](https://github.com/duckdb/duckdb/pull/23272) Add comment policy for bots
   - `-dag`: [`ebd3897cb`](https://github.com/krlmlr/duckdb/commit/ebd3897cbb2afa5568218d0149cf0c81f2f02fa5)
   - run #1: copied [`ccaee7b77`](https://github.com/krlmlr/duckdb/commit/ccaee7b7754405c8c8b9db7178ed057202ce78e8)
   - run #2: copied [`c1ce1049d`](https://github.com/krlmlr/duckdb/commit/c1ce1049d785564e1db6ffe2cb62b9289162c608)
+  - run #3: copied [`87cd7e030`](https://github.com/krlmlr/duckdb/commit/87cd7e0300a9388588b7f6b39a6a8701b8915327)
 - [#22648](https://github.com/duckdb/duckdb/pull/22648) Fix null sentinel for keys in dict vector (Arrow)
   - `-dag`: [`e8b3e6ebf`](https://github.com/krlmlr/duckdb/commit/e8b3e6ebf5d365d9abb5428a055392d95d7b8a51)
   - run #1: copied [`1e47259ea`](https://github.com/krlmlr/duckdb/commit/1e47259eabf84ff87ce8b8cb75878326b5cb71a9)
   - run #2: copied [`3bb48a5da`](https://github.com/krlmlr/duckdb/commit/3bb48a5dad6eea2dec3a6b607fb3105477ccf1d9)
+  - run #3: copied [`4ac1d914b`](https://github.com/krlmlr/duckdb/commit/4ac1d914bb1a99cc673ebccc6ff0b0109dfa9b1d)
 - [#23264](https://github.com/duckdb/duckdb/pull/23264) Parquet: add expression stats pruning for arithmetic filters
   - `-dag`: [`f96088d5d`](https://github.com/krlmlr/duckdb/commit/f96088d5df2947505f23e3c9e34532148a954c77)
   - run #1: copied [`83107011e`](https://github.com/krlmlr/duckdb/commit/83107011ee0ed98a30f8abf119a4428ceb4f86e1)
   - run #2: copied [`1d573f04c`](https://github.com/krlmlr/duckdb/commit/1d573f04cf25fddec4fbaa2bc5a8119cc734a505)
+  - run #3: copied [`8e6f6adb7`](https://github.com/krlmlr/duckdb/commit/8e6f6adb702f450fbbb73a5bb8f4e0052f4f6bd9)
 - [#23270](https://github.com/duckdb/duckdb/pull/23270) Add `init_local_state_finalize` callback to aggregate functions which allows them to create a `FunctionLocalState` that is persisted across `Finalize` calls, and use this to speed up ordered aggregates
   - `-dag`: [`c9c523357`](https://github.com/krlmlr/duckdb/commit/c9c523357d8a078ed5c18472bf16025debd336a2)
   - run #1: copied [`cd20345f9`](https://github.com/krlmlr/duckdb/commit/cd20345f9b8d56283d4119b7255d576d6bb90040)
   - run #2: copied [`c8511e9c4`](https://github.com/krlmlr/duckdb/commit/c8511e9c46a359a621e0d3659d596c1d49deaebf)
+  - run #3: copied [`8586bd503`](https://github.com/krlmlr/duckdb/commit/8586bd503ef56a176dc2e6dd8d0bcfacf350cc90)
 - [#23266](https://github.com/duckdb/duckdb/pull/23266) fix out-of-bounds read in strict time parsing
   - `-dag`: [`2b8a037ef`](https://github.com/krlmlr/duckdb/commit/2b8a037ef3393faf41c85c858336dbc82f65c2fb)
   - run #1: copied [`eace11f46`](https://github.com/krlmlr/duckdb/commit/eace11f46bcc0ab17298f5c37740076069db9387)
   - run #2: copied [`5fa74cffb`](https://github.com/krlmlr/duckdb/commit/5fa74cffb6fe78ca3375cf55db288aadbc7eedb0)
+  - run #3: copied [`24fbde8dd`](https://github.com/krlmlr/duckdb/commit/24fbde8dd45c2c997af8fc73b332c97c1aea4b70)
 - [#23271](https://github.com/duckdb/duckdb/pull/23271) Add support for `string_agg` to export its state by making separators part of the signature
   - `-dag`: [`fdd62313a`](https://github.com/krlmlr/duckdb/commit/fdd62313a60e2489f610d1fd883cbb3a9790958b)
   - run #1: copied [`e6a833fb9`](https://github.com/krlmlr/duckdb/commit/e6a833fb92d4a564a2250162dd497689e2aa2d90)
   - run #2: copied [`7782b285b`](https://github.com/krlmlr/duckdb/commit/7782b285bbf5747770a9e91e4d774d72ee350f43)
+  - run #3: copied [`b6413eedf`](https://github.com/krlmlr/duckdb/commit/b6413eedf9d29b59e3bb8aa87a13933999b9fe2a)
 - [#23250](https://github.com/duckdb/duckdb/pull/23250) Remove redundancies in join filter creation
   - `-dag`: [`7f087f81a`](https://github.com/krlmlr/duckdb/commit/7f087f81ad47b6f6f9d0287931c3581b0f62c206)
   - run #1: copied [`b86dc00c2`](https://github.com/krlmlr/duckdb/commit/b86dc00c29d6f072f537a42cd4dae4f89058c69b)
   - run #2: copied [`a793fbc24`](https://github.com/krlmlr/duckdb/commit/a793fbc2493ddc9a4240584cc1317d41dcb96fd2)
+  - run #3: copied [`27227c26b`](https://github.com/krlmlr/duckdb/commit/27227c26bddf41c803754e9cae7656b7d04ce746)
 - [#23281](https://github.com/duckdb/duckdb/pull/23281) Add setting `force_update_to_del_and_insert ` which forces updates to always be converted to delete and inserts
   - `-dag`: [`7cbba44ad`](https://github.com/krlmlr/duckdb/commit/7cbba44ad3295a4974e04a06e99268df4fd39f86)
   - run #1: copied [`66d18baf1`](https://github.com/krlmlr/duckdb/commit/66d18baf1224d2d33423bde07b94deb81fb9f829)
   - run #2: copied [`b0cb54b50`](https://github.com/krlmlr/duckdb/commit/b0cb54b5010f97cc0423329f1e15f51510d21565)
+  - run #3: copied [`3fb80a032`](https://github.com/krlmlr/duckdb/commit/3fb80a032cb38b58473303f8ce853bab8efabbbf)
 - [#23280](https://github.com/duckdb/duckdb/pull/23280) [Variant] Implement `SetVectorType` for `ShreddedVectorBuffer`
   - `-dag`: [`a7122d996`](https://github.com/krlmlr/duckdb/commit/a7122d996b4a0579b845d420f221ee5f63cc185e)
   - run #1: copied [`bc64e71db`](https://github.com/krlmlr/duckdb/commit/bc64e71dbcb9e7180d8ed497d184b15346b4c5cd)
   - run #2: copied [`adc96e9ef`](https://github.com/krlmlr/duckdb/commit/adc96e9efe2574016d8f12652e9867746ac3e227)
+  - run #3: copied [`f529a6bdd`](https://github.com/krlmlr/duckdb/commit/f529a6bdd5b7e1082cf5acbfbb4389d017a9fe38)
 - [#20859](https://github.com/duckdb/duckdb/pull/20859) Commits on top of PR https://redirect.github.com/duckdb/duckdb/pull/20859
   - `-dag`: [`d527c46f1`](https://github.com/krlmlr/duckdb/commit/d527c46f10eef59f26287f2d1de62ba739de9b9d)
   - run #1: copied [`83cf0a3a3`](https://github.com/krlmlr/duckdb/commit/83cf0a3a357c58c7151ea9ef8a8b9b6a81738679)
   - run #2: copied [`f08fce1a7`](https://github.com/krlmlr/duckdb/commit/f08fce1a7a53e367496ae3e402160d83e0a6a2aa)
+  - run #3: copied [`a81454421`](https://github.com/krlmlr/duckdb/commit/a8145442176979a2781cfc3dbcb7a4b934b948a2)
 - [#23289](https://github.com/duckdb/duckdb/pull/23289) Dead node counting fixes
   - `-dag`: [`7e5739c59`](https://github.com/krlmlr/duckdb/commit/7e5739c59abe1763dd8827c628dc278d3cc2dedd)
   - run #1: copied [`59b11f435`](https://github.com/krlmlr/duckdb/commit/59b11f43522bee889c4fa8e5fc0c8c311054dc24)
   - run #2: copied [`9ce37ec7c`](https://github.com/krlmlr/duckdb/commit/9ce37ec7cb49b3e24d5a532c6eaf93c6fb6cacf4)
+  - run #3: copied [`14281853b`](https://github.com/krlmlr/duckdb/commit/14281853bebae1dbe32aaa866bb215f2310045dc)
 - [#23285](https://github.com/duckdb/duckdb/pull/23285) Add support for `quantile`, `median`, `mad` to aggregate state export
   - `-dag`: [`4e35b83ce`](https://github.com/krlmlr/duckdb/commit/4e35b83ce80272255f66df219891935da35d24e9)
   - run #1: copied [`bac9feb04`](https://github.com/krlmlr/duckdb/commit/bac9feb04f3868f9435d3b5fddc626e742116920)
   - run #2: copied [`7cdfa0bcb`](https://github.com/krlmlr/duckdb/commit/7cdfa0bcb09516553dfe17e7ec2c44a27bc47cad)
+  - run #3: copied [`9f09dd9e5`](https://github.com/krlmlr/duckdb/commit/9f09dd9e55788b153f0e3b8d30c1b0a81097742a)
 - [#23287](https://github.com/duckdb/duckdb/pull/23287) Optimize rollup / cube / grouping sets queries by folding them into CTEs to allow for cascading aggregation
   - `-dag`: [`520c71809`](https://github.com/krlmlr/duckdb/commit/520c718093a3861aaf78abc1ade5916a2e124887)
   - run #1: copied [`128b55066`](https://github.com/krlmlr/duckdb/commit/128b550666036fea466dd800ccbe6363a3d18b11)
   - run #2: copied [`cbad03710`](https://github.com/krlmlr/duckdb/commit/cbad0371049f5b413858d899e72e2ac88ca293fa)
+  - run #3: copied [`aa77db2e4`](https://github.com/krlmlr/duckdb/commit/aa77db2e41a12235f2b8d70df07e5c599cad023a)
 - [#23283](https://github.com/duckdb/duckdb/pull/23283) Async Parquet Writes
   - `-dag`: [`cb5bd90f4`](https://github.com/krlmlr/duckdb/commit/cb5bd90f4bf6727bb42774e4d37b828385e6c724)
   - run #1: copied [`1c5d2d801`](https://github.com/krlmlr/duckdb/commit/1c5d2d80189e833a049db704a18f4e5c88bfe822)
   - run #2: copied [`bcfa883bc`](https://github.com/krlmlr/duckdb/commit/bcfa883bc672e8004758703246c22375761e7da9)
+  - run #3: copied [`216dec103`](https://github.com/krlmlr/duckdb/commit/216dec103b71f166ca2d5f38dae23d8a0d878262)
 - [#23296](https://github.com/duckdb/duckdb/pull/23296) Step 5: Make Mark to Semi join conversion more stable
   - `-dag`: [`85fe65ed4`](https://github.com/krlmlr/duckdb/commit/85fe65ed4c028122044361ad98bec1e8217b650a)
   - run #1: copied [`4f2861883`](https://github.com/krlmlr/duckdb/commit/4f2861883eaa93d14fd88d27dd4d7fdff085e29f)
   - run #2: copied [`4b69ea8f0`](https://github.com/krlmlr/duckdb/commit/4b69ea8f0ea9216ac2bc0b308ddbe4596536cbe2)
+  - run #3: copied [`2271deedb`](https://github.com/krlmlr/duckdb/commit/2271deedbe01ff17a556adbd624e4b19a37f30bd)
 - [#23251](https://github.com/duckdb/duckdb/pull/23251) Add setting: SET dialect_compatibility_mode='spark' 
   - `-dag`: [`e5f4ed794`](https://github.com/krlmlr/duckdb/commit/e5f4ed7945929d535c47667d6256896177912461)
   - run #1: copied [`9da86f7a6`](https://github.com/krlmlr/duckdb/commit/9da86f7a659dc773c692a74292db5acfeb312ee6)
   - run #2: copied [`fe50e9d84`](https://github.com/krlmlr/duckdb/commit/fe50e9d84f60bf106b7d8e157fa49dd27c17e34e)
+  - run #3: copied [`d4d34b6ab`](https://github.com/krlmlr/duckdb/commit/d4d34b6ab2b9c27965c29a63d9198730066297ae)
 - [#23301](https://github.com/duckdb/duckdb/pull/23301) Remove stale PR workflow
   - `-dag`: [`66643c118`](https://github.com/krlmlr/duckdb/commit/66643c118874a669b326b9fe73585d7c2f112ca0)
   - run #1: copied [`a06ce6fba`](https://github.com/krlmlr/duckdb/commit/a06ce6fba079c7d75690402032467a77c96b8249)
   - run #2: copied [`8e4c6b9dd`](https://github.com/krlmlr/duckdb/commit/8e4c6b9ddc1f5ea8706b24a1ff99a31135c8bfcb)
+  - run #3: copied [`d90a32931`](https://github.com/krlmlr/duckdb/commit/d90a3293163cda41c7fa0e84076e0f38817991ea)
 - [#23300](https://github.com/duckdb/duckdb/pull/23300) Fix flaky `AsyncFileWriter` test
   - `-dag`: [`4774c95c4`](https://github.com/krlmlr/duckdb/commit/4774c95c4dc7a74058adc534de0b0bd6178a8866)
   - run #1: copied [`e57765cf0`](https://github.com/krlmlr/duckdb/commit/e57765cf008e8b8406f65f31772b8a53845004e2)
   - run #2: copied [`4e6ed49e1`](https://github.com/krlmlr/duckdb/commit/4e6ed49e10c2de9b27e0413ce41a8cec33cd28ee)
+  - run #3: copied [`9c0a8fc9d`](https://github.com/krlmlr/duckdb/commit/9c0a8fc9d0dc5a2e4e34cd05231c41b4e587d663)
 - [#23303](https://github.com/duckdb/duckdb/pull/23303) [Variant] Fix crash for variant_extract on non-object shredded column
   - `-dag`: [`192a84d44`](https://github.com/krlmlr/duckdb/commit/192a84d4471d4cb7d724ca97bdb6a09a1bee249c)
   - run #1: copied [`8b8d3c48f`](https://github.com/krlmlr/duckdb/commit/8b8d3c48fbb3bc3ff1f0a422b1cabe15f9509c26)
   - run #2: copied [`5a0907efc`](https://github.com/krlmlr/duckdb/commit/5a0907efc9fefddf0a0273bbb18731c75504458a)
+  - run #3: copied [`0ebf9b175`](https://github.com/krlmlr/duckdb/commit/0ebf9b1756b647bb6336c0e2c2031f9fbc924c26)
 - [#23290](https://github.com/duckdb/duckdb/pull/23290) Add Parquet ASYNC I/O for local files
   - `-dag`: [`ebe4c2faf`](https://github.com/krlmlr/duckdb/commit/ebe4c2fafa773ae1d026edefb126d768e29da10c)
   - run #1: copied [`620013e06`](https://github.com/krlmlr/duckdb/commit/620013e06f8061bd803bdeb4d7cc8644d533c1ed)
   - run #2: copied [`cb4bc461c`](https://github.com/krlmlr/duckdb/commit/cb4bc461c40f3fdbfefa5709810147242a352dfe)
+  - run #3: copied [`cc75ed6df`](https://github.com/krlmlr/duckdb/commit/cc75ed6dfda2fc57185dea24b0d635f61b13091e)
 - [#23309](https://github.com/duckdb/duckdb/pull/23309) Fix flaky `AsyncFileWriter` test
   - `-dag`: [`8e6a4324b`](https://github.com/krlmlr/duckdb/commit/8e6a4324b4558cc94e87e02064f7fba36643fa15)
   - run #1: copied [`e92b08271`](https://github.com/krlmlr/duckdb/commit/e92b08271c87538b9ef8681a32924f8ce780bdb2)
   - run #2: copied [`64178ea4e`](https://github.com/krlmlr/duckdb/commit/64178ea4e8b0cd5cd3d5d0a0a2702e51455da487)
+  - run #3: copied [`b0c572f48`](https://github.com/krlmlr/duckdb/commit/b0c572f4885872c3586feda6168c27843baf34a8)
 - [#23306](https://github.com/duckdb/duckdb/pull/23306) Simplify subquery planning for provably single-row subqueries
   - `-dag`: [`823caf429`](https://github.com/krlmlr/duckdb/commit/823caf429b52b4957a1ce5932e903433702a5be2)
   - run #1: copied [`2031987cf`](https://github.com/krlmlr/duckdb/commit/2031987cf5be4ed18abba56c49d3d59547cb4df4)
   - run #2: copied [`7cd183578`](https://github.com/krlmlr/duckdb/commit/7cd183578d19885b4fcba1219fd4b873e79efc49)
+  - run #3: copied [`06b5e741e`](https://github.com/krlmlr/duckdb/commit/06b5e741e7122a807b8faa4f03e9351d42f687d5)
 - [#23307](https://github.com/duckdb/duckdb/pull/23307) Add `variant_comparator` which ensures variants are ordered / compared in the same manner as native DuckDB values
   - `-dag`: [`d1803638d`](https://github.com/krlmlr/duckdb/commit/d1803638dc45908b1c88b4aeeb561b17901267df)
   - run #1: copied [`38c98a0ef`](https://github.com/krlmlr/duckdb/commit/38c98a0efb491bdf24b2b9349ecad48c0897aa3e)
   - run #2: copied [`f557f8586`](https://github.com/krlmlr/duckdb/commit/f557f85864cd8ff816af23483a39d545a1dbf6d7)
+  - run #3: copied [`16857f2fb`](https://github.com/krlmlr/duckdb/commit/16857f2fb0e7db2be205308f72d854d3b6fd2750)
 - [#23308](https://github.com/duckdb/duckdb/pull/23308) Add missing import / fix non-unity builds
   - `-dag`: [`705b7159d`](https://github.com/krlmlr/duckdb/commit/705b7159d59532bab5819dc37820771a12223788)
   - run #1: copied [`7fc30285b`](https://github.com/krlmlr/duckdb/commit/7fc30285b36de8c034030c1598b69dcb68c48ada)
   - run #2: copied [`bc54a37a3`](https://github.com/krlmlr/duckdb/commit/bc54a37a354b104897054bf3e93563b8ad57eca8)
+  - run #3: copied [`92b6d376f`](https://github.com/krlmlr/duckdb/commit/92b6d376f648fa945fbf21bea3f33dac6bd2d456)
 - [#23288](https://github.com/duckdb/duckdb/pull/23288) Pass `ParserOptions` in default macro generation
   - `-dag`: [`d8c9a80a7`](https://github.com/krlmlr/duckdb/commit/d8c9a80a7816092d49f800b1f0eeaf38cc71a572)
   - run #1: copied [`9b03c7476`](https://github.com/krlmlr/duckdb/commit/9b03c7476204c2c1c89db57423d7e9b1df74e937)
   - run #2: copied [`4ab8e38e4`](https://github.com/krlmlr/duckdb/commit/4ab8e38e4299c22c6bd5b1742927793dcfe25f52)
+  - run #3: copied [`0bf24a2fd`](https://github.com/krlmlr/duckdb/commit/0bf24a2fd75f883430946d07c2b6bfa5473f5622)
 - [#22928](https://github.com/duckdb/duckdb/pull/22928) [Dev] Refactor `MultiFileReader::GetVirtualColumnExpression` and `BaseFileReader::expression_map`
   - `-dag`: [`2c2932253`](https://github.com/krlmlr/duckdb/commit/2c293225351f49f7e8d7e6db9c991717e7db6acb)
   - run #1: copied [`d6359d568`](https://github.com/krlmlr/duckdb/commit/d6359d56872f2383d4ecf7fb01a2c8a3001b2e8f)
   - run #2: copied [`0ead49bb2`](https://github.com/krlmlr/duckdb/commit/0ead49bb265cd81f4e91cd303709ec8cf15b7578)
+  - run #3: copied [`d4344237d`](https://github.com/krlmlr/duckdb/commit/d4344237d2f67ffa0b876460ee009345e4649e05)
 - [#23312](https://github.com/duckdb/duckdb/pull/23312) Allow slicing of shredded vectors, and fix issue with shredded vectors being fed into `StructVector::GetEntries`
   - `-dag`: [`d31e4e2ff`](https://github.com/krlmlr/duckdb/commit/d31e4e2ff292821445bff7eac0ea1fb1e43c4297)
   - run #1: copied [`eadeee07a`](https://github.com/krlmlr/duckdb/commit/eadeee07aed5ac8121894617b2e8dfe75e1c986f)
   - run #2: copied [`e6e156b9f`](https://github.com/krlmlr/duckdb/commit/e6e156b9f016321121c0e04ffdf74aa8f403a73f)
+  - run #3: copied [`4c02bf98d`](https://github.com/krlmlr/duckdb/commit/4c02bf98d069f57fb7e32ad2129d5bb01ca76737)
 - [#23310](https://github.com/duckdb/duckdb/pull/23310) Auto generate transform `expression.gram` (Part 8)
   - `-dag`: [`0be091204`](https://github.com/krlmlr/duckdb/commit/0be091204f6af763784695d1cac1fad1bc00d402)
   - run #1: copied [`79981f041`](https://github.com/krlmlr/duckdb/commit/79981f0417da781d2ff0cb7602424efbe7b140ff)
   - run #2: copied [`c9e692e56`](https://github.com/krlmlr/duckdb/commit/c9e692e568b51458245e50b4b6c244ea47300a89)
+  - run #3: copied [`0d91ebbc1`](https://github.com/krlmlr/duckdb/commit/0d91ebbc16fc45d38fcf824acb39386ce5df9b61)
 - [#23317](https://github.com/duckdb/duckdb/pull/23317) Add `VariantIterator` which allows traversal of variant values without unshredding
   - `-dag`: [`2e9995912`](https://github.com/krlmlr/duckdb/commit/2e99959127ab96b29348421bead2f6e8a1162952)
   - run #1: copied [`09213bf74`](https://github.com/krlmlr/duckdb/commit/09213bf74a2ea4f3934ad8029a9cd9f626378867)
   - run #2: copied [`702592cdc`](https://github.com/krlmlr/duckdb/commit/702592cdc65136806d3fcb41c287c7007dca7a39)
+  - run #3: copied [`ee15c67d5`](https://github.com/krlmlr/duckdb/commit/ee15c67d552ac482b97dd1229ce44e247366eb36)
 - [#23319](https://github.com/duckdb/duckdb/pull/23319) Remove specialized variant comparison code
   - `-dag`: [`4f41f033d`](https://github.com/krlmlr/duckdb/commit/4f41f033d81f6024c816c79b18ee61937536cf11)
   - run #1: copied [`d1b7c5578`](https://github.com/krlmlr/duckdb/commit/d1b7c55786949ca430571de11293a320e83ec3df)
   - run #2: copied [`b24090bb5`](https://github.com/krlmlr/duckdb/commit/b24090bb5590812bfc92cf5429d3717ccbf358f3)
+  - run #3: copied [`c3be65cd8`](https://github.com/krlmlr/duckdb/commit/c3be65cd8525249bd1cc6665784e7d0f281deb4d)
 - [#9655](https://github.com/duckdb/duckdb/pull/9655) Internal https://redirect.github.com/duckdb/duckdb/pull/9655: Test Vector DOUBLE[3]
   - `-dag`: [`ec19e02b7`](https://github.com/krlmlr/duckdb/commit/ec19e02b79ba88e88232925cdf244b26b76ac11e)
   - run #1: copied [`bb676dad4`](https://github.com/krlmlr/duckdb/commit/bb676dad4a7c8c7800df17e2f11df03ea81954ed)
   - run #2: copied [`6eee22e84`](https://github.com/krlmlr/duckdb/commit/6eee22e84dad991ad9fd586a95e9b9be0b0ba2c1)
+  - run #3: copied [`cca728501`](https://github.com/krlmlr/duckdb/commit/cca7285015a7e6533461072870511916f23c2458)
 - [#23304](https://github.com/duckdb/duckdb/pull/23304) Add export/import callbacks for aggregates with non-standard state, and support `approx_top_k` / `approx_quantile`
   - `-dag`: [`01d408b0f`](https://github.com/krlmlr/duckdb/commit/01d408b0fca35902c04c3896c8e214d5d0d8d25d)
   - run #1: copied [`acd39a871`](https://github.com/krlmlr/duckdb/commit/acd39a871b9c37102235fb851211e56b80feba15)
   - run #2: copied [`ab7cafef2`](https://github.com/krlmlr/duckdb/commit/ab7cafef2016e4655e1c16a09c8e160f03ca7e3a)
+  - run #3: copied [`2a55725ef`](https://github.com/krlmlr/duckdb/commit/2a55725ef7df56a715464ff5cda033df411ecb50)
 - [#23324](https://github.com/duckdb/duckdb/pull/23324) Avoid unnecessary call to ToUnifiedFormat in ColumnSegment filter
   - `-dag`: [`0eee9c41a`](https://github.com/krlmlr/duckdb/commit/0eee9c41ad7388ac33fc8bac0c8d0bb8c99f30ae)
   - run #1: copied [`9fe17c7e8`](https://github.com/krlmlr/duckdb/commit/9fe17c7e8f3faa3ecf6e314054ab828409584809)
   - run #2: copied [`bff5e281d`](https://github.com/krlmlr/duckdb/commit/bff5e281dc487f02295a039cb3d552b5d5c753cc)
+  - run #3: copied [`51dd2c733`](https://github.com/krlmlr/duckdb/commit/51dd2c7332bada7aeab155a7ef09d2fab9b75130)
 - [#23328](https://github.com/duckdb/duckdb/pull/23328) CMake: Set the extension base directory to the duckdb module dir
   - `-dag`: [`332c06147`](https://github.com/krlmlr/duckdb/commit/332c06147dbba918686a7e67926527895302a48c)
   - run #1: copied [`70fde7934`](https://github.com/krlmlr/duckdb/commit/70fde79344e11a8b7f54c550be778a7ef20902d2)
   - run #2: copied [`1e7ef94dc`](https://github.com/krlmlr/duckdb/commit/1e7ef94dc178614cd3db6081b0d82e192c8645f8)
+  - run #3: copied [`2cc68c154`](https://github.com/krlmlr/duckdb/commit/2cc68c15461e654887687f152ce8c8758be03971)
 - [#23298](https://github.com/duckdb/duckdb/pull/23298) Handle exceptions thrown while recovering from a failed commit
   - `-dag`: [`d83794c30`](https://github.com/krlmlr/duckdb/commit/d83794c30872411892341bec264d728cd35c9460)
   - run #1: copied [`c069e7db4`](https://github.com/krlmlr/duckdb/commit/c069e7db4532fe0e3f14d524885f7269463dd40d)
   - run #2: copied [`a6ae71a21`](https://github.com/krlmlr/duckdb/commit/a6ae71a214e83da144f4725c25bf2a784d1b6eee)
+  - run #3: copied [`f200c1d70`](https://github.com/krlmlr/duckdb/commit/f200c1d70e17aab05969da77762009f1f73937be)
 - [#23332](https://github.com/duckdb/duckdb/pull/23332) Use optional semantic values for generated transformer rules
   - `-dag`: [`e805c77c7`](https://github.com/krlmlr/duckdb/commit/e805c77c712e7124c33980e52c9b3fe9afc727ff)
   - run #1: copied [`574a9fddb`](https://github.com/krlmlr/duckdb/commit/574a9fddb4f081d11622c89a02394f3ad6f71027)
   - run #2: copied [`1c4e3b46c`](https://github.com/krlmlr/duckdb/commit/1c4e3b46c870d1b61f4b54e0330cb8cae3510f35)
+  - run #3: copied [`3bf27e000`](https://github.com/krlmlr/duckdb/commit/3bf27e000968f873db7f080bb291a6f824b8260d)
 - [#23331](https://github.com/duckdb/duckdb/pull/23331) [Parquet] Fix corrupted file invalidating the database
   - `-dag`: [`9113161d2`](https://github.com/krlmlr/duckdb/commit/9113161d219f055ac34f3258ab0f593eee9b4a4f)
   - run #1: copied [`12b0b3129`](https://github.com/krlmlr/duckdb/commit/12b0b312993895cb7aa4230996c08a5d44e93fdd)
   - run #2: copied [`70a5ec5ef`](https://github.com/krlmlr/duckdb/commit/70a5ec5ef7f5802a4e797d5ea33f02e0279ce38e)
+  - run #3: copied [`96470f98f`](https://github.com/krlmlr/duckdb/commit/96470f98f1dd101028698063601bfa4ec95de52f)
 - [#22975](https://github.com/duckdb/duckdb/pull/22975) Report <eof> in check_peg_parser parse errors
   - `-dag`: [`969d54fbf`](https://github.com/krlmlr/duckdb/commit/969d54fbfa58449b8fdd9b13968a34080875a1a3)
   - run #1: copied [`7aec6a502`](https://github.com/krlmlr/duckdb/commit/7aec6a502fce54733c40167548273043c4744848)
   - run #2: copied [`99244ad29`](https://github.com/krlmlr/duckdb/commit/99244ad299acbac8e2251886688a58fa0cf7c685)
+  - run #3: copied [`ab261dee2`](https://github.com/krlmlr/duckdb/commit/ab261dee207fcd9d21e6864ab8f3a1c0a1c8db78)
 - [#23333](https://github.com/duckdb/duckdb/pull/23333) Step 6: Flip the switch and have delim join as CTEs by default
   - `-dag`: [`fe622c290`](https://github.com/krlmlr/duckdb/commit/fe622c2900787748d8517505e6293392d8333bd9)
   - run #1: copied [`95e5f0565`](https://github.com/krlmlr/duckdb/commit/95e5f0565f408300321b65c0489867fa871b7714)
   - run #2: copied [`6b62041f2`](https://github.com/krlmlr/duckdb/commit/6b62041f26251c49669a9a5c165eff752713057c)
+  - run #3: copied [`83e4f7647`](https://github.com/krlmlr/duckdb/commit/83e4f764759b6d763b7d2047d3ef1a20d2ed79b2)
 - [#23185](https://github.com/duckdb/duckdb/pull/23185) Add invoke scalar function
   - `-dag`: [`17e4ce324`](https://github.com/krlmlr/duckdb/commit/17e4ce324381b0b93dbd4ca4a3a3cc71fe2e3b4c)
   - run #1: copied [`8d859227a`](https://github.com/krlmlr/duckdb/commit/8d859227aec752a27e6900ce8c85e7c0849bcdab)
   - run #2: copied [`ba13f6749`](https://github.com/krlmlr/duckdb/commit/ba13f67497da9885534e61c12581e3a8ddd2d5bd)
+  - run #3: copied [`47b30710b`](https://github.com/krlmlr/duckdb/commit/47b30710bf754d96e581123a99b2a8d2cf7f3111)
 - [#23273](https://github.com/duckdb/duckdb/pull/23273) Allow empty STRUCT types
   - `-dag`: [`01ad20ea5`](https://github.com/krlmlr/duckdb/commit/01ad20ea53aba7d3ed5e37da3d943baaf1db1cc8)
   - run #1: copied [`5127f44b3`](https://github.com/krlmlr/duckdb/commit/5127f44b3a839e9fecc8d47bcb90e7ad8c09276e)
   - run #2: copied [`d30150d5f`](https://github.com/krlmlr/duckdb/commit/d30150d5f83c1f6ac0cf71a753fad581fcbe7a9b)
+  - run #3: copied [`4a4d413cb`](https://github.com/krlmlr/duckdb/commit/4a4d413cb87543b70f1755ca46b9b300add9d2df)
 - [#23321](https://github.com/duckdb/duckdb/pull/23321) Fix uninitialized TransactionContext::invalidation_policy and auto_rollback members
   - `-dag`: [`b27543c15`](https://github.com/krlmlr/duckdb/commit/b27543c1523b208bfbf5f215c175dbd71cdc0321)
   - run #1: copied [`aaf360c7d`](https://github.com/krlmlr/duckdb/commit/aaf360c7d85e7f2dc2ed25cb876ee453b9796ae9)
   - run #2: copied [`d7fbd1a6d`](https://github.com/krlmlr/duckdb/commit/d7fbd1a6db0d44aca59f82ac534bf6b2f4c73cc0)
+  - run #3: copied [`66679a988`](https://github.com/krlmlr/duckdb/commit/66679a98838c46f46d43f5262ae4304c78acf0e3)
 - [#23336](https://github.com/duckdb/duckdb/pull/23336) Propagate shredded stats through `variant_comparator`
   - `-dag`: [`3030f4a6c`](https://github.com/krlmlr/duckdb/commit/3030f4a6c4a5db3dfcd892793b90bbae0519bcd2)
   - run #1: copied [`114cddd3b`](https://github.com/krlmlr/duckdb/commit/114cddd3b9f5d00044bfc294f766d9e70599c672)
   - run #2: copied [`768503c19`](https://github.com/krlmlr/duckdb/commit/768503c19036f453880a872951f6a2b7c2dcdeb1)
+  - run #3: copied [`536892b0c`](https://github.com/krlmlr/duckdb/commit/536892b0c706a36175c5b00fbc1f1e1b21193d72)
 - [#23345](https://github.com/duckdb/duckdb/pull/23345) AGENTS.md: Drop in-process
   - `-dag`: [`9c879e376`](https://github.com/krlmlr/duckdb/commit/9c879e3767d6c4566d3cc75ae3cae9ba18777307)
   - run #1: copied [`0600e7db6`](https://github.com/krlmlr/duckdb/commit/0600e7db6ae93931ff4191b5342bac7c44b2eda7)
   - run #2: copied [`c3a41a4db`](https://github.com/krlmlr/duckdb/commit/c3a41a4db9049bdfbecd1f427883a218a95a39b3)
+  - run #3: copied [`3a4256870`](https://github.com/krlmlr/duckdb/commit/3a42568705bfe79c7ec602b3790342f977411bfb)
 - [#23346](https://github.com/duckdb/duckdb/pull/23346) Clean-up VariantIterator API and unify it with vector iterator infrastructure
   - `-dag`: [`e4b6cbd5f`](https://github.com/krlmlr/duckdb/commit/e4b6cbd5fdaa7431d882896c058f9cf043d45e79)
   - run #1: copied [`3c7ae5d52`](https://github.com/krlmlr/duckdb/commit/3c7ae5d524131aa5f3944d9f9c204c0cfe76b0a2)
   - run #2: copied [`a82561d77`](https://github.com/krlmlr/duckdb/commit/a82561d77a74955e8fc24f96c2ee76cf79ba5ae1)
+  - run #3: copied [`21a96859c`](https://github.com/krlmlr/duckdb/commit/21a96859cf82c76b668d2cd4e49d4ab98545d48c)
 - [#23284](https://github.com/duckdb/duckdb/pull/23284) Support AFTER INSERT FOR EACH ROW triggers
   - `-dag`: [`b441a1f0f`](https://github.com/krlmlr/duckdb/commit/b441a1f0f36afb351272451f644f1725700b3de7)
   - run #1: copied [`17b436f54`](https://github.com/krlmlr/duckdb/commit/17b436f544d9e6fa0690e4d36e94698633a8e816)
   - run #2: copied [`3293f4821`](https://github.com/krlmlr/duckdb/commit/3293f482162cf456fed5b9b398b96449dfdba79d)
+  - run #3: copied [`644d54ac7`](https://github.com/krlmlr/duckdb/commit/644d54ac75a5ac0b8709656a79dedd4f0f40183f)
 - [#23343](https://github.com/duckdb/duckdb/pull/23343) Add `shredded_vector` option to `debug_verify_vector`
   - `-dag`: [`8a65c8ac5`](https://github.com/krlmlr/duckdb/commit/8a65c8ac5c9a89634cfc9a9628c70248a6fc1876)
   - run #1: copied [`faa89180d`](https://github.com/krlmlr/duckdb/commit/faa89180d14983db2b577818503ed77c59e33b4b)
   - run #2: copied [`9f13b4a69`](https://github.com/krlmlr/duckdb/commit/9f13b4a691a41634a3d7f769a4b4d4993847a280)
+  - run #3: copied [`c6a26b82d`](https://github.com/krlmlr/duckdb/commit/c6a26b82daa10b0fae909743708cc3a6a41eff85)
 - [#23349](https://github.com/duckdb/duckdb/pull/23349) Fix state export finalize with non-zero offset, and update list of skipped tests
   - `-dag`: [`a6ccfe334`](https://github.com/krlmlr/duckdb/commit/a6ccfe3347cd131e3d9940c8266f8e41ef5b3570)
   - run #1: copied [`7241076fd`](https://github.com/krlmlr/duckdb/commit/7241076fdf48776d81bb20a5aae39be5665e5977)
   - run #2: copied [`08181b683`](https://github.com/krlmlr/duckdb/commit/08181b68357210debd0b2998b07e2b71453365df)
+  - run #3: copied [`ea63e6be8`](https://github.com/krlmlr/duckdb/commit/ea63e6be8b5a0121c0d3aaf2293f39fbcc789c2e)
 - [#23347](https://github.com/duckdb/duckdb/pull/23347) Propagate stats in `structured type -> variant` casts
   - `-dag`: [`1d53c263a`](https://github.com/krlmlr/duckdb/commit/1d53c263a9fdc5c6a19dccf1856d27f792852429)
   - run #1: copied [`dff19f7e2`](https://github.com/krlmlr/duckdb/commit/dff19f7e20e28b70c730d047a3ab52e9b46ad96a)
   - run #2: copied [`7ab4b942e`](https://github.com/krlmlr/duckdb/commit/7ab4b942e3b6effe8e832dbf4cd6a805a16fc812)
+  - run #3: copied [`378ab1afe`](https://github.com/krlmlr/duckdb/commit/378ab1afe752697429bd7d88a4f22e7a769101b4)
 - [#23350](https://github.com/duckdb/duckdb/pull/23350) Deprecate Implicit Table-Function Identifier String Conversion
   - `-dag`: [`ac9823d58`](https://github.com/krlmlr/duckdb/commit/ac9823d5887679e55fd7905fb99f2f47cf777ea8)
   - run #1: copied [`ead0cacb1`](https://github.com/krlmlr/duckdb/commit/ead0cacb17fb26080b32b2f241edb7d19e3af553)
   - run #2: copied [`b4fbeed1e`](https://github.com/krlmlr/duckdb/commit/b4fbeed1eac00127ba200e64b60ce98931eac691)
+  - run #3: copied [`2ba83f084`](https://github.com/krlmlr/duckdb/commit/2ba83f0845e0d0ccb66be82901257a104d9179a4)
 - [#23191](https://github.com/duckdb/duckdb/pull/23191) Support submodules in extensions patching process
   - `-dag`: [`00adb4b21`](https://github.com/krlmlr/duckdb/commit/00adb4b210290310c2762f0613ca8ffce7daa860)
   - run #1: copied [`87990a86d`](https://github.com/krlmlr/duckdb/commit/87990a86d06e6dd72aa119629ad6ca7b62c514cd)
   - run #2: copied [`cff4aa80f`](https://github.com/krlmlr/duckdb/commit/cff4aa80fb9a790b014e5c82e8c5d8fb09aa9256)
+  - run #3: copied [`034675832`](https://github.com/krlmlr/duckdb/commit/034675832e6db9f7015fdddcdc15f853c27c276f)
 - [#21194](https://github.com/duckdb/duckdb/pull/21194) Nicer variable syntax
   - `-dag`: [`1f1b2e4ea`](https://github.com/krlmlr/duckdb/commit/1f1b2e4eade5f128ea914b744fe8830487d6a414)
   - run #1: copied [`5397804c9`](https://github.com/krlmlr/duckdb/commit/5397804c99c2930f25b07e4d1cd037505faeb044)
   - run #2: copied [`e32938e5f`](https://github.com/krlmlr/duckdb/commit/e32938e5ffa472244a2ea3017d0c6769f5ea12e0)
+  - run #3: copied [`44d3c0d46`](https://github.com/krlmlr/duckdb/commit/44d3c0d4618d129e31fc5c2a23bf4efbdb4a6b14)
 - [#23355](https://github.com/duckdb/duckdb/pull/23355) Remove `TransformEnum`
   - `-dag`: [`b65673a0f`](https://github.com/krlmlr/duckdb/commit/b65673a0f25e7051db5eddc689b26010f8f79279)
   - run #1: copied [`0847491b3`](https://github.com/krlmlr/duckdb/commit/0847491b36a8aa8ac3743158873172089a0d390b)
   - run #2: copied [`96f62e1a5`](https://github.com/krlmlr/duckdb/commit/96f62e1a5657014755bb1819db43032fbc7b3e2a)
+  - run #3: copied [`526d402f7`](https://github.com/krlmlr/duckdb/commit/526d402f7ce49c981ce9408b8f16aaee656245a0)
 - [#23206](https://github.com/duckdb/duckdb/pull/23206) Quote special object keys in json_each/json_tree fullkey and path
   - `-dag`: [`d35f29f2b`](https://github.com/krlmlr/duckdb/commit/d35f29f2b81f7e23bec7c09213494904a46ae7d9)
   - run #1: copied [`4367a56bf`](https://github.com/krlmlr/duckdb/commit/4367a56bff82c0871a1e64918fbc86506e17bae4)
   - run #2: copied [`1f80c3352`](https://github.com/krlmlr/duckdb/commit/1f80c33520162b82ed650474252b1384229b03b0)
+  - run #3: copied [`f44225599`](https://github.com/krlmlr/duckdb/commit/f442255994ff3e3fe5bea33f9acfad6e9f96d01b)
 - [#23353](https://github.com/duckdb/duckdb/pull/23353) New `debug_local_file_system_delay_ms` setting and asynchronous file initialization/finalization
   - `-dag`: [`3c4e3d96c`](https://github.com/krlmlr/duckdb/commit/3c4e3d96c98158511fe9e514308a07e03c281203)
   - run #1: copied [`3ce99817d`](https://github.com/krlmlr/duckdb/commit/3ce99817da92015915008593a2ad3e017ff66dff)
   - run #2: copied [`61de5b14d`](https://github.com/krlmlr/duckdb/commit/61de5b14d5b02020e4402eb667e997388a83cf45)
+  - run #3: copied [`7c300f86e`](https://github.com/krlmlr/duckdb/commit/7c300f86ed0b1722cc4ec1de7696e716dd3c11df)
 - [#23344](https://github.com/duckdb/duckdb/pull/23344) Fix leak on pending query close
   - `-dag`: [`d579ae0f0`](https://github.com/krlmlr/duckdb/commit/d579ae0f0b3a71338d19dc3208f88e19a82b4830)
   - run #1: copied [`4f33c0dc5`](https://github.com/krlmlr/duckdb/commit/4f33c0dc57e9494ce392b26843852fa8d46196ea)
   - run #2: copied [`e50b781a5`](https://github.com/krlmlr/duckdb/commit/e50b781a531426b3a07f0019dcdc49e6c8bed449)
+  - run #3: copied [`7c87bda86`](https://github.com/krlmlr/duckdb/commit/7c87bda86817549f0d66ce3f0ced824e3352eaf8)
 - [#23358](https://github.com/duckdb/duckdb/pull/23358) Allow table functions to propagate the query return type
   - `-dag`: [`377bb39c4`](https://github.com/krlmlr/duckdb/commit/377bb39c4eb619643ee44fa3bcc91b0e8dbc988a)
   - run #1: copied [`60aa8ab2d`](https://github.com/krlmlr/duckdb/commit/60aa8ab2da040ca37443819c5ac21b8a7ca3ecfa)
   - run #2: copied [`3cc1477ad`](https://github.com/krlmlr/duckdb/commit/3cc1477ad33c20a95bb21aa7bc9723af8090c386)
+  - run #3: copied [`188cd5a89`](https://github.com/krlmlr/duckdb/commit/188cd5a8948379b1eef7959f29c4b7e841de48fd)
 - [#23356](https://github.com/duckdb/duckdb/pull/23356) `CompressedMaterialization` and `JoinFilterPushdown` for `VARIANT`
   - `-dag`: [`0bbb41286`](https://github.com/krlmlr/duckdb/commit/0bbb412861701a7e9d4c0e0dc231538dbb8668f9)
   - run #1: copied [`0f55f6c83`](https://github.com/krlmlr/duckdb/commit/0f55f6c83e55fbc90c0aae528c72651d0c6bf556)
   - run #2: copied [`4b747622c`](https://github.com/krlmlr/duckdb/commit/4b747622ce46b1d491a135e1ded67901d49c21db)
+  - run #3: copied [`b96043d40`](https://github.com/krlmlr/duckdb/commit/b96043d4007a5cad92c77dc662dc6dd7f726d960)
 - [#23359](https://github.com/duckdb/duckdb/pull/23359) Use the new `VariantIterator` to unshred instead of first decomposing into `VariantValue` followed by re-constructing the variant
   - `-dag`: [`a005d1a45`](https://github.com/krlmlr/duckdb/commit/a005d1a45058b7ca234b2613c611dc33e8ee9680)
   - run #1: copied [`9b7a9ac06`](https://github.com/krlmlr/duckdb/commit/9b7a9ac063da83ba8134df6938bd87bef937390c)
   - run #2: copied [`14d92c882`](https://github.com/krlmlr/duckdb/commit/14d92c882c2a2dbc45f3ce020ce209b1061a2d2d)
+  - run #3: copied [`9f57a2245`](https://github.com/krlmlr/duckdb/commit/9f57a2245ac59d0f64f1e4fb5af36b35b21f0f33)
 - [#23361](https://github.com/duckdb/duckdb/pull/23361) In variant_extract correctly traverse child stats during stats propagation
   - `-dag`: [`6da068bc1`](https://github.com/krlmlr/duckdb/commit/6da068bc1dec745a7ab489f723886c72bb7762c5)
   - run #1: copied [`6aaeb4d37`](https://github.com/krlmlr/duckdb/commit/6aaeb4d371df27f3b48ac1468ea6db47e2704ad6)
   - run #2: copied [`6b8de766c`](https://github.com/krlmlr/duckdb/commit/6b8de766ca967ad165f38d0ba28eb53d051e8d50)
+  - run #3: copied [`0b946cbdf`](https://github.com/krlmlr/duckdb/commit/0b946cbdf3547235b093da51ada5020279657bc1)
 - [#23380](https://github.com/duckdb/duckdb/pull/23380) Make list aggregate append work on batches of rows instead of per rows and implement cluster update function
   - `-dag`: [`5762a3dc3`](https://github.com/krlmlr/duckdb/commit/5762a3dc3f5076455bfcd56e3d6079c4523713df)
   - run #1: copied [`f4440d805`](https://github.com/krlmlr/duckdb/commit/f4440d8053c1f2af80479417b5d4bf61fada306a)
   - run #2: copied [`974acddee`](https://github.com/krlmlr/duckdb/commit/974acddeea583700694f73cf1aacf75f785ec265)
+  - run #3: copied [`2c2d67516`](https://github.com/krlmlr/duckdb/commit/2c2d67516fd826f9a3b5d80be0b06f8fe506b51a)
 - [#23381](https://github.com/duckdb/duckdb/pull/23381) [SqllogicTester] Add `--stdin` option to read statements from stdin
   - `-dag`: [`77746912b`](https://github.com/krlmlr/duckdb/commit/77746912b2a7ddadfe696937cd7d44c06759d2b1)
   - run #1: copied [`cfd7e049c`](https://github.com/krlmlr/duckdb/commit/cfd7e049c0c678245e85ae06a2e8f43e6aea519d)
   - run #2: copied [`f526d8e78`](https://github.com/krlmlr/duckdb/commit/f526d8e781d8eb6921f24ecda1c43c30ae069118)
+  - run #3: copied [`8cdb620ad`](https://github.com/krlmlr/duckdb/commit/8cdb620ad813c4e7650cbd49c8f3a888a4dac135)
 - [#23376](https://github.com/duckdb/duckdb/pull/23376) Add support for state export to ordered aggregates
   - `-dag`: [`281f605a5`](https://github.com/krlmlr/duckdb/commit/281f605a5cda0d22a3c7b59eb31dfb5fe3cb38cd)
   - run #1: copied [`5608f2682`](https://github.com/krlmlr/duckdb/commit/5608f26823a58ac5aca3edd5828f778275e043d8)
   - run #2: copied [`d41535999`](https://github.com/krlmlr/duckdb/commit/d41535999f0a6744df13ace31fcd1d1ee57676d4)
+  - run #3: copied [`54da366bf`](https://github.com/krlmlr/duckdb/commit/54da366bf348b90bb60ab56bff5a948ae36805b9)
 - [#23378](https://github.com/duckdb/duckdb/pull/23378) Clean up examples folder
   - `-dag`: [`68a5d31c0`](https://github.com/krlmlr/duckdb/commit/68a5d31c0645ec73a3055cfcc214841b6b0172d0)
   - run #1: copied [`d88676301`](https://github.com/krlmlr/duckdb/commit/d88676301136faa742516660dcf42359800aae82)
   - run #2: copied [`0a66ae77b`](https://github.com/krlmlr/duckdb/commit/0a66ae77b5235a318510feb179712a00c4a8d64c)
+  - run #3: copied [`cb95a8355`](https://github.com/krlmlr/duckdb/commit/cb95a83558a447b35fd998c1a90cc79793cd764c)
 - [#23339](https://github.com/duckdb/duckdb/pull/23339) Allow triggering internal join types
   - `-dag`: [`0138ea273`](https://github.com/krlmlr/duckdb/commit/0138ea273d3969549c3b3a0f21970a6d5ec821be)
   - run #1: copied [`b8496d2d1`](https://github.com/krlmlr/duckdb/commit/b8496d2d1183a8a467c6c40122aa62caad20105a)
   - run #2: copied [`5bbadaa83`](https://github.com/krlmlr/duckdb/commit/5bbadaa839178d29c8295388daf50497533e3445)
+  - run #3: copied [`cd70b7c32`](https://github.com/krlmlr/duckdb/commit/cd70b7c329715aae13e31bc4ad17bcc7ec6a1af2)

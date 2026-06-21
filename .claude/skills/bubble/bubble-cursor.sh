@@ -64,7 +64,9 @@ echo "DEMERGED_SO_FAR=$DEMERGED"
 #     positively-detected create push) and is the immutable audit trail.
 #   WIP_BRANCH (<branch>-NN-wip) holds the verified reconstruction RECON, pushed
 #     before the build so a restarted/later agent resumes without redoing the
-#     manual de-merge. Deleted on publish.
+#     manual de-merge. Best-effort deleted on publish; if the environment rejects
+#     ref deletion it persists harmlessly (named by the now-advanced NN, never
+#     re-consulted).
 printf 'GATE_BRANCH=%s-%02d\n' "$BR_NAME" "$DEMERGED"
 printf 'WIP_BRANCH=%s-%02d-wip\n' "$BR_NAME" "$DEMERGED"
 
