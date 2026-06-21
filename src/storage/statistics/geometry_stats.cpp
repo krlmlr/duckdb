@@ -4,6 +4,7 @@
 #include "duckdb/common/types/vector.hpp"
 #include "duckdb/common/serializer/serializer.hpp"
 #include "duckdb/common/serializer/deserializer.hpp"
+#include "duckdb/planner/expression/bound_cast_expression.hpp"
 #include "duckdb/planner/expression/bound_constant_expression.hpp"
 #include "duckdb/planner/expression/bound_function_expression.hpp"
 
@@ -299,8 +300,23 @@ FilterPropagateResult GeometryStats::CheckZonemap(const BaseStatistics &stats, c
 		return FilterPropagateResult::NO_PRUNING_POSSIBLE;
 	}
 
-	const auto lhs_kind = func.GetChildren()[0]->GetExpressionType();
-	const auto rhs_kind = func.GetChildren()[1]->GetExpressionType();
+	// The column reference may be wrapped in a GEOMETRY -> GEOMETRY cast (e.g. a CRS-erasing cast inserted to match
+	// the predicate's argument type). Such casts only change CRS metadata, not coordinates, so the bounding box
+	// remains valid. Look through them when classifying the operands.
+	auto strip_geometry_cast = [](const Expression &child) -> const Expression * {
+		if (child.GetExpressionType() == ExpressionType::OPERATOR_CAST) {
+			auto &cast = child.Cast<BoundCastExpression>();
+			if (cast.Child().GetReturnType().id() == LogicalTypeId::GEOMETRY) {
+				return &cast.Child();
+			}
+		}
+		return &child;
+	};
+
+	const auto &lhs = *strip_geometry_cast(*func.GetChildren()[0]);
+	const auto &rhs = *strip_geometry_cast(*func.GetChildren()[1]);
+	const auto lhs_kind = lhs.GetExpressionType();
+	const auto rhs_kind = rhs.GetExpressionType();
 	const auto lhs_is_const = lhs_kind == ExpressionType::VALUE_CONSTANT && rhs_kind == ExpressionType::BOUND_REF;
 	const auto rhs_is_const = rhs_kind == ExpressionType::VALUE_CONSTANT && lhs_kind == ExpressionType::BOUND_REF;
 
@@ -319,10 +335,10 @@ FilterPropagateResult GeometryStats::CheckZonemap(const BaseStatistics &stats, c
 	}
 
 	if (lhs_is_const) {
-		return CheckIntersectionFilter(data, func.GetChildren()[0]->Cast<BoundConstantExpression>().GetValue());
+		return CheckIntersectionFilter(data, lhs.Cast<BoundConstantExpression>().GetValue());
 	}
 	if (rhs_is_const) {
-		return CheckIntersectionFilter(data, func.GetChildren()[1]->Cast<BoundConstantExpression>().GetValue());
+		return CheckIntersectionFilter(data, rhs.Cast<BoundConstantExpression>().GetValue());
 	}
 	// Else, no constant argument
 	return FilterPropagateResult::NO_PRUNING_POSSIBLE;
