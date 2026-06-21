@@ -35,6 +35,16 @@ bash .claude/skills/add-flat-branch/replay-flat-branches.sh v2.0-flat  # one bra
 # DRY_RUN=1 builds/verifies without pushing
 ```
 
+The `-dag` branches (see below) have their own incremental replayer, which also
+re-links new cross-branch merges. It processes branches oldest-first and
+auto-detects each branch's older dag from its existing links:
+
+```bash
+bash .claude/skills/add-flat-branch/replay-dag-branches.sh            # all -dag branches
+bash .claude/skills/add-flat-branch/replay-dag-branches.sh v2.0-dag   # one branch
+# DRY_RUN=1 builds/verifies without pushing; NO_FETCH=1 uses tracking refs as-is
+```
+
 Use the rest of this skill only for **genuinely new** branches.
 
 ## Topology: a chain by age
