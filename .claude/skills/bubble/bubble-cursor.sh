@@ -31,6 +31,12 @@ REL="${1:?release ref required}"
 MAIN="${2:?main ref required}"
 PREV="${3:-}"
 BR="${4:-main-$(basename "$REL")}"
+BR_NAME="${BR#origin/}"                 # bare name for GATE/WIP (strip any origin/ prefix)
+# Resolve the branch SHA preferring origin/ (the published state) over a possibly
+# stale local ref; fall back to the local ref, else treat as not-yet-created.
+if   git rev-parse -q --verify "origin/$BR_NAME" >/dev/null 2>&1; then BR_REF="origin/$BR_NAME"
+elif git rev-parse -q --verify "$BR"             >/dev/null 2>&1; then BR_REF="$BR"
+else BR_REF=""; fi
 
 relmerges() { # oldest-first back-merges of REL (excluding the predecessor line) on $1's first-parent
 	git rev-list --reverse --first-parent --merges "$1" 2>/dev/null | while read -r m; do
@@ -41,13 +47,13 @@ relmerges() { # oldest-first back-merges of REL (excluding the predecessor line)
 }
 
 mapfile -t MAIN_BM < <(relmerges "$MAIN")
-if git rev-parse -q --verify "$BR" >/dev/null 2>&1; then
-	mapfile -t BR_BM < <(relmerges "$BR"); EXISTS=yes
+if [ -n "$BR_REF" ]; then
+	mapfile -t BR_BM < <(relmerges "$BR_REF"); EXISTS=yes
 else
 	BR_BM=("${MAIN_BM[@]}"); EXISTS=no
 fi
 
-echo "BRANCH=$BR"; echo "MAIN=$MAIN"; echo "RELEASE=$REL"; echo "PREV_RELEASE=${PREV:-<none>}"; echo "EXISTS=$EXISTS"
+echo "BRANCH=$BR_NAME"; echo "BRANCH_REF=${BR_REF:-<none>}"; echo "MAIN=$MAIN"; echo "RELEASE=$REL"; echo "PREV_RELEASE=${PREV:-<none>}"; echo "EXISTS=$EXISTS"
 echo "MAIN_TREE=$(git rev-parse "${MAIN}^{tree}")"
 echo "RELEASE_BACKMERGES_ON_MAIN=${#MAIN_BM[@]}"
 echo "RELEASE_BACKMERGES_REMAINING=${#BR_BM[@]}"
@@ -59,8 +65,8 @@ echo "DEMERGED_SO_FAR=$DEMERGED"
 #   WIP_BRANCH (<branch>-NN-wip) holds the verified reconstruction RECON, pushed
 #     before the build so a restarted/later agent resumes without redoing the
 #     manual de-merge. Deleted on publish.
-printf 'GATE_BRANCH=%s-%02d\n' "$BR" "$DEMERGED"
-printf 'WIP_BRANCH=%s-%02d-wip\n' "$BR" "$DEMERGED"
+printf 'GATE_BRANCH=%s-%02d\n' "$BR_NAME" "$DEMERGED"
+printf 'WIP_BRANCH=%s-%02d-wip\n' "$BR_NAME" "$DEMERGED"
 
 NEXT="${BR_BM[0]:-}"
 if [ -n "$NEXT" ]; then

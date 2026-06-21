@@ -132,11 +132,21 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
 2. **Advance the bifurcation one merge (tree-preserving graft).** Re-root the
    de-merged-so-far linear base **plus the next segment** onto `NEXT_P2`,
    reproducing `MERGE_TREE`, then re-attach the upper history **unchanged**.
-   - **Build the reconstruction `RECON`:** replay `merge-base(NEXT^1,NEXT^2)..NEXT^1`
-     onto `NEXT_P2`, dropping empties and reconciling per step 3, until
-     `tree == MERGE_TREE`. If a cross-side reconciliation remains (changes the
-     merge made beyond any replayed PR), add **one** reconcile/checkpoint commit
-     carrying `NEXT`'s message whose tree **is** `MERGE_TREE`.
+   - **Build the reconstruction `RECON`:** check out `NEXT_P2`, then replay
+     `SEGMENT_FROM..NEXT_P1` (== `merge-base(NEXT^1,NEXT^2)..NEXT^1`) onto it with
+     `replay-segment.sh` — it applies each first-parent commit, **skips empties**
+     (a commit the advanced base already has; note git has no portable
+     `--empty=drop`/`--allow-empty=false` here — they error), and **stops on the
+     first conflict** for manual resolution (step 3), then is re-run to finish:
+     ```bash
+     git checkout --detach "$NEXT_P2"
+     bash $SK/replay-segment.sh "$SEGMENT_FROM..$NEXT_P1"   # rerun after each manual resolve
+     ```
+     Continue until `tree == MERGE_TREE`. If a cross-side reconciliation remains
+     (changes the merge made beyond any replayed PR), add **one** reconcile/
+     checkpoint commit carrying `NEXT`'s message whose tree **is** `MERGE_TREE`.
+     (A run can be **clean** — the replay alone reproduces `MERGE_TREE`, no
+     reconcile commit — as runs #1 and #3 were.)
    - **Checkpoint `RECON` to `$WIP_BRANCH` before building** — this is the resume
      point that preserves the manual reconciliation across a restart/reclaim:
      ```bash

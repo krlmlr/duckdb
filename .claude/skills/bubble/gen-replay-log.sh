@@ -5,13 +5,17 @@
 # Generates the growable provenance log: every first-parent commit since the
 # bifurcation BIF up to MAINDAG (origin/main-dag), grouped by run (one run per
 # release back-merge). Identity per commit = its PR (-> duckdb/duckdb) + its -dag
-# commit (-> krlmlr/duckdb). Every COMPLETED run carries a per-commit SHA link
-# (commits link to krlmlr/duckdb), with a role:
+# commit (-> krlmlr/duckdb). Every COMPLETED run carries a per-commit SHA + role:
 #   replayed  - cherry-picked in that run's de-merge segment (new SHA)
 #   copied    - above that run's de-merge point; reattached tree-verbatim (new SHA)
-#   empty     - went empty that run (change already in that run's base); no SHA
-# Back-merges: linearized (the run that de-merged it) / copied (still a merge that
-#   run) / gone (de-merged by an earlier run, now below the bifurcation).
+#   empty     - went empty that run (change already in that run's base); no SHA.
+#               Once absorbed it stays absorbed -> written once as "from run #N".
+# Back-merges per run: linearized (the run that de-merged it) / copied (merge)
+#   (not yet de-merged that run) / gone (de-merged by an earlier run).
+#
+# To add a run: append one line to RUNS (label|de-merged-range|full-result-ref|
+#   checkpoint-PR|checkpoint-note). Full-result-ref for run N is the branch state
+#   AFTER run N (run1 -> -01, run2 -> -02, ..., latest -> origin/<branch>).
 #
 # Why PR+`-dag` and not an origin/main SHA: krlmlr's fork `main` is not a faithful
 # mirror of duckdb/duckdb main (some PRs, e.g. #20369, are absent), so the -dag
@@ -21,23 +25,48 @@ BIF="$1"; MAINDAG="$2"
 CO="https://github.com/krlmlr/duckdb/commit"
 PRU="https://github.com/duckdb/duckdb/pull"
 
-# PR# -> SHA over a range. Used both for de-merged segments and full run branches.
-declare -A R1 R2 R1ALL R2ALL
-fill(){ local -n M=$1; local sha subj pr
+# --- completed runs (oldest first) -----------------------------------------
+RUNS=(
+  "1|00528f79b..0ffd087cddb5|origin/main-v1.5-variegata-01|20488|linearized (clean; checkpoint == segment tail, tree == merge tree)"
+  "2|3710298ae..d0ab64a4c323|origin/main-v1.5-variegata-02|20588|linearized → reconcile [\`d0ab64a4\`](CO/d0ab64a4c3232b381bbb058cc23cece04d19f0ee) (tree \`e337ce86\` == merge tree); removed NOT-elimination (#20394) + regenerated churn"
+  "3|9c028743f..76e52d65cf|origin/main-v1.5-variegata|20644|linearized (clean; replay reproduced the merge tree, no reconcile)"
+)
+RUN_NS=(); declare -A CKPT_NOTE
+for spec in "${RUNS[@]}"; do
+  IFS='|' read -r n range ref pr note <<<"$spec"
+  RUN_NS+=("$n"); CKPT_NOTE[$n]="${note//CO\//$CO/}"
+  declare -gA "DM_$n" "ALL_$n"
   while read -r sha subj; do
-    pr=$(echo "$subj" | grep -oE 'pull/[0-9]+|#[0-9]+' | head -1 | grep -oE '[0-9]+')
-    [ -n "$pr" ] && M[$pr]=$sha
-  done < <(git log --reverse --first-parent --format='%H %s' "$2" 2>/dev/null); }
-
-fill R1    "00528f79b..0ffd087cddb5"                    # run #1 de-merged segment (#20488)
-fill R2    "3710298ae..d0ab64a4c323"                    # run #2 de-merged segment (#20588)
-fill R1ALL "00528f79b..origin/main-v1.5-variegata-01"   # run #1 full result branch
-fill R2ALL "00528f79b..origin/main-v1.5-variegata"      # run #2 full result branch
+    p=$(echo "$subj" | grep -oE 'pull/[0-9]+|#[0-9]+' | head -1 | grep -oE '[0-9]+')
+    [ -n "$p" ] && printf -v "DM_$n[$p]" '%s' "$sha"
+  done < <(git log --reverse --first-parent --format='%H %s' "$range" 2>/dev/null)
+  while read -r sha subj; do
+    p=$(echo "$subj" | grep -oE 'pull/[0-9]+|#[0-9]+' | head -1 | grep -oE '[0-9]+')
+    [ -n "$p" ] && printf -v "ALL_$n[$p]" '%s' "$sha"
+  done < <(git log --reverse --first-parent --format='%H %s' "$ref" 2>/dev/null)
+done
 
 prnum(){ echo "$1" | grep -oE 'pull/[0-9]+|#[0-9]+' | head -1 | grep -oE '[0-9]+'; }
 title(){ echo "$1" | sed -E 's@ \(https://redirect[^)]*\)@@; s@ \(#[0-9]+\)$@@'; }
 prlink(){ [ -n "$1" ] && printf '[#%s](%s/%s) ' "$1" "$PRU" "$1"; }
 link(){ printf '[`%s`](%s/%s)' "${1:0:9}" "$CO" "$1"; }
+
+emit_roles(){ local pr="$1" n dmv allv
+  [ -z "$pr" ] && { echo "  - (no PR#)"; return; }
+  for n in "${RUN_NS[@]}"; do
+    dmv="DM_$n[$pr]"; allv="ALL_$n[$pr]"
+    if   [ -n "${!dmv:-}" ];  then echo "  - run #$n: replayed $(link "${!dmv}")"
+    elif [ -n "${!allv:-}" ]; then echo "  - run #$n: copied $(link "${!allv}")"
+    else echo "  - from run #$n: empty (absorbed — base already has the change; stays absorbed)"; return; fi
+  done; }
+
+emit_ckpt(){ local k="$1" pr="$2" n allv
+  for n in "${RUN_NS[@]}"; do
+    if   [ "$n" -eq "$k" ]; then echo "  - run #$n: ${CKPT_NOTE[$k]}"
+    elif [ "$n" -lt "$k" ]; then allv="ALL_$n[$pr]"; [ -n "${!allv:-}" ] && echo "  - run #$n: copied (merge) $(link "${!allv}")" || echo "  - run #$n: copied (merge)"
+    else echo "  - run #$n: gone (de-merged in run #$k; now below the bifurcation)"; fi
+  done; }
+
 MAXRUN=$(git rev-list --count --first-parent --merges "${BIF}..${MAINDAG}" 2>/dev/null)
 
 cat <<EOF
@@ -53,33 +82,23 @@ SHA (→ \`krlmlr/duckdb\`) with a role:
 - **copied** \`sha\` — above that run's de-merge point; reattached tree-verbatim by
   the graft (new SHA, byte-identical tree);
 - **empty (absorbed)** — went empty that run (change already in that run's base);
-  no SHA. Once absorbed it stays absorbed, so it is written once as **from run
-  #N** and later runs are not repeated.
+  no SHA. Once absorbed it stays absorbed, so it is written once as **from run #N**.
 
 Each run re-roots the de-merged-so-far spine onto the next back-merge's second
 parent, so a commit replayed by an earlier run can later go **empty** once the
 advancing v1.5 base already reflects it (cherry-pick onto the base is empty —
 confirmed; the v1.5 base reached the same state via other commits, so there is no
-single attributable v1.5 PR).
+single attributable v1.5 PR). **Completed runs: ${#RUN_NS[@]} of $MAXRUN.**
 EOF
 
 run=0; started=0
 while IFS=$'\t' read -r sha parents subj; do
   np=$(echo "$parents" | wc -w); pr=$(prnum "$subj"); t=$(title "$subj")
   if [ "$np" -ge 2 ]; then
-    k=$((run+1))
-    echo
+    k=$((run+1)); echo
     echo "- **[checkpoint] Run #$k back-merge** $(prlink "$pr")\"$t\""
     echo "  - \`-dag\`: $(link "$sha")"
-    # run #1 column
-    if   [ "$k" -eq 1 ]; then echo "  - run #1: linearized (clean; checkpoint == segment tail, tree == merge tree)"
-    elif [ -n "${R1ALL[$pr]:-}" ]; then echo "  - run #1: copied (merge) $(link "${R1ALL[$pr]}")"
-    else echo "  - run #1: gone (de-merged earlier)"; fi
-    # run #2 column
-    if   [ "$k" -eq 2 ]; then echo "  - run #2: linearized → reconcile $(link d0ab64a4c3232b381bbb058cc23cece04d19f0ee) (tree \`e337ce86\` == merge tree); removed NOT-elimination (#20394) + regenerated churn"
-    elif [ "$k" -lt 2 ]; then echo "  - run #2: gone (de-merged in run #$k; now below the bifurcation)"
-    elif [ -n "${R2ALL[$pr]:-}" ]; then echo "  - run #2: copied (merge) $(link "${R2ALL[$pr]}")"
-    else echo "  - run #2: —"; fi
+    emit_ckpt "$k" "$pr"
     run=$k; started=0; continue
   fi
   if [ "$started" -eq 0 ]; then
@@ -91,17 +110,5 @@ while IFS=$'\t' read -r sha parents subj; do
   fi
   echo "- $(prlink "$pr")$t"
   echo "  - \`-dag\`: $(link "$sha")"
-  if [ -z "$pr" ]; then echo "  - (no PR#)"; else
-    absorbed=0
-    # run #1
-    if   [ -n "${R1[$pr]:-}" ];    then echo "  - run #1: replayed $(link "${R1[$pr]}")"
-    elif [ -n "${R1ALL[$pr]:-}" ]; then echo "  - run #1: copied $(link "${R1ALL[$pr]}")"
-    else echo "  - from run #1: empty (absorbed — base already has the change; stays absorbed)"; absorbed=1; fi
-    # run #2 (skip once absorbed: absorption persists for all later runs)
-    if [ "$absorbed" -eq 0 ]; then
-      if   [ -n "${R2[$pr]:-}" ];    then echo "  - run #2: replayed $(link "${R2[$pr]}")"
-      elif [ -n "${R2ALL[$pr]:-}" ]; then echo "  - run #2: copied $(link "${R2ALL[$pr]}")"
-      else echo "  - from run #2: empty (absorbed — base already has the change; stays absorbed)"; fi
-    fi
-  fi
+  emit_roles "$pr"
 done < <(git log --reverse --first-parent --format='%H%x09%P%x09%s' "${BIF}..${MAINDAG}" 2>/dev/null)

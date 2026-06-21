@@ -91,10 +91,26 @@ Gate/snapshot `-01` = run #1 result (the state this run overwrote).
   (`expression_type.hpp` is high-fanout). Fast tests: all passed. Cross-tree
   ccache hits were low (~12%) — unity builds bust on the v1.5↔main delta.
 
+## Run #3 (de-merge of #20644, base `9c028743`)
+
+**Clean run — no reconcile commit** (like run #1): replaying the 7-commit spine
+onto `9c028743` reproduced the merge tree `ab8d98b8` exactly. 6 applied, 1 empty
+(#20624 azure-ref, already in the base). Now **`DEMERGED=3, REMAINING=13`**;
+gate/snapshot `-02` = run #2 result.
+
+Two script bugs hit and fixed this run (kept here as the cautionary record):
+- **Stale local ref / `origin/` gate name.** The cursor resolved a stale *local*
+  `main-v1.5-variegata` (run #1) and, when given `origin/…`, leaked the prefix
+  into the gate name. Fixed: the cursor now prefers `origin/<branch>` and derives
+  `GATE/WIP` from the bare basename.
+- **Cherry-pick empties.** `--empty=drop` and `--allow-empty=false` error here;
+  the replay loop must detect empties from the message and `--skip`. Captured in
+  `replay-segment.sh`.
+
 ## Resume
 
 ```bash
 SK=.claude/skills/bubble
 eval "$(bash $SK/bubble-cursor.sh origin/v1.5-variegata-dag origin/main-dag origin/v1.4-andium-dag main-v1.5-variegata)"
-# de-merge the next back-merge on the branch; base each run on origin/main-v1.5-variegata
+# de-merge the next back-merge on the branch (cursor resolves origin/<branch>)
 ```
