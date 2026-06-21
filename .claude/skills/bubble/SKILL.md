@@ -118,23 +118,27 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
 ## Proof of work: per-commit numstat (before vs after)
 
 A faithful de-merge carries each PR's diff verbatim. After replaying a segment,
-compare every commit's numstat to the original and record the table — it is the
-run's proof of work and its sharpest drift detector:
+compare every commit's **per-file** numstat to the original — not the aggregate
+shortstat, which hides *which* file moved. Diffing the two sorted per-file lists
+is exact and cheap:
 
 ```bash
-ns(){ git show --numstat --format="" "$1" | awk '{f++;a+=$1;d+=$2} END{printf "%df +%d -%d",f,a,d}'; }
-# for each source commit C and its replayed C': compare  ns C  vs  ns C'
+nsf(){ git show --numstat --format="" "$1" | awk -v OFS='\t' '{print $3,$1,$2}' | sort; }
+# for each source commit C and its replayed C':
+diff <(nsf "$C") <(nsf "$C_replayed")     # empty == carried verbatim; any line == a drifted file
 ```
 
-Identical numstat ⇒ the PR was carried exactly. A divergence (`*`) flags where
-resolution altered the patch — almost always a **generated file** (`-X theirs`
+An empty diff ⇒ the PR was reproduced exactly, file for file. Any line names a
+file whose `+/-` changed — almost always a **generated file** (`-X theirs`
 pulled in regenerated index churn) needing `make generate-files`, or a genuine
-**forward-port**. Investigate every `*`; a clean run is all `=`.
+**forward-port**. Record the divergent files as the run's proof of work; a clean
+run produces no lines.
 
 Measured on this repo (validation, no build): a clean segment reproduced every
-commit identically (e.g. `3f +278 -71 → 3f +278 -71`); the one drift was
-`Replace magic number…` going `1f +2 -1 → 1f +111 -136` — exactly the generated
-`config.cpp` index churn, correctly flagged for regeneration.
+file identically (e.g. `src/.../physical_delete.hpp +278 -71` on both sides); the
+one drift was `Replace magic number…`, where `src/main/config.cpp` went
+`+2 -1 → +111 -136` — exactly the generated settings-index churn, correctly
+named and flagged for regeneration.
 
 ## Hard rules
 
