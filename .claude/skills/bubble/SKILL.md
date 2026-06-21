@@ -18,7 +18,8 @@ the release line, which is what the R package vendors (cut at a release tag, e.g
 
 This is **replay done sequentially with deterministic checkpoints** — not the
 flat first-parent squash (`add-flat-branch`) and not a per-commit cherry-pick onto
-a fixed base (`build-linear-branch`). The merge trees are the checkpoints.
+a fixed base (`build-linear-branch`, now **deprecated** — superseded by this
+skill). The merge trees are the checkpoints.
 
 ## Two invariants (hold at every force-push)
 
@@ -336,6 +337,8 @@ the reconcile commit's message and the run notes.
   bifurcation, not the real one), which inflates apparent divergence.
 - `add-flat-branch`'s `-dag` variant keeps the real merges — the substrate this
   skill reasons over (real `tree(M)` checkpoints, real second parents).
-- `build-linear-branch` cherry-picks per-PR onto a *fixed* release base; bubble
+- `build-linear-branch` is **deprecated — superseded by this skill; do not use it
+  for new work.** It cherry-picks per-PR onto a *fixed* release base; bubble
   instead advances the base one merge at a time, using the merge trees as
-  checkpoints, so drift is caught and localised every step.
+  checkpoints, so drift is caught and localised every step. (`build-linear-branch`
+  is kept only for reference.)
