@@ -103,13 +103,15 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
      the dev side splits a declaration from its definition and breaks the build.
      `-X theirs` (or `git checkout <C> -- <every file C touches>`) keeps the
      changeset internally consistent; partial `--ours`/`--theirs` does not.
-   - **Default to the dev side; you have freedom in transient regions.** Favour
-     the incoming (dev) content — it is the intent and it drives convergence.
-     But a region a *later* non-merge commit re-touches is **transient**: its
-     intermediate value need only **build + test**, not match the target, since
-     the later commit re-pins it. So when the dev version references an API the
-     diverged base lacks, resolving that region toward **base** is legitimate
-     (see Red → fix). Only the *last* commit to touch a region must match target.
+   - **Conflict markers are red herrings — take the dev side and move on.**
+     `-X theirs` is the correct disposition for *textual* conflicts; do not
+     hand-pick hunks. The conflicts that matter (external callers, type/ABI
+     drift, behavioural mismatch) are invisible to the merge and surface only at
+     **build + test** (next steps). A region a later non-merge commit re-touches
+     is **transient** — its intermediate content need only build+test, not match
+     target — but you make it build by **forward-porting**, not by reverting to
+     base (see Red → fix). Only the *last* commit to touch a region must match
+     target.
    - **Release→main back-merges are no-ops here.** A "Merge v1.5 → main" commit
      re-syncs the dev line with release content the `v<TAG>` base *already* has,
      so it carries nothing new onto this base — `--skip` it. (Resolving it
@@ -149,22 +151,24 @@ For each source flat commit `C` from `linear-todo.sh list` (oldest-first):
    git worktree remove --force "$WT"     # reclaim disk; keep CCACHE_DIR
    ```
 
-5. **Red → fix in place (still "in spirit"), escalate last.** Make the smallest
-   change that greens the commit while preserving its message, in order of
-   preference:
-   - **Re-resolve a transient region toward base.** If the break is dev content
-     referencing an API the base lacks *and* a later commit re-touches that
-     region, take base there and rebuild — convergence is restored downstream.
-     (`-X theirs` always picks dev; a manual 3-way mimicking it is identical
-     wherever dev builds and only earns its cost on exactly these breaks.)
-   - amend a minimal fix into the commit (API drift, a moved symbol, a test
-     expectation), or
-   - squash a non-building intermediate forward into the commit that completes
-     it.
+5. **Red is the real conflict → forward-port, escalate last.** A build or test
+   failure is the genuine semantic conflict the merge could not see; the marker
+   resolution was a red herring. Greenfix in order of preference, keeping the
+   commit's message:
+   - **Forward-port the reconciliation from a later dev commit.** The error
+     names a symbol / caller / behaviour; find the later commit(s) on the dev
+     line that adjust it (`git log <dev>-flat -S<symbol> -- <file>`), and amend
+     their minimal relevant hunk into this commit. The change is faithful (it is
+     the dev line's own fix) and lands empty when that commit is reached. The
+     source may be *much* later, and a port can chain — port its prerequisite
+     too. Do **not** revert the region to base to dodge the error: it desyncs the
+     dev file or guts the commit, and usually still won't build.
+   - If the failure is a genuine ordering artifact (a non-building intermediate
+     that a near commit completes), squash it forward into that commit.
    Rebuild (ccache makes the retry cheap), then push when green. Use the build
-   window: while commit `N` builds, resolve `N+1` in the main checkout. If a
-   commit cannot be made green without large refactoring, **stop and report**
-   with the commit and the failure — do not push red and do not skip silently.
+   window: while commit `N` builds, resolve `N+1` in the main checkout. If a port
+   cascades unmanageably or needs large refactoring, **stop and report** with the
+   commit and the failure — do not push red and do not skip silently.
 
 ## Fidelity — converge to `v2.0-flat`
 
@@ -179,8 +183,9 @@ auto-merges that blend base lines — so converge deliberately:
   thereby pinned to its final `v2.0-flat` content and **must** match it. A region
   a later commit re-touches is **transient**: it is re-pinned downstream, so its
   only obligation mid-stream is to build + test — if the dev content there needs
-  an API the diverged base lacks, take base for that region and let the later
-  commit converge it. The acceptance check is convergence at the **tip** (and at
+  a reconciliation the diverged base lacks, **forward-port** it from the later
+  dev commit that supplies it (never revert the region to base — that desyncs or
+  guts the commit). The acceptance check is convergence at the **tip** (and at
   back-merge boundaries), not byte-for-byte at every commit.
 - **Back-merges are re-sync points.** At each "Merge … into main" commit the tree
   should match `v2.0-flat` at that point; snapshot it there.
