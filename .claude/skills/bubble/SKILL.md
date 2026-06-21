@@ -232,9 +232,10 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
      cache is warm; if you find yourself paying a cold build inside the budget,
      warm the cache first (build `main` once) rather than shrinking the chain.
 5. **Publish only if the tree is unchanged, then drop the resume point.**
-   Force-push is allowed *only* after the tip tree matches `START_TREE`; on
-   success, delete `$WIP_BRANCH` (the reconstruction now lives in the published
-   branch; the `-NN` gate snapshot remains as the audit trail):
+   First update [`REPLAY-LOG.md`](REPLAY-LOG.md) with this run's roles/synthetic
+   commits (above). Force-push is allowed *only* after the tip tree matches
+   `START_TREE`; on success, delete `$WIP_BRANCH` (the reconstruction now lives in
+   the published branch; the `-NN` gate snapshot remains as the audit trail):
    ```bash
    test "$(git rev-parse "${BRANCH}^{tree}")" = "$START_TREE" || { echo "TREE CHANGED — abort"; exit 1; }
    git push --force-with-lease origin "$BRANCH"
@@ -295,6 +296,22 @@ code proves; the authoritative rationale lives in the PR threads. **The review i
 documentation, not a gate** — the merge tree is authoritative, so record and
 **proceed**; surface anything that looks like accidental loss. Put the findings in
 the reconcile commit's message and the run notes.
+
+## Replay log (provenance) — keep it current every run
+
+[`REPLAY-LOG.md`](REPLAY-LOG.md) is the growable, oldest-first (`git log
+--reverse`) provenance of every commit replayed since the bifurcation. **Update it
+in the same run that changes it, before publishing** (step 5):
+
+- For each original commit the run touched, append one **L2 sub-bullet** recording
+  its role that run: `replayed <sha>`, `empty (absorbed)`, or `reattached <sha>`.
+  If the segment reached a commit not yet listed, add its **L1 entry** (original
+  sha + title, then the `-dag` sha as the first L2 sub-bullet).
+- Insert **synthetic commits** (reconcile/checkpoint, splits, transient measures)
+  **inline** at their spine position, mapped to the merge/PR they linearize.
+- Add an **L3 bullet** under any commit that needed conflict resolution, naming
+  the resolution (the merge tree is the oracle).
+- All links point at `github.com/krlmlr/duckdb/commit/<sha>`.
 
 ## Hard rules
 
