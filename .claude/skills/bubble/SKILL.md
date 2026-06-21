@@ -182,7 +182,7 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
      **reproduced from the merge tree**: take the file's `tree(NEXT)` version, or
      forward-port the owning commit's change. The checkpoint assertion (step 2)
      verifies it; the reconciliation audit (below) reviews it.
-4. **Commit optimistically, then build the segment; test the one synthetic tree.**
+4. **Commit optimistically, then build the segment; test the checkpoint.**
    Commit the chain first; then **compile-certify every commit this run rewrote**
    (`make release`, shared ccache; `CURRENT_FORK..` the checkpoint) in the
    dedicated build worktree — successive builds are incremental. **Do not build
@@ -190,15 +190,15 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    trees still equal `main`'s, already green upstream), so it carries no new risk
    — it gets certified in the future run whose bifurcation reaches it.
 
-   **Run the fast unit suite on exactly one commit — and not the checkpoint.** The
-   checkpoint/tip (and any reconcile commit) reproduces the *real merge tree*,
-   which upstream CI already passed, so testing it is **moot — green by
-   construction**. The commit worth testing is the one with a **synthetic tree** a
-   combination upstream never had: the **last commit before the run's synthetic
-   reconcile commit**, or — if the run is clean (no reconcile) — **the commit just
-   before the tip**. (Run #3: `a803d034`, the last commit before the carried
-   reconcile, which holds not_elimination on the v1.5 base.) Compile is per-commit;
-   the functional suite is this one synthetic tree.
+   **Run the fast unit suite on the checkpoint** — the commit whose tree **is**
+   `MERGE_TREE` (the RECON tip, or the reconcile commit if the run needed one).
+   This is the **linearized back-merge**: a *combined* main + release tree.
+   **Do not assume it is green "by construction."** A back-merge's merged result
+   is a new cross-line combination — merges are exactly where two independently
+   green sides break — and reproducing that tree byte-for-byte does not make it
+   tested. So the checkpoint is the single **highest-value** functional test for
+   the run, not a moot one. (Run #3: `76e52d65`, the linearized #20644.) Compile
+   is per-commit; the functional suite is on the checkpoint.
 
    Green-certify accordingly; if a commit is red, **fix in place, retest, repeat**
    — message preserved, content amended/squashed minimally. (The tip-tree
