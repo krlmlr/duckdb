@@ -190,15 +190,16 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    trees still equal `main`'s, already green upstream), so it carries no new risk
    — it gets certified in the future run whose bifurcation reaches it.
 
-   **Run the fast unit suite on the checkpoint** — the commit whose tree **is**
-   `MERGE_TREE` (the RECON tip, or the reconcile commit if the run needed one).
-   This is the **linearized back-merge**: a *combined* main + release tree.
-   **Do not assume it is green "by construction."** A back-merge's merged result
-   is a new cross-line combination — merges are exactly where two independently
-   green sides break — and reproducing that tree byte-for-byte does not make it
-   tested. So the checkpoint is the single **highest-value** functional test for
-   the run, not a moot one. (Run #3: `76e52d65`, the linearized #20644.) Compile
-   is per-commit; the functional suite is on the checkpoint.
+   **Run the fast unit suite on the de-merge's final commit — the one just before
+   the back-merge** (the last commit of the de-merged segment; its tree reproduces
+   `MERGE_TREE` — the RECON tip on a clean run, or the reconcile commit when the
+   run needed one). This is the **linearized back-merge**: a *combined* main +
+   release tree. **Do not assume it is green "by construction."** A back-merge's
+   merged result is a new cross-line combination — merges are exactly where two
+   independently green sides break — and reaching that tree via our linearized
+   replay must be *verified*, not assumed. It is the single **highest-value**
+   functional test for the run. (Run #3: `76e52d65`, just before the #20644
+   back-merge.) Compile is per-commit; the functional suite is on this one commit.
 
    Green-certify accordingly; if a commit is red, **fix in place, retest, repeat**
    — message preserved, content amended/squashed minimally. (The tip-tree
