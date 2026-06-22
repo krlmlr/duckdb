@@ -132,11 +132,21 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
 2. **Advance the bifurcation one merge (tree-preserving graft).** Re-root the
    de-merged-so-far linear base **plus the next segment** onto `NEXT_P2`,
    reproducing `MERGE_TREE`, then re-attach the upper history **unchanged**.
-   - **Build the reconstruction `RECON`:** replay `merge-base(NEXT^1,NEXT^2)..NEXT^1`
-     onto `NEXT_P2`, dropping empties and reconciling per step 3, until
-     `tree == MERGE_TREE`. If a cross-side reconciliation remains (changes the
-     merge made beyond any replayed PR), add **one** reconcile/checkpoint commit
-     carrying `NEXT`'s message whose tree **is** `MERGE_TREE`.
+   - **Build the reconstruction `RECON`:** check out `NEXT_P2`, then replay
+     `SEGMENT_FROM..NEXT_P1` (== `merge-base(NEXT^1,NEXT^2)..NEXT^1`) onto it with
+     `replay-segment.sh` — it applies each first-parent commit, **skips empties**
+     (a commit the advanced base already has; note git has no portable
+     `--empty=drop`/`--allow-empty=false` here — they error), and **stops on the
+     first conflict** for manual resolution (step 3), then is re-run to finish:
+     ```bash
+     git checkout --detach "$NEXT_P2"
+     bash $SK/replay-segment.sh "$SEGMENT_FROM..$NEXT_P1"   # rerun after each manual resolve
+     ```
+     Continue until `tree == MERGE_TREE`. If a cross-side reconciliation remains
+     (changes the merge made beyond any replayed PR), add **one** reconcile/
+     checkpoint commit carrying `NEXT`'s message whose tree **is** `MERGE_TREE`.
+     (A run can be **clean** — the replay alone reproduces `MERGE_TREE`, no
+     reconcile commit — as runs #1 and #3 were.)
    - **Checkpoint `RECON` to `$WIP_BRANCH` before building** — this is the resume
      point that preserves the manual reconciliation across a restart/reclaim:
      ```bash
@@ -172,16 +182,29 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
      **reproduced from the merge tree**: take the file's `tree(NEXT)` version, or
      forward-port the owning commit's change. The checkpoint assertion (step 2)
      verifies it; the reconciliation audit (below) reviews it.
-4. **Commit optimistically, then test — only the rewritten segment.** Commit the
-   chain first; then build + run the fast suite (`release`, shared ccache) on the
-   **commits this run rewrote**, i.e. `CURRENT_FORK..` up to the de-merged merge's
-   checkpoint. **Do not build the commits *past* the merge:** the upper history is
-   re-attached unchanged (its trees still equal `main`'s, already green upstream),
-   so it carries no new risk — it gets certified in the future run whose
-   bifurcation reaches it. Green-certify the segment; if a commit is red, **fix in
-   place, retest, repeat** — message preserved, content amended/squashed minimally.
-   (The tip-tree assertion in step 5 guarantees the unbuilt upper part is still
-   byte-for-byte `main`.)
+4. **Commit optimistically, build the segment; test the commit before the back-merge.**
+   Commit the chain first; then **compile-certify every commit this run rewrote**
+   (`make release`, shared ccache; `CURRENT_FORK..` the checkpoint) in the
+   dedicated build worktree — successive builds are incremental. **Do not build
+   the commits *past* the merge:** the upper history is re-attached unchanged (its
+   trees still equal `main`'s, already green upstream), so it carries no new risk
+   — it gets certified in the future run whose bifurcation reaches it.
+
+   **Run the fast unit suite on the de-merge's final commit — the one just before
+   the back-merge** (the last commit of the de-merged segment; its tree reproduces
+   `MERGE_TREE` — the RECON tip on a clean run, or the reconcile commit when the
+   run needed one). This is the **linearized back-merge**: a *combined* main +
+   release tree. **Do not assume it is green "by construction."** A back-merge's
+   merged result is a new cross-line combination — merges are exactly where two
+   independently green sides break — and reaching that tree via our linearized
+   replay must be *verified*, not assumed. It is the single **highest-value**
+   functional test for the run. (Run #3: `76e52d65`, just before the #20644
+   back-merge.) Compile is per-commit; the functional suite is on this one commit.
+
+   Green-certify accordingly; if a commit is red, **fix in place, retest, repeat**
+   — message preserved, content amended/squashed minimally. (The tip-tree
+   assertion in step 5 guarantees the unbuilt upper part is still byte-for-byte
+   `main`.)
 
    **What "escalate a hard break" means here: try harder, don't stop.** A red
    intermediate commit is reconciled by *more* work, not by bailing:
@@ -231,18 +254,23 @@ export CCACHE_DIR="$HOME/.cache/duckdb-linear-ccache"   # shared, survives workt
    - Size the run so the chain you must green-certify fits the budget *after* the
      cache is warm; if you find yourself paying a cold build inside the budget,
      warm the cache first (build `main` once) rather than shrinking the chain.
-5. **Publish only if the tree is unchanged, then drop the resume point.**
-   First regenerate [`REPLAY-LOG.md`](REPLAY-LOG.md) (`$BIF` = the original
-   bifurcation, run #1's base — constant across runs). Force-push is allowed
-   *only* after the tip tree matches `START_TREE`; on success, delete `$WIP_BRANCH`
-   (the reconstruction now lives in the published branch; the `-NN` gate snapshot
-   remains as the audit trail):
+5. **Publish only if the tree is unchanged.** First regenerate
+   [`REPLAY-LOG.md`](REPLAY-LOG.md) (`$BIF` = the original bifurcation, run #1's
+   base — constant across runs) and commit it. Force-push the branch *only* after
+   the tip tree matches `START_TREE`:
    ```bash
    test "$(git rev-parse "${BRANCH}^{tree}")" = "$START_TREE" || { echo "TREE CHANGED — abort"; exit 1; }
    git push --force-with-lease origin "$BRANCH"
-   git push origin --delete "$WIP_BRANCH" 2>/dev/null || true   # resume point no longer needed
+   git push origin --delete "$WIP_BRANCH" 2>/dev/null || true   # best-effort; see below
    ```
    The rewrite changed history; it must not have changed content.
+
+   **Don't depend on deleting `$WIP_BRANCH`.** Some environments (this one) reject
+   ref deletion — the push is a silent no-op and the branch persists. That's
+   harmless: the resume point is named by `DEMERGED_SO_FAR`, which has advanced, so
+   a leftover `-NN-wip` is for a *completed* slot and is never re-consulted (the
+   next run looks at `-<NN+1>-wip`). Leave it as a stale tombstone; do not block
+   publish on the delete succeeding.
 
 ## Proof of work: per-commit numstat (before vs after)
 

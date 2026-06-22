@@ -91,10 +91,36 @@ Gate/snapshot `-01` = run #1 result (the state this run overwrote).
   (`expression_type.hpp` is high-fanout). Fast tests: all passed. Cross-tree
   ccache hits were low (~12%) — unity builds bust on the v1.5↔main delta.
 
+## Run #3 (de-merge of #20644, base `9c028743`)
+
+**Clean run — no reconcile commit** (like run #1): replaying the 7-commit spine
+onto `9c028743` reproduced the merge tree `ab8d98b8` exactly. 6 applied, 1 empty
+(#20624 azure-ref, already in the base). **Published** `main-v1.5-variegata` →
+`cd70b7c3`; **`DEMERGED=3, REMAINING=13`**; gate/snapshot `-02` = run #2 result.
+
+Green-certify: all 6 commits **compile** green (`702/57/39/647/26/10s`); the fast
+unit suite is run on **`76e52d65`** — the de-merge's final commit, **one commit
+before the back-merge** (its tree reproduces the merge tree `ab8d98b8`) — and
+**passed: 995,401 assertions, 3,944 cases, 0 failures**. A back-merge's merged
+tree is a **combined cross-line state** — reproducing it byte-for-byte does
+**not** make it tested, so it is **not** green by construction (corrected from an
+earlier wrong call to skip it). It is the highest-value functional test for the
+run. (`a803d034`, the pre-reconcile synthetic tree, was also run and passed — a
+bonus, not the target.)
+
+Three environment/script learnings, all folded into the skill:
+- **Stale local ref / `origin/` gate name** — the cursor now prefers
+  `origin/<branch>` and derives `GATE/WIP` from the bare basename.
+- **Cherry-pick empties** — `--empty=drop`/`--allow-empty=false` error here; the
+  replay loop detects empties from the message and `--skip`s (`replay-segment.sh`).
+- **Branch deletion is a no-op here** — `git push --delete` silently fails, so
+  `-02-wip` persists. Harmless (named by the advanced `DEMERGED`, never
+  re-consulted); the skill no longer depends on deleting it.
+
 ## Resume
 
 ```bash
 SK=.claude/skills/bubble
 eval "$(bash $SK/bubble-cursor.sh origin/v1.5-variegata-dag origin/main-dag origin/v1.4-andium-dag main-v1.5-variegata)"
-# de-merge the next back-merge on the branch; base each run on origin/main-v1.5-variegata
+# de-merge the next back-merge on the branch (cursor resolves origin/<branch>)
 ```
