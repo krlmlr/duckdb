@@ -1,0 +1,185 @@
+name: Fork Sync
+
+# Keeps `fork` (this repository's default branch) current with upstream `main`
+# by merging `main` into it whenever `main` moves.
+#
+# Why not `on: push: branches: [main]`?
+# For a push event GitHub reads the workflow file from the pushed commit,
+# so such a workflow would have to live on `main` itself,
+# and `main` is a 1:1 hardreset mirror of duckdb:main (see .github/pull.yml) —
+# anything added there is discarded on the next sync.
+# Chaining off `workflow_run` does not help either:
+# every upstream workflow excludes `main` from its push trigger
+# (`branches-ignore: [main, ...]`),
+# so a push to `main` starts no run to chain from.
+#
+# What remains are the events that GitHub resolves against the default branch:
+# a poll, a manual run, and an API trigger.
+# The poll is cheap — one API call, no checkout — while there is nothing to do.
+#
+# Trigger a run from the outside with:
+#   gh api repos/krlmlr/duckdb/dispatches -f event_type=main-updated
+#
+# Merge, not rebase.
+# A rebase would replay the commit that deletes upstream's `.github/`,
+# and no token available here may push a commit that touches `.github/workflows/`:
+# the `permissions:` block has no `workflows` key,
+# and `actions: write` covers the Actions API, not the workflow files.
+# A merge leaves the fork-local commits alone and adds a single merge commit,
+# whose `.github/` is pinned to what this branch already had — see below.
+# The merge commits can be flattened by rebasing the branch locally.
+
+on:
+  schedule:
+    # Twice an hour, off the hour: runs scheduled at :00 queue behind everyone else's.
+    - cron: '9,39 * * * *'
+  push:
+    branches:
+      - fork
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Merge even when the fork branch already contains main's tip
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [main-updated]
+
+concurrency:
+  group: fork-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  FORK_BRANCH: fork
+  MAIN_BRANCH: main
+
+jobs:
+  check:
+    name: Check for work
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      behind: ${{ steps.compare.outputs.behind }}
+
+    steps:
+      - name: Compare the fork branch against main
+        id: compare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          # `behind_by` counts the commits that main has and the fork branch lacks.
+          compare=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/compare/${MAIN_BRANCH}...${FORK_BRANCH}?per_page=1" \
+            --jq '[.status, .ahead_by, .behind_by] | @tsv')
+          IFS=$'\t' read -r status ahead behind <<<"$compare"
+
+          echo "behind=$behind" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "\`$FORK_BRANCH\` is $ahead ahead of and $behind behind \`$MAIN_BRANCH\` (\`$status\`)."
+            echo
+            if [ "$behind" -eq 0 ]; then
+              echo "Nothing to merge."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  merge:
+    name: Merge main into the fork branch
+    needs: check
+    if: needs.check.outputs.behind != '0' || inputs.force
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out the fork branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.FORK_BRANCH }}
+          # The merge base needs the full history; blobs are fetched on demand.
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Merge main
+        id: merge
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --no-tags --filter=blob:none origin \
+            "+refs/heads/${MAIN_BRANCH}:refs/remotes/origin/${MAIN_BRANCH}"
+
+          before=$(git rev-parse HEAD)
+          echo "before=$before" >> "$GITHUB_OUTPUT"
+
+          rc=0
+          git merge --no-commit --no-ff "origin/${MAIN_BRANCH}" || rc=$?
+          if [ "$rc" -ne 0 ] && ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            echo "::error::Could not start the merge."
+            exit 1
+          fi
+
+          # This branch owns `.github/`: it deleted upstream's copy, and upstream keeps
+          # editing it, so every sync would conflict there. Restoring the directory
+          # settles those conflicts, and it keeps the merge commit clear of workflow
+          # files, which GITHUB_TOKEN would not be allowed to push.
+          # A `.gitattributes` merge driver cannot take this over: a deleted file leaves
+          # no `ours` stage to merge, so drivers never run on modify/delete conflicts,
+          # and files upstream adds do not conflict at all.
+          git rm -r -q -f --ignore-unmatch -- .github
+          if [ -n "$(git ls-tree "$before" -- .github)" ]; then
+            git checkout "$before" -- .github
+          fi
+
+          conflicts=$(git diff --name-only --diff-filter=U)
+          if [ -n "$conflicts" ]; then
+            git merge --abort
+            {
+              echo "### Conflict"
+              echo
+              echo "Merging \`$MAIN_BRANCH\` into \`$FORK_BRANCH\` conflicted outside \`.github/\`;"
+              echo "the branch was left untouched."
+              echo
+              echo '```'
+              echo "$conflicts"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          git commit --no-edit --quiet
+          after=$(git rev-parse HEAD)
+          echo "after=$after" >> "$GITHUB_OUTPUT"
+
+          # Refuse to push a merge commit that would need the workflows permission.
+          git diff --quiet "$before" "$after" -- .github/workflows
+
+      - name: Push the merge
+        if: steps.merge.outputs.after != steps.merge.outputs.before
+        env:
+          BEFORE: ${{ steps.merge.outputs.before }}
+        run: |
+          set -euo pipefail
+
+          git push origin "HEAD:refs/heads/${FORK_BRANCH}"
+
+          {
+            echo "### Merged"
+            echo
+            echo "\`$FORK_BRANCH\` now contains \`$MAIN_BRANCH\` ($(git rev-parse --short "origin/${MAIN_BRANCH}")), adding:"
+            echo
+            git log --reverse --format='- `%h` %s' "${BEFORE}..origin/${MAIN_BRANCH}" | tail -25
+          } >> "$GITHUB_STEP_SUMMARY"
