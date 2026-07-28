@@ -1,40 +1,15 @@
-# Configuration for the "Pull" GitHub App, which keeps this fork in sync with
+# Default configuration for the "Pull" GitHub App, which keeps this fork in sync with
 # the upstream duckdb/duckdb repository.
 #
 # Pointers:
 #   - App / install / manage:  https://pull.git.ci/
 #   - Source:                  https://github.com/wei/pull
 #   - Configuration reference: https://github.com/wei/pull/blob/master/docs/CONFIGURATIONS.md
-#   - Trigger a manual sync:   https://pull.git.ci/process/krlmlr/duckdb
-#
-# Notes:
-#   - This file must live on the fork's default branch for Pull to read it.
-#   - `upstream` is written as `owner:branch` (here always duckdb:<branch>).
-#   - `mergeMethod` values: none | merge | squash | rebase | hardreset.
-#       rebase    -> replay the fork-local commits on top of upstream, so the
-#                    fork stays exactly one commit (this pull.yml) ahead of main.
-#       hardreset -> force the fork branch to match upstream exactly (1:1 mirror);
-#                    discards any fork-local commits on that branch.
-#
-# Intent of this variant:
-#   - `fork` uses rebase so the only fork-local commits (this pull.yml) are
-#     preserved as the commits ahead of upstream duckdb:main. Using
-#     hardreset here would delete this config on every sync.
-#   - `main` is a 1:1 mirror of upstream's `main` via hardreset.
+#   - Trigger a manual sync:   https://pull.git.ci/process/<your-user>/duckdb
 
 version: "1"
 
 rules:
-  # Keep pull.yml as the commits ahead of upstream main.
-  - base: fork
-    upstream: duckdb:main
-    mergeMethod: rebase
-
-  # Mirror upstream's main 1:1 onto the fork's main branch.
-  - base: main
-    upstream: duckdb:main
-    mergeMethod: hardreset
-
   - base: v1.1-eatoni
     upstream: duckdb:v1.1-eatoni
     mergeMethod: hardreset
@@ -55,5 +30,6 @@ rules:
     upstream: duckdb:v1.5-variegata
     mergeMethod: hardreset
 
-label: ":arrow_heart_down: pull"
-conflictLabel: "merge-conflict"
+  - base: main
+    upstream: duckdb:main
+    mergeMethod: hardreset
