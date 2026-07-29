@@ -31,10 +31,7 @@
         "name": "concat",
         "parameters": "value,...",
         "description": "Concatenates multiple strings or lists. `NULL` inputs are skipped. See also operator `||`.",
-        "examples": [
-            "concat('Hello', ' ', 'World')",
-            "concat([1, 2, 3], NULL, [4, 5, 6])"
-        ],
+        "examples": ["concat('Hello', ' ', 'World')", "concat([1, 2, 3], NULL, [4, 5, 6])"],
         "categories": ["string", "list"],
         "type": "scalar_function"
     },
@@ -45,19 +42,15 @@
         "example": "list_concat([2, 3], [4, 5, 6], [7])",
         "categories": ["list"],
         "type": "scalar_function",
-        "aliases": ["list_cat","array_concat","array_cat"]
+        "aliases": ["list_cat", "array_concat", "array_cat"]
     },
     {
         "name": "||",
         "parameters": "arg1,arg2",
         "description": "Concatenates two strings, lists, or blobs. Any `NULL` input results in `NULL`. See also `concat(arg1, arg2, ...)` and `list_concat(list1, list2, ...)`.",
-        "examples": [
-            "'Duck' || 'DB'",
-            "[1, 2, 3] || [4, 5, 6]",
-            "'\\xAA'::BLOB || '\\xBB'::BLOB"
-        ],
+        "examples": ["'Duck' || 'DB'", "[1, 2, 3] || [4, 5, 6]", "'\\xAA'::BLOB || '\\xBB'::BLOB"],
         "type": "scalar_function",
-        "categories": ["string","list","blob"],
+        "categories": ["string", "list", "blob"],
         "struct": "ConcatOperatorFun"
     },
     {
@@ -182,17 +175,13 @@
         "name": "octet_length",
         "variants": [
             {
-                "parameters": [
-                    {"name": "blob", "type": "BLOB"}
-                ],
+                "parameters": [{"name": "blob", "type": "BLOB"}],
                 "description": "Number of bytes in `blob`.",
                 "example": "octet_length('\\xAA\\xBB'::BLOB)",
                 "categories": ["blob"]
             },
             {
-                "parameters": [
-                    {"name": "bitstring", "type": "BIT"}
-                ],
+                "parameters": [{"name": "bitstring", "type": "BIT"}],
                 "description": "Returns the number of bytes in the `bitstring`.",
                 "example": "octet_length('1101011'::BITSTRING)",
                 "categories": ["bitstring"]
@@ -212,9 +201,7 @@
         "name": "array_length",
         "variants": [
             {
-                "parameters": [
-                    {"name": "list", "type": "ANY[]"}
-                ],
+                "parameters": [{"name": "list", "type": "ANY[]"}],
                 "description": "Returns the length of the `list`.",
                 "example": "array_length([1, 2, 3])",
                 "categories": ["list"]
@@ -235,10 +222,7 @@
         "name": "overlay",
         "parameters": "string,replacement,start,count",
         "description": "Replaces a substring of `string` starting at character `start` with `replacement`. If `count` is not specified, it defaults to the length of `replacement`. Note that a `start` value of `1` refers to the first character of the `string`.",
-        "examples": [
-            "overlay('hello' placing 'xyz' from 2 for 3)",
-            "overlay('hello' placing 'xyz' from 2)"
-        ],
+        "examples": ["overlay('hello' placing 'xyz' from 2 for 3)", "overlay('hello' placing 'xyz' from 2)"],
         "categories": ["string"],
         "type": "scalar_function_set"
     },
@@ -246,10 +230,7 @@
         "name": "substring",
         "parameters": "string,start,length",
         "description": "Extracts substring starting from character `start` up to the end of the string. If optional argument `length` is set, extracts a substring of `length` characters instead. Note that a `start` value of `1` refers to the first character of the `string`.",
-        "examples": [
-            "substring('Hello', 2)",
-            "substring('Hello', 2, 2)"
-        ],
+        "examples": ["substring('Hello', 2)", "substring('Hello', 2, 2)"],
         "categories": ["string"],
         "type": "scalar_function_set",
         "aliases": ["substr"]
@@ -258,10 +239,7 @@
         "name": "substring_grapheme",
         "parameters": "string,start,length",
         "description": "Extracts substring starting from grapheme clusters `start` up to the end of the string. If optional argument `length` is set, extracts a substring of `length` grapheme clusters instead. Note that a `start` value of `1` refers to the `first` character of the `string`.",
-        "examples": [
-            "substring_grapheme('🦆🤦🏼‍♂️🤦🏽‍♀️🦆', 3)",
-            "substring_grapheme('🦆🤦🏼‍♂️🤦🏽‍♀️🦆', 3, 2)"
-        ],
+        "examples": ["substring_grapheme('🦆🤦🏼‍♂️🤦🏽‍♀️🦆', 3)", "substring_grapheme('🦆🤦🏼‍♂️🤦🏽‍♀️🦆', 3, 2)"],
         "categories": ["string"],
         "type": "scalar_function_set"
     },
