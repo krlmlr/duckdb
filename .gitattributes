@@ -1,1 +1,5 @@
 *.test linguist-language=sql
+# functions.json is generated from functions.yaml (scripts/functions_yaml.py);
+# view diffs semantically: git config diff.functionsjson.textconv 'jq --sort-keys .'
+src/function/**/functions.json diff=functionsjson
+extension/core_functions/**/functions.json diff=functionsjson
