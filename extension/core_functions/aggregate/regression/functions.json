@@ -44,7 +44,7 @@
     {
         "name": "regr_sxx",
         "parameters": "y,x",
-        "description": "",
+        "description": "Returns the sum of squared deviations of the independent variable, sum((x - avg(x))^2)",
         "example": "REGR_COUNT(y, x) * VAR_POP(x)",
         "type": "aggregate_function",
         "struct": "RegrSXXFun"
@@ -52,7 +52,7 @@
     {
         "name": "regr_sxy",
         "parameters": "y,x",
-        "description": "Returns the population covariance of input values",
+        "description": "Returns the sum of deviation products of the input values, sum((y - avg(y)) * (x - avg(x)))",
         "example": "REGR_COUNT(y, x) * COVAR_POP(y, x)",
         "type": "aggregate_function",
         "struct": "RegrSXYFun"
@@ -60,7 +60,7 @@
     {
         "name": "regr_syy",
         "parameters": "y,x",
-        "description": "",
+        "description": "Returns the sum of squared deviations of the dependent variable, sum((y - avg(y))^2)",
         "example": "REGR_COUNT(y, x) * VAR_POP(y)",
         "type": "aggregate_function",
         "struct": "RegrSYYFun"
