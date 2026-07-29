@@ -1,0 +1,33 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: rank
+  parameters: ''
+  description: The rank of the current row with gaps
+  examples:
+    - RANK() OVER (PARTITION BY event ORDER BY points)
+  categories: ''
+  type: window_function
+- name: dense_rank
+  parameters: ''
+  description: The rank of the current row without gaps
+  examples:
+    - DENSE_RANK() OVER (PARTITION BY event ORDER BY points)
+  categories: ''
+  aliases:
+    - rank_dense
+  type: window_function
+- name: percent_rank
+  parameters: ''
+  description: The relative rank of the current row as a fraction
+  examples:
+    - PERCENT_RANK() OVER (PARTITION BY event ORDER BY points)
+  categories: ''
+  type: window_function
+- name: cume_dist
+  parameters: ''
+  description: The number of partition rows preceding or peer with current row / total partition
+    rows.
+  examples:
+    - CUME_DIST() OVER (PARTITION BY event ORDER BY points)
+  categories: ''
+  type: window_function

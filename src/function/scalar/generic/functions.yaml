@@ -1,0 +1,34 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: constant_or_null
+  parameters: arg1,arg2
+  description: If arg2 is NULL, return NULL. Otherwise, return arg1.
+  examples:
+    - constant_or_null(42, NULL)
+  type: scalar_function
+- name: getvariable
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+  struct: GetVariableFun
+- name: error
+  parameters: message
+  description: Throws the given error message
+  examples:
+    - error('access_mode')
+  type: scalar_function
+- name: create_sort_key
+  parameters: parameters...
+  description: Constructs a binary-comparable sort key based on a set of input parameters
+    and sort qualifiers
+  examples:
+    - create_sort_key('A', 'DESC')
+  type: scalar_function
+- name: invoke
+  parameters: lambda, arg1, arg2, ...
+  description: Invokes a lambda function with the given arguments
+  examples:
+    - invoke(x -> x + 1, 5)
+  type: scalar_function

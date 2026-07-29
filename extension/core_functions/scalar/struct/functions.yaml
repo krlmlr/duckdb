@@ -1,0 +1,28 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: struct_insert
+  parameters: struct,any
+  description: Adds field(s)/value(s) to an existing STRUCT with the argument values. The
+    entry name(s) will be the bound variable name(s)
+  examples:
+    - 'struct_insert({''a'': 1}, b := 2)'
+  type: scalar_function
+- name: struct_update
+  parameters: struct,any
+  description: Changes field(s)/value(s) to an existing STRUCT with the argument values. The
+    entry name(s) will be the bound variable name(s)
+  examples:
+    - 'struct_update({''a'': 1}, a := 2)'
+  type: scalar_function
+- name: struct_keys
+  parameters: struct
+  description: Returns the field names of a STRUCT as a list
+  examples:
+    - 'struct_keys({''a'': 1, ''b'': 2})'
+  type: scalar_function
+- name: struct_values
+  parameters: struct
+  description: Returns the field values of a STRUCT as an UnnamedStruct
+  examples:
+    - 'struct_values({''a'': 1, ''b'': ''world''})'
+  type: scalar_function

@@ -1,0 +1,44 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: '&'
+  parameters: left,right
+  description: Bitwise AND
+  examples:
+    - 91 & 15
+  type: scalar_function_set
+  struct: BitwiseAndFun
+- name: '|'
+  parameters: left,right
+  description: Bitwise OR
+  examples:
+    - 32 | 3
+  type: scalar_function_set
+  struct: BitwiseOrFun
+- name: '~'
+  parameters: input
+  description: Bitwise NOT
+  examples:
+    - ~15
+  type: scalar_function_set
+  struct: BitwiseNotFun
+- name: '<<'
+  parameters: input
+  description: Bitwise shift left
+  examples:
+    - 1 << 4
+  type: scalar_function_set
+  struct: LeftShiftFun
+- name: '>>'
+  parameters: input
+  description: Bitwise shift right
+  examples:
+    - 8 >> 2
+  type: scalar_function_set
+  struct: RightShiftFun
+- name: xor
+  parameters: left,right
+  description: Bitwise XOR
+  examples:
+    - xor(17, 5)
+  type: scalar_function_set
+  struct: BitwiseXorFun

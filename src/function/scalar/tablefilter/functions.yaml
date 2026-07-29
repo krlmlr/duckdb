@@ -1,0 +1,37 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: __internal_tablefilter_bloom_filter
+  struct: TableFilterBloomFilterFun
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_tablefilter_dynamic
+  struct: TableFilterDynamicFun
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_tablefilter_optional
+  struct: TableFilterOptionalFun
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_tablefilter_prefix_range
+  struct: TableFilterPrefixRangeFun
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_tablefilter_selectivity_optional
+  struct: TableFilterSelectivityOptionalFun
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function

@@ -1,0 +1,128 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: __internal_compress_integral_utinyint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_compress_integral_usmallint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_compress_integral_uinteger
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_compress_integral_ubigint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_compress_string_utinyint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_compress_string_usmallint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_compress_string_uinteger
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_compress_string_ubigint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_compress_string_uhugeint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_compress_string_hugeint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_compress_geometry_point
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_decompress_geometry_point
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function
+- name: __internal_decompress_integral_smallint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_integer
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_bigint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_hugeint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_usmallint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_uinteger
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_ubigint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_integral_uhugeint
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set
+- name: __internal_decompress_string
+  parameters: ''
+  description: ''
+  examples:
+    - ''
+  type: scalar_function_set

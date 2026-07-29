@@ -1,0 +1,42 @@
+# Function documentation; source of truth for the sibling functions.json
+# (regenerate with: python3 scripts/functions_yaml.py to-json).
+- name: decode
+  parameters: blob,varchar
+  description: Converts `blob` to `VARCHAR`. Invalid UTF-8 is handled based on the error behavior
+    argument. Can be 'strict' (default, fail), 'replace' to replace invalid characters with
+    '?', or 'ignore' to skip invalid characters.
+  examples:
+    - decode('\xC3\xBC'::BLOB)
+    - decode('\xA0'::BLOB, 'replace')
+    - decode('\xA0'::BLOB, 'ignore')
+  type: scalar_function_set
+  categories:
+    - blob
+- name: encode
+  parameters: string
+  description: Converts the `string` to `BLOB`. Converts UTF-8 characters into literal encoding.
+  examples:
+    - encode('my_string_with_ü')
+  type: scalar_function
+  categories:
+    - blob
+- name: from_base64
+  parameters: string
+  description: Converts a base64 encoded `string` to a character string (`BLOB`).
+  examples:
+    - from_base64('QQ==')
+  type: scalar_function
+  categories:
+    - string
+    - blob
+- name: to_base64
+  parameters: blob
+  description: Converts a `blob` to a base64 encoded string.
+  examples:
+    - to_base64('A'::BLOB)
+  type: scalar_function
+  categories:
+    - string
+    - blob
+  aliases:
+    - base64
