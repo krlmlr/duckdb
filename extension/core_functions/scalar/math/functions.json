@@ -207,7 +207,7 @@
         "description": "Computes the logarithm of x to base b. b may be omitted, in which case the default 10",
         "example": "log(2, 64)",
         "type": "scalar_function_set"
-     },
+    },
     {
         "name": "nextafter",
         "parameters": "x, y",
@@ -320,5 +320,5 @@
         "description": "Computes the inverse hyperbolic tan of x",
         "example": "atanh(0.5)",
         "type": "scalar_function"
-	}
+    }
 ]
