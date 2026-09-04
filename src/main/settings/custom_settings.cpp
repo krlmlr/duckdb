@@ -1110,12 +1110,88 @@ Value ForceMbedtlsUnsafeSetting::GetSetting(const ClientContext &context) {
 //===----------------------------------------------------------------------===//
 // HTTP Proxy
 //===----------------------------------------------------------------------===//
+namespace {
+
+enum class ProxyCredentials { NONE, USERNAME_ONLY, USERNAME_AND_PASSWORD };
+
+// Strip a `user[:password]@` userinfo component from the authority part of
+// `proxy` in place. The return value tells the caller which of `username` /
+// `password` were populated:
+//
+//   NONE                   - neither output was touched
+//   USERNAME_ONLY          - only `username` is valid (no `:` in userinfo)
+//   USERNAME_AND_PASSWORD  - both outputs are valid
+//
+// Returns NONE without parsing when the URL has no `://` scheme (a bare
+// `host:port` is too ambiguous), when no `@` is present in the authority,
+// or when the userinfo block is empty (e.g. `http://@host` — leave existing
+// credential settings alone instead of clobbering them).
+ProxyCredentials ExtractProxyCredentials(string &proxy, string &username, string &password) {
+	auto scheme_end = proxy.find("://");
+	if (scheme_end == string::npos) {
+		return ProxyCredentials::NONE;
+	}
+	idx_t userinfo_start = scheme_end + 3;
+	auto at_pos = proxy.find('@', userinfo_start);
+	if (at_pos == string::npos) {
+		return ProxyCredentials::NONE;
+	}
+	// RFC 3986 §3.2: the authority component ends at the first '/', '?' or
+	// '#'. A later '@' belongs to the path / query / fragment and is not
+	// userinfo, so don't treat it as a credential.
+	auto authority_end = proxy.find_first_of("/?#", userinfo_start);
+	if (authority_end != string::npos && at_pos > authority_end) {
+		return ProxyCredentials::NONE;
+	}
+	auto userinfo = proxy.substr(userinfo_start, at_pos - userinfo_start);
+	// Drop `userinfo@` from the URL whether or not we end up extracting
+	// credentials, so the remainder is the bare proxy authority.
+	proxy.erase(userinfo_start, at_pos - userinfo_start + 1);
+	if (userinfo.empty()) {
+		return ProxyCredentials::NONE;
+	}
+	auto colon_pos = userinfo.find(':');
+	if (colon_pos == string::npos) {
+		username = std::move(userinfo);
+		return ProxyCredentials::USERNAME_ONLY;
+	}
+	username = userinfo.substr(0, colon_pos);
+	password = userinfo.substr(colon_pos + 1);
+	return ProxyCredentials::USERNAME_AND_PASSWORD;
+}
+
+void ApplyHTTPProxyURL(DBConfig &config, string proxy) {
+	string username;
+	string password;
+	auto extracted = ExtractProxyCredentials(proxy, username, password);
+	if (extracted != ProxyCredentials::NONE) {
+		config.user_settings.SetUserSetting(HTTPProxyUsernameSetting::SettingIndex, Value(std::move(username)));
+	}
+	if (extracted == ProxyCredentials::USERNAME_AND_PASSWORD) {
+		config.user_settings.SetUserSetting(HTTPProxyPasswordSetting::SettingIndex, Value(std::move(password)));
+	}
+	config.options.http_proxy = std::move(proxy);
+}
+
+} // namespace
+
 void HTTPProxySetting::SetGlobal(DatabaseInstance *, DBConfig &config, const Value &input) {
-	config.options.http_proxy = input.GetValue<string>();
+	ApplyHTTPProxyURL(config, input.GetValue<string>());
 }
 
 void HTTPProxySetting::ResetGlobal(DatabaseInstance *, DBConfig &config) {
-	config.options.http_proxy = FileSystem::GetEnvVariable("HTTP_PROXY");
+	// Prefer lowercase, which is the de-facto standard followed by curl/wget and
+	// avoids the `HTTP_PROXY` (uppercase) CGI httpoxy ambiguity; fall back to
+	// uppercase for compatibility. HTTPS takes precedence over HTTP.
+	static const char *kEnvVars[] = {"https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY"};
+	string proxy;
+	for (auto *name : kEnvVars) {
+		proxy = FileSystem::GetEnvVariable(name);
+		if (!proxy.empty()) {
+			break;
+		}
+	}
+	ApplyHTTPProxyURL(config, std::move(proxy));
 }
 
 //===----------------------------------------------------------------------===//
