@@ -1,0 +1,46 @@
+# Default configuration for the "Pull" GitHub App, which keeps this fork in sync with
+# the upstream duckdb/duckdb repository.
+#
+# Pointers:
+#   - App / install / manage:  https://pull.git.ci/
+#   - Source:                  https://github.com/wei/pull
+#   - Configuration reference: https://github.com/wei/pull/blob/master/docs/CONFIGURATIONS.md
+#   - Trigger a manual sync:   https://pull.git.ci/process/<your-user>/duckdb
+#
+# Notes:
+#   - This file must live on the fork's default branch (`fork`) for Pull to read it.
+#   - `upstream` is written as `owner:branch` (here always duckdb:<branch>).
+#   - Every rule uses `hardreset`, so each branch below is a 1:1 mirror of its upstream
+#     counterpart, and any fork-local commit on it is discarded on the next sync.
+#   - `fork` has no rule on purpose: it is not a mirror but `main` plus the fork-local
+#     commits, so it is kept current by .github/workflows/ForkSync.yml, which merges
+#     `main` into it once Pull has moved `main` forward.
+#   - Deleting this file would not disable Pull: without a configuration it hard-resets
+#     the fork's default branch from upstream, which is exactly what `fork` must not do.
+
+version: "1"
+
+rules:
+  - base: v1.1-eatoni
+    upstream: duckdb:v1.1-eatoni
+    mergeMethod: hardreset
+
+  - base: v1.2-histrionicus
+    upstream: duckdb:v1.2-histrionicus
+    mergeMethod: hardreset
+
+  - base: v1.3-ossivalis
+    upstream: duckdb:v1.3-ossivalis
+    mergeMethod: hardreset
+
+  - base: v1.4-andium
+    upstream: duckdb:v1.4-andium
+    mergeMethod: hardreset
+
+  - base: v1.5-variegata
+    upstream: duckdb:v1.5-variegata
+    mergeMethod: hardreset
+
+  - base: main
+    upstream: duckdb:main
+    mergeMethod: hardreset
