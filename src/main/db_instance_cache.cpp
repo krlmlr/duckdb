@@ -1,8 +1,13 @@
 #include "duckdb/main/db_instance_cache.hpp"
 #include "duckdb/main/extension_helper.hpp"
 #include "duckdb/main/database_file_path_manager.hpp"
+#include "duckdb/common/chrono.hpp"
+#include "duckdb/parallel/task_scheduler.hpp"
 
 namespace duckdb {
+
+//! How long to wait for an in-flight shutdown before reporting that the database is still in use
+static constexpr int64_t SHUTDOWN_WAIT_SECONDS = 5;
 
 DatabaseCacheEntry::DatabaseCacheEntry() {
 }
@@ -80,9 +85,25 @@ shared_ptr<DuckDB> DBInstanceCache::GetInstanceInternal(const string &database, 
 	if (!db_instance) {
 		// if the database does not exist, but the cache entry still exists, the database is being shut down
 		// we need to wait until the database is fully shut down to safely proceed
-		// we do this here using a busy spin
+		// we do this here using a bounded spin
+		//
+		// the wait is bounded because a shutdown is not the only way to reach this state: the entry is released
+		// on the last line of ~DatabaseInstance, and a DatabaseInstance can outlive the DuckDB handle that
+		// pointed at it, because a ClientContext holds one and a connection or an unfinished result holds a
+		// ClientContext - then no shutdown is running and the entry never expires
+		//
+		// we report rather than fall through to CreateInstance: the file lock does not fire within a single
+		// process, so creating would succeed and leave two instances writing the same file
 		cache_entry.reset();
+		auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(SHUTDOWN_WAIT_SECONDS);
 		while (!weak_cache_entry.expired()) {
+			TaskScheduler::YieldThread();
+			if (std::chrono::steady_clock::now() > deadline) {
+				throw ConnectionException("Database \"%s\" is still in use: an earlier instance has been released "
+				                          "but something is still holding it open, such as an open query result or "
+				                          "a connection. Release it before opening the database again.",
+				                          database);
+			}
 		}
 		D_ASSERT(!cache_entry);
 		// the cache entry has now been deleted - clear it from the set of database instances and return
