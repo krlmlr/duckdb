@@ -21,18 +21,6 @@
 version: "1"
 
 rules:
-  - base: v1.1-eatoni
-    upstream: duckdb:v1.1-eatoni
-    mergeMethod: hardreset
-
-  - base: v1.2-histrionicus
-    upstream: duckdb:v1.2-histrionicus
-    mergeMethod: hardreset
-
-  - base: v1.3-ossivalis
-    upstream: duckdb:v1.3-ossivalis
-    mergeMethod: hardreset
-
   - base: v1.4-andium
     upstream: duckdb:v1.4-andium
     mergeMethod: hardreset
