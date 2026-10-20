@@ -136,7 +136,7 @@ struct FormatreadabledecimalsizeFun {
 struct HammingFun {
 	static constexpr const char *Name = "hamming";
 	static constexpr const char *Parameters = "s1,s2";
-	static constexpr const char *Description = "The Hamming distance between to strings, i.e., the number of positions with different characters for two strings of equal length. Strings must be of equal length. Characters of different cases (e.g., `a` and `A`) are considered different.";
+	static constexpr const char *Description = "The Hamming distance between two strings, i.e., the number of positions with different characters for two strings of equal length. Strings must be of equal length. Characters of different cases (e.g., `a` and `A`) are considered different.";
 	static constexpr const char *Example = "hamming('duck', 'luck')";
 	static constexpr const char *Categories = "text_similarity";
 
